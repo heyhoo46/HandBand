@@ -1,15 +1,17 @@
-## PumpK's gitignore for SV workspace ##
+## PumpK's gitignore for HandBand workspace ##
 
-#Exclude CubeIDE
+#Exclude CubeIDE Trees
 **/.metadata/**
 **/.settings/**
 **/Debug/**
+**/Drivers/**
+#Exclude CubeIDE Files
 .cproject
 .mxproject
 .project
 
-**/Drivers/**
 #Exclude vivado Trees
+**/**.runs/**
 **/**.cache/**
 **/**.sim/**
 **/**.hw/**
