@@ -2,22 +2,33 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 
+# ========================
+# 설정: 16×16 그리드
+# ========================
+IMG_WIDTH, IMG_HEIGHT = 640, 480
 
-IMG_WIDTH = 640
-IMG_HEIGHT = 480
-X_UNIT = IMG_WIDTH // 3
-Y_UNIT = IMG_HEIGHT // 3
+NUM_COLS = 16    # 가로 칸 수
+NUM_ROWS = 16    # 세로 칸 수
 
+ROI_W = IMG_WIDTH  // NUM_COLS   # 각 칸 너비
+ROI_H = IMG_HEIGHT // NUM_ROWS   # 각 칸 높이
 
-image_path = 'example.png'  # 필요시 경로를 변경하세요
+total_zones = NUM_COLS * NUM_ROWS
 
-# 이미지 로드 및 리사이즈
+# 사용할 이미지 파일
+image_path = 'input_image.png'
+
+# ========================
+# 1. 이미지 로드 & 리사이즈
+# ========================
 img = Image.open(image_path).convert('RGB')
 img = img.resize((IMG_WIDTH, IMG_HEIGHT))
+img_np = np.array(img)  # 원본 픽셀
 
-
-img_np = np.array(img)     
-tmp = img_np.astype(np.uint16)      # (H, W, 3) uint16
+# ========================
+# 2. 4-bit RGB 변환
+# ========================
+tmp = img_np.astype(np.uint16)
 r4 = (tmp[:, :, 0] * 15 // 255).astype(np.uint8)
 g4 = (tmp[:, :, 1] * 15 // 255).astype(np.uint8)
 b4 = (tmp[:, :, 2] * 15 // 255).astype(np.uint8)
@@ -47,9 +58,9 @@ def rgb_to_hsv(r, g, b):
     return H, S, V
 
 # ========================
-# 4. 색상 분류: is_red / is_blue 마스크
+# 4. 색상 분류
 # ========================
-is_red = np.zeros((IMG_HEIGHT, IMG_WIDTH), dtype=bool)
+is_red  = np.zeros((IMG_HEIGHT, IMG_WIDTH), dtype=bool)
 is_blue = np.zeros((IMG_HEIGHT, IMG_WIDTH), dtype=bool)
 
 for y in range(IMG_HEIGHT):
@@ -62,36 +73,46 @@ for y in range(IMG_HEIGHT):
                 is_blue[y, x] = True
 
 # ========================
-# 5. zone_id 매핑 (3x3 grid)
+# 5. zone_id 매핑 (16×16)
 # ========================
-zone_id_map = (np.arange(IMG_WIDTH) // X_UNIT)[None, :] + 3 * (np.arange(IMG_HEIGHT) // Y_UNIT)[:, None]
-zone_id_map = zone_id_map.astype(int)
+cols = np.arange(IMG_WIDTH)  // ROI_W
+rows = np.arange(IMG_HEIGHT) // ROI_H
+zone_id_map = (rows[:, None] * NUM_COLS) + cols[None, :]
 
 # ========================
-# 6. zone별 red/blue 픽셀 수 카운트
+# 6. zone별 카운트
 # ========================
-red_count_per_zone = np.array([np.sum((zone_id_map == i) & is_red) for i in range(9)])
-blue_count_per_zone = np.array([np.sum((zone_id_map == i) & is_blue) for i in range(9)])
-
-max_red_zone = int(np.argmax(red_count_per_zone))
-max_blue_zone = int(np.argmax(blue_count_per_zone))
+red_count  = np.array([np.sum((zone_id_map == i) & is_red)  for i in range(total_zones)])
+blue_count = np.array([np.sum((zone_id_map == i) & is_blue) for i in range(total_zones)])
 
 # ========================
-# 7. 그리드 라인 오버레이
+# 7. 검출된 zone 나열
 # ========================
-grid_image = img_np.copy()
-# 선 색은 빨강 (255,0,0)
-for i in range(1, 3):
-    grid_image[:, X_UNIT * i, :] = [255, 0, 0]  # vertical line
-    grid_image[Y_UNIT * i, :, :] = [255, 0, 0]  # horizontal line
+red_zones  = [str(i) for i, c in enumerate(red_count)  if c > 0]
+blue_zones = [str(i) for i, c in enumerate(blue_count) if c > 0]
+
+print(f"Red zones : {','.join(red_zones) or 'None'}")
+print(f"Blue zones: {','.join(blue_zones) or 'None'}")
 
 # ========================
-# 8. 결과 시각화
+# 8. 그리드 오버레이
+# ========================
+vis = img_np.copy()
+# 수직선
+for i in range(1, NUM_COLS):
+    x = ROI_W * i
+    vis[:, x, :] = [255, 0, 0]
+# 수평선
+for j in range(1, NUM_ROWS):
+    y = ROI_H * j
+    vis[y, :, :] = [255, 0, 0]
+
+# ========================
+# 9. 결과 시각화
 # ========================
 fig, ax = plt.subplots(figsize=(8, 6))
-ax.imshow(grid_image)
-ax.set_title(f"Max Red Zone: {max_red_zone}, Max Blue Zone: {max_blue_zone}")
+ax.imshow(vis)
+ax.set_title(f"Red zones: {','.join(red_zones) or 'None'} | Blue zones: {','.join(blue_zones) or 'None'}")
 plt.axis('off')
 plt.tight_layout()
 plt.show()
-
