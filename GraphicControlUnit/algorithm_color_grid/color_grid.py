@@ -2,29 +2,25 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 
-# ========================
-# 1. 이미지 로딩 및 파라미터 설정
-# ========================
+
 IMG_WIDTH = 640
 IMG_HEIGHT = 480
 X_UNIT = IMG_WIDTH // 3
 Y_UNIT = IMG_HEIGHT // 3
 
-# 사용자 로컬에 있는 이미지 파일 경로 설정
-image_path = 'input_image.png'  # 필요시 경로를 변경하세요
+
+image_path = 'example.png'  # 필요시 경로를 변경하세요
 
 # 이미지 로드 및 리사이즈
 img = Image.open(image_path).convert('RGB')
 img = img.resize((IMG_WIDTH, IMG_HEIGHT))
 
-# ========================
-# 2. 4-bit RGB 변환
-# ========================
-# 0~255 -> 0~15
-img_np = np.array(img)
-r4 = (img_np[:, :, 0] * 15 // 255).astype(np.uint8)
-g4 = (img_np[:, :, 1] * 15 // 255).astype(np.uint8)
-b4 = (img_np[:, :, 2] * 15 // 255).astype(np.uint8)
+
+img_np = np.array(img)     
+tmp = img_np.astype(np.uint16)      # (H, W, 3) uint16
+r4 = (tmp[:, :, 0] * 15 // 255).astype(np.uint8)
+g4 = (tmp[:, :, 1] * 15 // 255).astype(np.uint8)
+b4 = (tmp[:, :, 2] * 15 // 255).astype(np.uint8)
 
 # ========================
 # 3. HSV 변환 함수
