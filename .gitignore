@@ -1,0 +1,28 @@
+## PumpK's gitignore for SV workspace ##
+
+#Exclude CubeIDE
+**/.metadata/**
+**/.settings/**
+**/Debug/**
+.cproject
+.mxproject
+.project
+
+**/Drivers/**
+#Exclude vivado Trees
+**/**.cache/**
+**/**.sim/**
+**/**.hw/**
+**/.Xil/**
+#Exclude vivado File
+**.debug
+**.jou
+**.log
+**.str
+**backup**
+**.bkp
+
+#Exept gitignore
+!.gitignore
+#Exept vivado xpr
+!**.xpr
