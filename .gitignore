@@ -6,9 +6,6 @@
 **/Debug/**
 **/Drivers/**
 #Exclude CubeIDE Files
-.cproject
-.mxproject
-.project
 
 #Exclude vivado Trees
 **/**.runs/**
