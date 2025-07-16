@@ -5,4 +5,7 @@
  *      Author: kccistc
  */
 
-
+typedef struct {
+	int angle;
+	int scalar;
+} velocity;
