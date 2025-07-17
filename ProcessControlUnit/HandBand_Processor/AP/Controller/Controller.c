@@ -13,9 +13,9 @@ void controller_init()
 
 void controller_excute()
 {
-	Point user_data[DATANUM];
-	LC_Model_PopPoint(user_data);
+	user_t user_data;
+	LC_Model_PopUser(&user_data);
 
-	Polar ctrl_vector = TemporalFramDifferencing(user_data, DATANUM);
+	Polar ctrl_vector = TemporalFramDifferencing(user_data.pointArr, DATANUM);
 	CP_Model_PushPolar(&ctrl_vector);
 }
