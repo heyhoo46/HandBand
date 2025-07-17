@@ -13,10 +13,16 @@
 #include <vector.h>
 #include <string.h>
 
+#define DATANUM 10
+
+typedef struct {
+	Point pointArr[DATANUM];
+}user_t;
+
 extern osMailQId pointDataMbox;
 
 void LC_Model_Init();
-void LC_Model_PushPoint(Point* data);
-void LC_Model_PopPoint(Point* data);
+void LC_Model_PushUser(user_t* data);
+void LC_Model_PopUser(user_t* data);
 
 #endif /* MODEL_INC_LC_MODEL_H_ */

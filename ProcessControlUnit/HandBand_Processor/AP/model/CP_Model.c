@@ -26,6 +26,6 @@ void CP_Model_PopPolar(Polar* data)
 {
 	osEvent evt = osMailGet(polarDataMbox, 0);
 	if(evt.status != osEventMail) return;
-	memcpy(data, evt.value.p, sizeof(int)*DATANUM);
+	memcpy(data, evt.value.p, sizeof(Polar));
 	osMailFree(polarDataMbox, evt.value.p);
 }

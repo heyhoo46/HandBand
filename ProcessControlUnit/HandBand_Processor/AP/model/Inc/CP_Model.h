@@ -13,7 +13,6 @@
 #include <vector.h>
 #include <string.h>
 
-#define DATANUM 10
 
 extern osMailQId polarDataMbox;
 
