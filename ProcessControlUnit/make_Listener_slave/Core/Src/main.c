@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "cmsis_os.h"
 #include "dma.h"
 #include "spi.h"
 #include "usart.h"
@@ -58,6 +59,7 @@ uint8_t buffer_index = 0;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MPU_Config(void);
+void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -91,6 +93,14 @@ int main(void)
   /* MPU Configuration--------------------------------------------------------*/
   MPU_Config();
 
+  /* Enable the CPU Cache */
+
+  /* Enable I-Cache---------------------------------------------------------*/
+  SCB_EnableICache();
+
+  /* Enable D-Cache---------------------------------------------------------*/
+  SCB_EnableDCache();
+
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
@@ -116,6 +126,14 @@ int main(void)
 
   /* USER CODE END 2 */
 
+  /* Call init function for freertos objects (in cmsis_os2.c) */
+  MX_FREERTOS_Init();
+
+  /* Start scheduler */
+  osKernelStart();
+
+  /* We should never get here as control is now taken by the scheduler */
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1)
@@ -124,10 +142,12 @@ int main(void)
 //		HAL_Delay(100);
 
 		HAL_SPI_Receive_DMA(&hspi1, &rx_data, 1);
+
 		if(rx_flag == 1){
 			rx_flag = 0;
 			rx_buffer[buffer_index] = rx_data;
-//			HAL_SPI_Receive_DMA(&hspi1, &rx_data, 1);
+
+			HAL_SPI_Receive_DMA(&hspi1, &rx_data, 1);
 
 			char str[50];
 			sprintf(str,"rx_buffer[%d] = %d \n", buffer_index, rx_buffer[buffer_index]);
@@ -139,7 +159,29 @@ int main(void)
 				buffer_index = 0;
 			}
 
-//			HAL_Delay(200);
+/******
+//////To Send   Red [8bit Data(x), 8bit Data(y)], Blue[8bit_Data(x),8bit_Data(y)]
+
+			//queue 배열 구조, 8bit의 data 저장 + Model에 저장
+			for(int i = 0; i < 8; i++){
+				queue = rx_buffer[buffer_index];
+				i++;
+				if(i == 8){
+					i = 0;
+					LC_Model_PushUser(&queue)
+				}
+			}
+			int data[4];
+			data[spi_cnt++] = rx_data;
+			spi_cnt %= 4;
+                                               (count % 4) == 0 -> Red(x) 8bit
+			-----> Data 8개 받고 Count ++, case  (count % 4) == 1 -> Red(y) 8bit
+											   (count % 4) == 2 -> Blue(x) 8bit
+                                               (count % 4) == 3 -> Blue(y) 8bit
+			send Data Function :  LC_Model_PushUser(user_t* data)
+******/
+
+
 		}
     /* USER CODE END WHILE */
 
@@ -237,6 +279,28 @@ void MPU_Config(void)
   /* Enables the MPU */
   HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
 
+}
+
+/**
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM17 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM17)
+  {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  /* USER CODE END Callback 1 */
 }
 
 /**
