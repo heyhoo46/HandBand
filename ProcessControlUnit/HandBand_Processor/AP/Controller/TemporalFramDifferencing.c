@@ -9,8 +9,8 @@
 /* 	TemporalFramDifferencing
  * 		data: 프레임들의 마커 위치 데이터 배열
  * 		dataNum: 사용할 데이터 갯수
- * 	feature: 프레임간 차이를 벡터로 표현하는 함수
- * 	explain: 각 프레임간 차이를 벡터로 표현, 모두 벡터합 하여 잡음저항성을 늘린다.
+ * 	feature: 프레임간 차이를 축적하여 하나의 벡터로 표현하는 함수
+ * 	explain: 잡음저항성을 위해 여러 벡터를 하나의 경향으로 합한다.
  */
 Polar TemporalFramDifferencing(Point* data, int dataNum)
 {
