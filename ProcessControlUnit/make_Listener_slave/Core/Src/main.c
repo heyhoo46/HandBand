@@ -127,6 +127,7 @@ int main(void)
 		if(rx_flag == 1){
 			rx_flag = 0;
 			rx_buffer[buffer_index] = rx_data;
+//			HAL_SPI_Receive_DMA(&hspi1, &rx_data, 1);
 
 			char str[50];
 			sprintf(str,"rx_buffer[%d] = %d \n", buffer_index, rx_buffer[buffer_index]);
@@ -134,11 +135,11 @@ int main(void)
 
 			buffer_index++;
 
-			if(buffer_index >= Buffer_Size){
-				memset(rx_buffer, 0, Buffer_Size);
+			if(buffer_index == Buffer_Size) {
 				buffer_index = 0;
 			}
-			HAL_Delay(100);
+
+//			HAL_Delay(200);
 		}
     /* USER CODE END WHILE */
 

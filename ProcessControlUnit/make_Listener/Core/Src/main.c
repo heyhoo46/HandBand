@@ -112,14 +112,14 @@ int main(void)
 			  char str[50];
 			  sprintf(str,"SuCCEss, rx_buffer[%d] = %d \n", i, tx_data[i]);
 			  HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 1000);
-			  HAL_Delay(100);
+//			  HAL_Delay(100);
           }
 		  i++;
 	  }
 	  else {
 		  i = 0;
 	  }
-	  HAL_Delay(100);
+//	  HAL_Delay(100);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
