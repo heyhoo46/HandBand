@@ -69,7 +69,7 @@ void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
 {
 	if (hspi->Instance == SPI1) {
 		rx_flag = 1;
-		//HAL_SPI_Receive_DMA(&hspi1, &rx_data, 1);
+		HAL_SPI_Receive_DMA(&hspi1, &rx_data, 1);
 	}
 }
 
@@ -137,7 +137,7 @@ int main(void)
 			rx_flag = 0;
 			rx_buffer[buffer_index] = rx_data;
 
-			HAL_SPI_Receive_DMA(&hspi1, &rx_data, 1);
+			//HAL_SPI_Receive_DMA(&hspi1, &rx_data, 1);
 
 			char str[50];
 			sprintf(str,"rx_buffer[%d] = %d \n", buffer_index, rx_buffer[buffer_index]);
@@ -245,28 +245,6 @@ void MPU_Config(void)
   /* Enables the MPU */
   HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
 
-}
-
-/**
-  * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM17 interrupt took place, inside
-  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
-  * a global variable "uwTick" used as application time base.
-  * @param  htim : TIM handle
-  * @retval None
-  */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-  /* USER CODE BEGIN Callback 0 */
-
-  /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM17)
-  {
-    HAL_IncTick();
-  }
-  /* USER CODE BEGIN Callback 1 */
-
-  /* USER CODE END Callback 1 */
 }
 
 /**

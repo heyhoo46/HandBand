@@ -9,7 +9,8 @@
 #define DATANUM 10
 
 typedef struct {
-	Point pointArr[DATANUM];
+	Point pointArr_Red[DATANUM];
+	Point pointArr_Blue[DATANUM];
 }user_t;
 
 extern osMailQId pointDataMbox;
