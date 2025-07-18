@@ -1,9 +1,3 @@
-/*
- * LC_Model.c
- *
- *  Created on: Jul 17, 2025
- *      Author: kccistc
- */
 #include <LC_Model.h>
 
 osMailQId pointDataMbox;
