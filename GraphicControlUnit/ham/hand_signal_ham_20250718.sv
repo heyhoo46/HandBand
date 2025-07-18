@@ -100,6 +100,7 @@ module top_hand_signal (
     );
 
 
+    //JISU_Data = {(red_flag  % 8),(red_flag  / 8),(blue_flag % 8),(blue_flag / 8)}
 
 endmodule
 
