@@ -66,6 +66,7 @@ module SPI_Master_32bit (
         ready = 1'b0;
         done = 1'b0;
         CS = 1'b1;  // Inactive high
+        rx_data = temp_rx_data_reg;
         
         case (state)
             IDLE: begin
@@ -107,13 +108,13 @@ module SPI_Master_32bit (
             CP1: begin
                 CS = 1'b0;
                 if (sclk_counter_reg == 8'd124) begin
+
                     // Sample MISO on appropriate edge
                     if (cpha == 1'b1) begin
                         temp_rx_data_next = {temp_rx_data_reg[30:0], MISO};
                     end
                     
                     if (bit_counter_reg == 6'd31) begin  // 32 bits complete
-                        rx_data = temp_rx_data_next;
                         done = 1'b1;
                         state_next = IDLE;
                     end else begin
