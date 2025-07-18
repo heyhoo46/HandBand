@@ -2,7 +2,7 @@
 #define AP_MODEL_LC_MODEL_H_
 
 #include <stdint.h>
-#include <cmsis_os.h>
+//#include <cmsis_os.h>
 #include <vector.h>
 #include <string.h>
 
