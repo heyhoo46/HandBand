@@ -1,5 +1,13 @@
 #include "TemFrameVector_KalmanFilter.h" 
 
+#define Q_POS_NOISE_STD_DEV_FLOAT    0.1f // 위치 노이즈 표준편차
+#define Q_VEL_NOISE_STD_DEV_FLOAT    0.01f // 속도 노이즈 표준편차 
+
+#define R_MEASUREMENT_NOISE_STD_DEV_FLOAT 5.0f // 측정 노이즈 표준편차 
+
+#define P_INITIAL_COVARIANCE_FLOAT   10.0f // 초기 오차 공분산 
+
+
 void matrix_add(int32_t *C, const int32_t *A, const int32_t *B, int rows, int cols) {
     for (int i = 0; i < rows * cols; i++) {
         C[i] = A[i] + B[i];
@@ -78,20 +86,20 @@ void KalmanFilter_Init(KalmanFilter_t *kf, float dt,
     kf->H[1][1] = F_SCALE;
 
     for(int i=0; i<4; i++) for(int j=0; j<4; j++) kf->Q[i][j] = 0;
-    kf->Q[0][0] = FLOAT_TO_FIXED(0.1);
-    kf->Q[1][1] = FLOAT_TO_FIXED(0.1);
-    kf->Q[2][2] = FLOAT_TO_FIXED(0.01);
-    kf->Q[3][3] = FLOAT_TO_FIXED(0.01);
+    kf->Q[0][0] = FLOAT_TO_FIXED(Q_POS_NOISE_STD_DEV_FLOAT);
+    kf->Q[1][1] = FLOAT_TO_FIXED(Q_POS_NOISE_STD_DEV_FLOAT);
+    kf->Q[2][2] = FLOAT_TO_FIXED(Q_VEL_NOISE_STD_DEV_FLOAT);
+    kf->Q[3][3] = FLOAT_TO_FIXED(Q_VEL_NOISE_STD_DEV_FLOAT);
 
     for(int i=0; i<2; i++) for(int j=0; j<2; j++) kf->R[i][j] = 0;
-    kf->R[0][0] = FLOAT_TO_FIXED(10.0);
-    kf->R[1][1] = FLOAT_TO_FIXED(10.0);
+    kf->R[0][0] = FLOAT_TO_FIXED(R_MEASUREMENT_NOISE_STD_DEV_FLOAT);
+    kf->R[1][1] = FLOAT_TO_FIXED(R_MEASUREMENT_NOISE_STD_DEV_FLOAT);
 
     for(int i=0; i<4; i++) for(int j=0; j<4; j++) kf->P[i][j] = 0;
-    kf->P[0][0] = FLOAT_TO_FIXED(10.0);
-    kf->P[1][1] = FLOAT_TO_FIXED(10.0);
-    kf->P[2][2] = FLOAT_TO_FIXED(10.0);
-    kf->P[3][3] = FLOAT_TO_FIXED(10.0);
+    kf->P[0][0] = FLOAT_TO_FIXED(P_INITIAL_COVARIANCE_FLOAT);
+    kf->P[1][1] = FLOAT_TO_FIXED(P_INITIAL_COVARIANCE_FLOAT);
+    kf->P[2][2] = FLOAT_TO_FIXED(P_INITIAL_COVARIANCE_FLOAT);
+    kf->P[3][3] = FLOAT_TO_FIXED(P_INITIAL_COVARIANCE_FLOAT);
 }
 
 // --- 칼만 필터 예측 함수 ---
