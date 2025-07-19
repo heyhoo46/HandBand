@@ -80,4 +80,40 @@ void HAL_MspInit(void)
 
 /* USER CODE BEGIN 1 */
 
+
+/////additional
+///***********
+void HAL_DMA_MspInit(DMA_HandleTypeDef *hdma)
+{
+    if(hdma->Instance == DMA1_Stream0)
+    {
+        __HAL_RCC_DMA1_CLK_ENABLE();
+
+        HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 5, 0);
+        HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
+    }
+    else if(hdma->Instance == DMA1_Stream1)
+    {
+        __HAL_RCC_DMA1_CLK_ENABLE();
+
+        HAL_NVIC_SetPriority(DMA1_Stream1_IRQn, 5, 0);
+        HAL_NVIC_EnableIRQ(DMA1_Stream1_IRQn);
+    }
+}
+
+void HAL_DMA_MspDeInit(DMA_HandleTypeDef *hdma)
+{
+    if(hdma->Instance == DMA1_Stream0)
+    {
+        HAL_NVIC_DisableIRQ(DMA1_Stream0_IRQn);
+    }
+    else if(hdma->Instance == DMA1_Stream1)
+    {
+        HAL_NVIC_DisableIRQ(DMA1_Stream1_IRQn);
+    }
+}
+
+///********
+//////////
+
 /* USER CODE END 1 */
