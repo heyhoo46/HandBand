@@ -1,5 +1,8 @@
 ## PumpK's gitignore for HandBand workspace ##
 
+#Exclude VSC Setting File Trees
+**/.vscode/**
+
 #Exclude CubeIDE Trees
 **/.metadata/**
 **/.settings/**
