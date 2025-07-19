@@ -1,6 +1,5 @@
-#include "TemFrameVector_KalmanFilter.h" // 위에서 정의한 헤더 파일 포함
+#include "TemFrameVector_KalmanFilter.h" 
 
-// --- 행렬 연산 함수 구현 (이전 답변과 동일) ---
 void matrix_add(int32_t *C, const int32_t *A, const int32_t *B, int rows, int cols) {
     for (int i = 0; i < rows * cols; i++) {
         C[i] = A[i] + B[i];
@@ -85,8 +84,8 @@ void KalmanFilter_Init(KalmanFilter_t *kf, float dt,
     kf->Q[3][3] = FLOAT_TO_FIXED(0.01);
 
     for(int i=0; i<2; i++) for(int j=0; j<2; j++) kf->R[i][j] = 0;
-    kf->R[0][0] = FLOAT_TO_FIXED(100.0);
-    kf->R[1][1] = FLOAT_TO_FIXED(100.0);
+    kf->R[0][0] = FLOAT_TO_FIXED(10.0);
+    kf->R[1][1] = FLOAT_TO_FIXED(10.0);
 
     for(int i=0; i<4; i++) for(int j=0; j<4; j++) kf->P[i][j] = 0;
     kf->P[0][0] = FLOAT_TO_FIXED(10.0);

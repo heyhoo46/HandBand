@@ -1,0 +1,2 @@
+소스 위치로 cd명령어를 통해 이동 후 콘솔에 아래 입력
+/c/msys64/ucrt64/bin/gcc.exe kalman_visualizer.c TemFrameVector_KalmanFilter.c -o kalman_visualizer `pkg-config --cflags --libs raylib` -std=c99 -Wall
