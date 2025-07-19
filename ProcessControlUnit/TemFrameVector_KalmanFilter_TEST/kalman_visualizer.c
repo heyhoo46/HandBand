@@ -7,7 +7,7 @@
 #include <math.h>
 #include <string.h> // for sprintf, strlen, strcpy
 
-// --- Global variables for visualization (since we don't care about resources here) ---
+// --- Global variables for visualization ---
 #define MAX_POINTS 100 // 최대 시각화할 점의 개수
 Vector2 originalPoints[MAX_POINTS];
 Vector2 filteredPoints[MAX_POINTS];
@@ -33,34 +33,34 @@ int main(void) {
     // --- Original Path Data (from previous Python example, scaled for visualization) ---
     // Note: These are example raw measurements. In a real scenario, they would come from a sensor.
     float initial_raw_points[10][2] = {
-        {0.00, 1.05},   // P0
-        {0.50, 1.40},   // P1
-        {1.00, 1.95},   // P2
-        {1.50, 2.90},   // P3
-        {2.00, 4.05},   // P4
-        {2.50, 5.50},   // P5
-        {3.00, 8.05},   // P6
-        {3.50, 11.20},  // P7
-        {4.00, 16.03},  // P8 (exponential trend)
-        {3.00, -5.00}   // P9 (outlier breaking the trend)
+        {0.00f, 1.05f},   // P0
+        {0.50f, 1.40f},   // P1
+        {1.00f, 1.95f},   // P2
+        {1.50f, 2.90f},   // P3
+        {2.00f, 4.05f},   // P4
+        {2.50f, 5.50f},   // P5
+        {3.00f, 8.05f},   // P6
+        {3.50f, 11.20f},  // P7
+        {4.00f, 16.03f},  // P8 (exponential trend)
+        {3.00f, -5.00f}   // P9 (outlier breaking the trend)
     };
     int num_raw_points = sizeof(initial_raw_points) / sizeof(initial_raw_points[0]);
 
     // --- Kalman Filter Setup ---
     KalmanFilter_t myKalmanFilter;
-    float dt = 0.5; // Time step between data points (e.g., in seconds)
-                    // Matches the interval used to generate the sample points (0.5 for x-axis increase)
+    float dt = 0.5f; // Time step between data points (e.g., in seconds)
+                     // Matches the interval used to generate the sample points (0.5 for x-axis increase)
 
     // Initial state based on the first point of the raw data
     KalmanFilter_Init(&myKalmanFilter, dt,
                       initial_raw_points[0][0], initial_raw_points[0][1],
-                      0.0, 0.0); // Initial velocity assumed to be zero
+                      0.0f, 0.0f); // Initial velocity assumed to be zero (float 0.0f)
 
     // --- Visualization Scaling and Offset ---
     // Adjust these values to fit your data range into the screen
-    float scale_x = 80.0f;  // Pixels per unit X
-    float scale_y = 30.0f;  // Pixels per unit Y
-    float offset_x = screenWidth / 4.0f;    // Center the graph horizontally
+    float scale_x = 80.0f;    // Pixels per unit X
+    float scale_y = 30.0f;    // Pixels per unit Y
+    float offset_x = screenWidth / 4.0f;     // Center the graph horizontally
     float offset_y = screenHeight * 0.7f; // Move the origin to bottom-left for positive Y upwards
 
     SetTargetFPS(60); // Set our game to run at 60 frames-per-second
@@ -82,18 +82,18 @@ int main(void) {
                 float measured_y = initial_raw_points[data_idx][1];
 
                 // Kalman Filter Predict & Update
-                int32_t updated_x_fixed, updated_y_fixed;
+                // 출력 변수를 float 타입으로 변경합니다.
+                float updated_x_float, updated_y_float;
                 KalmanFilter_Update(&myKalmanFilter, measured_x, measured_y,
-                                    &updated_x_fixed, &updated_y_fixed);
+                                    &updated_x_float, &updated_y_float);
 
-                // Convert filtered fixed-point values back to float
-                float filtered_x_float = FIXED_TO_FLOAT(updated_x_fixed);
-                float filtered_y_float = FIXED_TO_FLOAT(updated_y_fixed);
+                // 이제 updated_x_float, updated_y_float 자체가 float 타입의 필터링된 값입니다.
+                // FIXED_TO_FLOAT 변환은 더 이상 필요 없습니다.
 
                 // Add points for drawing
                 add_points( (Vector2){ measured_x, measured_y },
-                            (Vector2){ filtered_x_float, filtered_y_float } );
-                
+                            (Vector2){ updated_x_float, updated_y_float } ); // float 값을 직접 사용
+
                 data_idx++;
                 simulation_time_accumulator -= time_per_data_point; // Subtract processed time
             }
@@ -104,9 +104,9 @@ int main(void) {
         ClearBackground(RAYWHITE); // Clear the background to white
 
         DrawText("Kalman Filter Visualization", 10, 10, 20, DARKGRAY);
-        DrawText("Original (SkyBlue Dashed)", 10, 40, 16, SKYBLUE);
-        DrawText("Filtered (Green Solid)", 10, 60, 16, GREEN);
-        DrawText("Final Filtered Displacement (Red Dashed)", 10, 80, 16, RED);
+        DrawText("Original (SkyBlue Circles & Lines)", 10, 40, 16, SKYBLUE); // Updated description
+        DrawText("Filtered (Green Solid Lines & Circles)", 10, 60, 16, GREEN); // Updated description
+        DrawText("Final Filtered Displacement (Red Solid)", 10, 80, 16, RED); // Updated description
 
         // --- Draw Coordinate Axes ---
         DrawLine(0, (int)offset_y, screenWidth, (int)offset_y, LIGHTGRAY); // X-axis
@@ -150,7 +150,7 @@ int main(void) {
 
         EndDrawing(); // --- 모든 그림 그리기 명령 끝 ---
 
-        // --- 스크린샷 저장 기능 (EndDrawing() 후로 이동) ---
+        // --- 스크린샷 저장 기능 ---
         if (IsKeyPressed(KEY_P)) // 'P' 키를 누르면 스크린샷 저장 시도
         {
             char filename[64]; // 파일명을 저장할 충분한 크기의 버퍼
@@ -170,7 +170,6 @@ int main(void) {
                 } else {
                     // 파일이 존재하지 않으면, 이 이름으로 저장 가능
                     TakeScreenshot(filename);
-                    // 한글 대신 영어 메시지로 변경
                     printf("Screenshot saved as '%s'.\n", filename);
                     break; // 루프 종료
                 }
