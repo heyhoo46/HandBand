@@ -1,57 +1,44 @@
 import cv2
 import time
 
-def try_capture_with_dshow():
-    device_index = 2 # 문제가 되는 인덱스를 특정
-    print(f"\n--- 장치 인덱스 {device_index} (DirectShow 백엔드) 시도 중 ---")
+def display_capture_card_feed_clean():
+    # 캡처보드 장치 인덱스 설정 (영상 출력을 확인한 인덱스로 변경하세요)
+    device_index = 2
 
-    # 여기에서 cv2.CAP_DSHOW를 명시적으로 추가합니다.
+    # DirectShow 백엔드를 명시적으로 사용 (Windows 환경에서 가장 안정적)
     cap = cv2.VideoCapture(device_index + cv2.CAP_DSHOW)
 
+    # 캡처보드가 성공적으로 열렸는지 확인
     if not cap.isOpened():
-        print(f"오류: 장치 인덱스 {device_index} (DirectShow)를 열 수 없습니다.")
+        print(f"오류: 캡처보드 (인덱스 {device_index})를 열 수 없습니다.")
         return
 
-    print(f"장치 인덱스 {device_index} (DirectShow) 열기 성공. 프레임 읽기 시도 중...")
-
-    # 선택 사항: 해상도 및 FPS 설정 (캡처보드가 지원하는 값으로 설정)
+    # --- 선택 사항: 캡처보드 해상도 및 FPS 설정 ---
+    # OBS에서 확인한 캡처보드의 지원 해상도/FPS를 여기에 설정할 수 있습니다.
     # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
     # cap.set(cv2.CAP_PROP_FPS, 30)
+    # --------------------------------------------
 
-    # 초기 프레임 읽기 시도 (타임아웃 포함)
-    initial_read_attempts = 10
-    found_first_frame = False
-    for attempt in range(initial_read_attempts):
-        ret, frame = cap.read()
-        if ret:
-            print(f"첫 프레임 성공적으로 읽음 (시도 {attempt+1}/{initial_read_attempts})")
-            found_first_frame = True
-            break
-        else:
-            print(f"프레임 읽기 실패 (시도 {attempt+1}/{initial_read_attempts}). ret={ret}. 대기 중...")
-            time.sleep(0.5)
+    print(f"캡처보드 (인덱스 {device_index}) 영상 표시 중. 창을 닫으려면 'q' 키를 누르세요.")
 
-    if not found_first_frame:
-        print(f"오류: {initial_read_attempts}번 시도했지만 첫 유효 프레임을 받지 못했습니다.")
-        print("  -> 캡처보드에 영상 신호가 들어오는지 다시 확인하거나, 다른 백엔드(CAP_MSMF)를 시도해보세요.")
-        cap.release()
-        cv2.destroyAllWindows()
-        return
-
-    print(f"장치 인덱스 {device_index} (DirectShow) 영상 표시 시작. 'q' 키로 종료.")
     while True:
-        ret, frame = cap.read()
+        ret, frame = cap.read() # 프레임 읽기
+
         if not ret:
-            print("프레임을 더 이상 읽을 수 없습니다. 스트림 종료 또는 문제 발생.")
+            print("오류: 프레임을 읽을 수 없습니다. 스트림이 종료되었거나 문제가 발생했습니다.")
             break
-        cv2.imshow(f'Capture Card Feed - Device {device_index} (DSHOW)', frame)
+
+        cv2.imshow('Capture Card Feed', frame) # 화면에 프레임 표시
+
+        # 'q' 키를 누르면 루프 종료
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
+    # 자원 해제 및 창 닫기
     cap.release()
     cv2.destroyAllWindows()
-    print("테스트 종료.")
+    print("영상 표시 종료.")
 
 if __name__ == "__main__":
-    try_capture_with_dshow()
+    display_capture_card_feed_clean()
