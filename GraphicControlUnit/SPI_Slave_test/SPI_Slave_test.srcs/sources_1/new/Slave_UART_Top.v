@@ -55,6 +55,4 @@ module Slave_UART_Top (
         .tx (tx)
     );
 
-
-
 endmodule
