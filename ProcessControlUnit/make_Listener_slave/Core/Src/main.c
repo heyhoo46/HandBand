@@ -18,7 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "cmsis_os.h"
 #include "dma.h"
 #include "spi.h"
 #include "usart.h"
@@ -59,7 +58,6 @@ uint8_t buffer_index = 0;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MPU_Config(void);
-void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -126,14 +124,6 @@ int main(void)
 
   /* USER CODE END 2 */
 
-  /* Call init function for freertos objects (in cmsis_os2.c) */
-  MX_FREERTOS_Init();
-
-  /* Start scheduler */
-  osKernelStart();
-
-  /* We should never get here as control is now taken by the scheduler */
-
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1)
@@ -158,30 +148,6 @@ int main(void)
 			if(buffer_index == Buffer_Size) {
 				buffer_index = 0;
 			}
-
-/******
-//////To Send   Red [8bit Data(x), 8bit Data(y)], Blue[8bit_Data(x),8bit_Data(y)]
-
-			//queue 배열 구조, 8bit의 data 저장 + Model에 저장
-			for(int i = 0; i < 8; i++){
-				queue = rx_buffer[buffer_index];
-				i++;
-				if(i == 8){
-					i = 0;
-					LC_Model_PushUser(&queue)
-				}
-			}
-			int data[4];
-			data[spi_cnt++] = rx_data;
-			spi_cnt %= 4;
-                                               (count % 4) == 0 -> Red(x) 8bit
-			-----> Data 8개 받고 Count ++, case  (count % 4) == 1 -> Red(y) 8bit
-											   (count % 4) == 2 -> Blue(x) 8bit
-                                               (count % 4) == 3 -> Blue(y) 8bit
-			send Data Function :  LC_Model_PushUser(user_t* data)
-******/
-
-
 		}
     /* USER CODE END WHILE */
 

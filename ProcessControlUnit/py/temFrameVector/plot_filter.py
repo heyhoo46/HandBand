@@ -4,7 +4,7 @@ from scipy.signal import medfilt
 
 def calculate_displacement_vector(start_point, end_point):
     """
-    두 점 사이의 변위 벡터를 계산합니다.
+    두 점 사이의 변위 벡터를 계산합니다.    
     """
     return np.array(end_point) - np.array(start_point)
 

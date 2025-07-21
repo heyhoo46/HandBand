@@ -25,7 +25,12 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
+#include "Listener.h"
+#include "Controller.h"
+#include "Presenter.h"
+#include "CP_Model.h"
+#include "LC_Model.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,6 +53,9 @@
 
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
+osThreadId myListenerTaskHandle;
+osThreadId myControllerTasHandle;
+osThreadId myPresenterTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -55,6 +63,9 @@ osThreadId defaultTaskHandle;
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void const * argument);
+void StartListener(void const * argument);
+void StartController(void const * argument);
+void StartPresenter(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -105,7 +116,21 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
+  /* definition and creation of myListenerTask */
+  osThreadDef(myListenerTask, StartListener, osPriorityNormal, 0, 128);
+  myListenerTaskHandle = osThreadCreate(osThread(myListenerTask), NULL);
+
+  /* definition and creation of myControllerTas */
+  osThreadDef(myControllerTas, StartController, osPriorityNormal, 0, 128);
+  myControllerTasHandle = osThreadCreate(osThread(myControllerTas), NULL);
+
+  /* definition and creation of myPresenterTask */
+  osThreadDef(myPresenterTask, StartPresenter, osPriorityNormal, 0, 128);
+  myPresenterTaskHandle = osThreadCreate(osThread(myPresenterTask), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
+  LC_Model_Init();
+  CP_Model_Init();
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
@@ -127,6 +152,67 @@ void StartDefaultTask(void const * argument)
     osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
+}
+
+/* USER CODE BEGIN Header_StartListener */
+/**
+* @brief Function implementing the myListenerTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartListener */
+void StartListener(void const * argument)
+{
+  /* USER CODE BEGIN StartListener */
+	Listener_Init();
+  /* Infinite loop */
+  for(;;)
+  {
+	  Listener_Excute();
+    osDelay(1);
+  }
+  /* USER CODE END StartListener */
+}
+
+/* USER CODE BEGIN Header_StartController */
+/**
+* @brief Function implementing the myControllerTas thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartController */
+void StartController(void const * argument)
+{
+  /* USER CODE BEGIN StartController */
+	Controller_Init();
+  /* Infinite loop */
+  for(;;)
+  {
+	  Controller_Excute();
+    osDelay(1);
+  }
+  /* USER CODE END StartController */
+}
+
+/* USER CODE BEGIN Header_StartPresenter */
+/**
+* @brief Function implementing the myPresenterTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartPresenter */
+void StartPresenter(void const * argument)
+{
+  /* USER CODE BEGIN StartPresenter */
+	Presenter_Init();
+  /* Infinite loop */
+  for(;;)
+  {
+	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+	Presenter_Execute();
+    osDelay(1000);
+  }
+  /* USER CODE END StartPresenter */
 }
 
 /* Private application code --------------------------------------------------*/

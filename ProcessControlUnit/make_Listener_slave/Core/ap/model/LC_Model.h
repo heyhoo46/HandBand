@@ -2,14 +2,15 @@
 #define AP_MODEL_LC_MODEL_H_
 
 #include <stdint.h>
-#include <cmsis_os.h>
+//#include <cmsis_os.h>
 #include <vector.h>
 #include <string.h>
 
 #define DATANUM 10
 
 typedef struct {
-	Point pointArr[DATANUM];
+	Point pointArr_Red[DATANUM];
+	Point pointArr_Blue[DATANUM];
 }user_t;
 
 extern osMailQId pointDataMbox;
