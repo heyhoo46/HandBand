@@ -10,11 +10,18 @@
 
 #include <math.h>
 
+#define DATANUM 10
+
 //Heeju Use Structure
 typedef struct {
 	int x; //(8bit)
 	int y; //( 8bit)
 } Point;
+
+typedef struct {
+	Point pointArr_Red[DATANUM];
+	Point pointArr_Blue[DATANUM];
+}user_t;
 
 /*
  * 	벡터의 극좌표표현 스트럭트
