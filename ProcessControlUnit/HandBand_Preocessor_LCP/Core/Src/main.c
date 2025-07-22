@@ -65,13 +65,13 @@ static void MPU_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
-{
-	if (hspi->Instance == SPI1) {
-		rx_flag = 1;
-		//HAL_SPI_Receive_DMA(&hspi1, &rx_data, 1);
-	}
-}
+//void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
+//{
+//	if (hspi->Instance == SPI1) {
+//		rx_flag = 1;
+//		//HAL_SPI_Receive_DMA(&hspi1, &rx_data, 1);
+//	}
+//}
 
 //void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
 //{
