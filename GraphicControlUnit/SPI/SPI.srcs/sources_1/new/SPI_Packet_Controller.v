@@ -174,8 +174,8 @@ module SPI_Packet_Controller #(
     input wire start_button,        // 버튼 입력 (edge triggered)
     output reg sequence_done,       // 전체 시퀀스 완료
     
-    // 외부 데이터 인터페이스 (320비트 = 10 × 32비트)
-    input wire [319:0] all_packet_data,  // 10개 패킷을 하나의 벡터로
+    // 외부 데이터 인터페이스 (32비트 한 개)
+    input wire [31:0] packet_data,  // 32비트 데이터
     
     // SPI Master 인터페이스  
     output reg spi_start,           // SPI 시작 신호
@@ -202,15 +202,6 @@ module SPI_Packet_Controller #(
     reg spi_start_next;
     reg [7:0] spi_tx_data_next;
     reg sequence_done_next;
-    
-    // 320비트 벡터에서 32비트 패킷 추출하는 함수
-    function [31:0] get_packet;
-        input [319:0] data;
-        input [3:0] packet_index;
-        begin
-            get_packet = data[packet_index*32 +: 32];  // 패킷별 32비트 추출
-        end
-    endfunction
     
     // 순차 로직
     always @(posedge clk) begin
@@ -258,10 +249,10 @@ module SPI_Packet_Controller #(
         case (state)
             IDLE: begin
                 if (start_button) begin  // 디바운스된 버튼 edge 신호
-                    // 버튼 눌림 - 첫 번째 패킷 로드
+                    // 버튼 눌림 - 외부에서 받은 32비트 데이터 로드
                     packet_counter_next = 0;
                     byte_counter_next = 0;
-                    current_packet_next = get_packet(all_packet_data, 0);  // 첫 번째 패킷 추출
+                    current_packet_next = packet_data;  // 외부 32비트 데이터 저장
                     spi_start_next = 1'b1;
                     state_next = TRANSMIT;
                 end
@@ -290,10 +281,10 @@ module SPI_Packet_Controller #(
             
             WAIT_TIMER: begin
                 if (timer_counter == TIMER_100MS - 1) begin
-                    // 0.1초 대기 완료 - 다음 패킷 로드
+                    // 0.1초 대기 완료 - 현재 packet_data 값을 새로 로드
                     packet_counter_next = packet_counter + 1;
                     byte_counter_next = 0;
-                    current_packet_next = get_packet(all_packet_data, packet_counter + 1);  // 다음 패킷 추출
+                    current_packet_next = packet_data;  // 현재 packet_data 값 새로 로드
                     spi_start_next = 1'b1;
                     state_next = TRANSMIT;
                 end else begin

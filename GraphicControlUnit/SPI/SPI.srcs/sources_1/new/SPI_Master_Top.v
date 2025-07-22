@@ -206,8 +206,8 @@ module SPI_Master_Top #(
     input  wire                  start_raw,    // 원본 버튼 입력 (디바운스 전)
     output wire                  done,         // 전체 시퀀스 완료 신호
     
-    // 외부 데이터 인터페이스 (320비트 벡터)
-    input  wire [319:0]          all_packet_data,  // 10개 패킷 × 32비트 = 320비트
+    // 외부 데이터 인터페이스 (32비트 한 개)
+    input  wire [31:0]           packet_data,      // 32비트 데이터
 
     // SPI interface
     output wire                SCLK,  // SPI Clock
@@ -243,7 +243,7 @@ module SPI_Master_Top #(
         .reset         (reset),
         .start_button  (start_debounced),  // 디바운스된 신호 사용
         .sequence_done (done),
-        .all_packet_data (all_packet_data),  // 320비트 벡터
+        .all_packet_data (packet_data),       // 32비트 데이터
         .spi_start     (spi_start),
         .spi_tx_data   (spi_tx_data),
         .spi_done      (spi_done),
