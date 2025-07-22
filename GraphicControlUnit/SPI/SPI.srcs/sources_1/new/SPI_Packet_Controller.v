@@ -173,8 +173,6 @@ module SPI_Packet_Controller #(
     
     // 외부 데이터 인터페이스
     input wire [7:0] data_in,       // 외부에서 받는 데이터
-    output reg data_req,            // 데이터 요청 신호
-    input wire data_valid,          // 데이터 유효 신호
     
     // SPI Master 인터페이스  
     output reg spi_start,           // SPI 시작 신호
@@ -187,22 +185,18 @@ module SPI_Packet_Controller #(
     localparam TIMER_100MS = 12_500_000;
     
     // 상태 머신
-    localparam IDLE = 3'b000, 
-               REQ_DATA = 3'b001,       // 데이터 요청 상태
-               WAIT_DATA = 3'b010,      // 데이터 대기 상태
-               TRANSMIT = 3'b011, 
-               WAIT_TIMER = 3'b100,
-               COOLDOWN = 3'b101;
+    localparam IDLE = 1'b0, 
+               TRANSMIT = 1'b1;
     
     // 상태 머신 및 제어 신호
-    reg [2:0] state, state_next;
+    reg state, state_next;
     reg [31:0] timer_counter, timer_counter_next;
     reg [3:0] packet_counter, packet_counter_next;  // 0~9 (10개 패킷)
     reg [1:0] byte_counter, byte_counter_next;      // 0~3 (4바이트)
     reg spi_start_next;
     reg [7:0] spi_tx_data_next;
     reg sequence_done_next;
-    reg data_req_next;
+    reg in_cooldown, in_cooldown_next;
     
     // 순차 로직
     always @(posedge clk) begin
@@ -214,7 +208,7 @@ module SPI_Packet_Controller #(
             spi_start <= 1'b0;
             spi_tx_data <= 8'h00;
             sequence_done <= 1'b0;
-            data_req <= 1'b0;
+            in_cooldown <= 1'b0;
         end else begin
             state <= state_next;
             timer_counter <= timer_counter_next;
@@ -223,7 +217,7 @@ module SPI_Packet_Controller #(
             spi_start <= spi_start_next;
             spi_tx_data <= spi_tx_data_next;
             sequence_done <= sequence_done_next;
-            data_req <= data_req_next;
+            in_cooldown <= in_cooldown_next;
         end
     end
     
@@ -237,83 +231,70 @@ module SPI_Packet_Controller #(
         spi_start_next = 1'b0;
         spi_tx_data_next = spi_tx_data;
         sequence_done_next = 1'b0;
-        data_req_next = 1'b0;
+        in_cooldown_next = in_cooldown;
         
-        case (state)
-            IDLE: begin
-                if (start_button) begin  // 디바운스된 버튼 edge 신호
-                    // 버튼 눌림 - 첫 번째 바이트 데이터 요청
-                    packet_counter_next = 0;
-                    byte_counter_next = 0;
-                    data_req_next = 1'b1;
-                    state_next = REQ_DATA;
+        if (in_cooldown) begin
+            // 쿨다운 중
+            if (timer_counter == TIMER_100MS - 1) begin
+                // 쿨다운 완료
+                in_cooldown_next = 1'b0;
+                sequence_done_next = 1'b1;
+            end else begin
+                timer_counter_next = timer_counter + 1;
+            end
+        end else begin
+            case (state)
+                IDLE: begin
+                    if (start_button && !in_cooldown) begin
+                        // 버튼 눌림 - 첫 번째 바이트 전송 시작
+                        packet_counter_next = 0;
+                        byte_counter_next = 0;
+                        spi_tx_data_next = data_in;  // 외부 데이터 직접 사용
+                        spi_start_next = 1'b1;
+                        state_next = TRANSMIT;
+                    end
                 end
-            end
+                
+                TRANSMIT: begin
+                    if (spi_done) begin
+                        if (byte_counter == BYTES_PER_PACKET - 1) begin
+                            // 현재 패킷의 4바이트 전송 완료
+                            if (packet_counter == PACKET_COUNT - 1) begin
+                                // 전체 시퀀스 완료 - 쿨다운 시작
+                                timer_counter_next = 0;
+                                in_cooldown_next = 1'b1;
+                                state_next = IDLE;
+                            end else begin
+                                // 다음 패킷을 위해 0.1초 대기
+                                timer_counter_next = 0;
+                                state_next = IDLE;  // IDLE에서 타이머 처리
+                            end
+                        end else begin
+                            // 현재 패킷의 다음 바이트 전송
+                            byte_counter_next = byte_counter + 1;
+                            spi_tx_data_next = data_in;  // 외부 데이터 직접 사용
+                            spi_start_next = 1'b1;
+                        end
+                    end
+                end
+                
+                default: state_next = IDLE;
+            endcase
             
-            REQ_DATA: begin
-                // 데이터 요청 후 대기
-                data_req_next = 1'b1;
-                state_next = WAIT_DATA;
-            end
-            
-            WAIT_DATA: begin
-                if (data_valid) begin
-                    // 유효한 데이터 받음 - SPI 전송 시작
+            // IDLE 상태에서 패킷 간 타이머 처리
+            if (state == IDLE && packet_counter > 0 && packet_counter < PACKET_COUNT && !in_cooldown) begin
+                if (timer_counter == TIMER_100MS - 1) begin
+                    // 0.1초 대기 완료 - 다음 패킷 전송
+                    packet_counter_next = packet_counter + 1;
+                    byte_counter_next = 0;
                     spi_tx_data_next = data_in;
                     spi_start_next = 1'b1;
                     state_next = TRANSMIT;
                 end else begin
-                    // 데이터 대기 중
-                    data_req_next = 1'b1;
-                end
-            end
-            
-            TRANSMIT: begin
-                if (spi_done) begin
-                    if (byte_counter == BYTES_PER_PACKET - 1) begin
-                        // 현재 패킷의 4바이트 전송 완료
-                        if (packet_counter == PACKET_COUNT - 1) begin
-                            // 전체 시퀀스 완료 - 쿨다운 시작
-                            timer_counter_next = 0;
-                            state_next = COOLDOWN;
-                        end else begin
-                            // 다음 패킷을 위해 0.1초 대기
-                            timer_counter_next = 0;
-                            state_next = WAIT_TIMER;
-                        end
-                    end else begin
-                        // 현재 패킷의 다음 바이트 데이터 요청
-                        byte_counter_next = byte_counter + 1;
-                        data_req_next = 1'b1;
-                        state_next = REQ_DATA;
-                    end
-                end
-            end
-            
-            WAIT_TIMER: begin
-                if (timer_counter == TIMER_100MS - 1) begin
-                    // 0.1초 대기 완료 - 다음 패킷 첫 바이트 데이터 요청
-                    packet_counter_next = packet_counter + 1;
-                    byte_counter_next = 0;
-                    data_req_next = 1'b1;
-                    state_next = REQ_DATA;
-                end else begin
                     timer_counter_next = timer_counter + 1;
                 end
             end
-            
-            COOLDOWN: begin
-                if (timer_counter == TIMER_100MS - 1) begin
-                    // 쿨다운 완료 - 시퀀스 완료 신호 출력 후 IDLE로
-                    sequence_done_next = 1'b1;
-                    state_next = IDLE;
-                end else begin
-                    timer_counter_next = timer_counter + 1;
-                end
-            end
-            
-            default: state_next = IDLE;
-        endcase
+        end
     end
 
 endmodule
