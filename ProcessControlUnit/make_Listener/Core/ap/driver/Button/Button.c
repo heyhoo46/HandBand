@@ -9,10 +9,6 @@
 
 enum {PUSHED=0, RELEASED};
 
-Button_Handler_t hBtnMode;
-Button_Handler_t hBtnRunStop;
-Button_Handler_t hBtnClear;
-
 
 void Button_Init(Button_Handler_t *hbtn, GPIO_TypeDef * GPIOx, uint16_t pinNum)
 {

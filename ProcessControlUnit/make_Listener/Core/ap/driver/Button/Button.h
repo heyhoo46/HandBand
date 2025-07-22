@@ -17,9 +17,7 @@ typedef struct {
 	uint32_t prevState;
 }Button_Handler_t;
 
-extern Button_Handler_t hBtnMode;
-extern Button_Handler_t hBtnRunStop;
-extern Button_Handler_t hBtnClear;
+//extern Button_Handler_t hBtnClick;
 
 void Button_Init(Button_Handler_t *hbtn, GPIO_TypeDef * GPIOx, uint16_t pinNum);
 button_state_t Button_GetState(Button_Handler_t *hbtn);
