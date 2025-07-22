@@ -17,8 +17,8 @@ Polar Blue_ctrl_vector;
 Point calculateVector(Point h1, Point h2)
 {
 	Point ret;
-	ret.x = h1.x - h2.y;
-	ret.y = h1.y - h2.y;
+	ret.x = h2.x - h1.y;
+	ret.y = h2.y - h1.y;
 	return ret;
 }
 
