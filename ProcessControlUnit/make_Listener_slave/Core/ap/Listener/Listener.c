@@ -1,6 +1,6 @@
 #include "Listener.h"
 
-user_t data;
+
 
 uint8_t rx_data[4];
 volatile uint8_t rx_flag = 0;
@@ -35,19 +35,32 @@ int Listener_Execute()
 void Listener_CheckButton()
 {
 	if(HAL_SPI_Receive(&hspi1, rx_data, 4, 10) == HAL_OK){
-		data.pointArr_Red[cnt].x  = rx_data[0];
-		data.pointArr_Red[cnt].y  = rx_data[1];
-		data.pointArr_Blue[cnt].x = rx_data[2];
-		data.pointArr_Blue[cnt].y = rx_data[3];
-		cnt++;
-		if(cnt == DATANUM){
-			Lis_flag = 1;
-		}
 
-//		char str1[50];
-//		for(int i = 0; i < 4; i++) {
-//			sprintf(str1, "Received_SPI: %d\r\n", rx_data[i]);
-//			HAL_UART_Transmit(&huart1, (uint8_t *)str1, strlen(str1),100);
+			data.pointArr_Red[cnt].x  = rx_data[0];
+			data.pointArr_Red[cnt].y  = rx_data[1];
+			data.pointArr_Blue[cnt].x = rx_data[2];
+			data.pointArr_Blue[cnt].y = rx_data[3];
+			cnt++;
+
+		if(cnt == DATANUM){
+			cnt = 0;
+			Lis_flag = 1;
+
+		for (int i = 0; i < DATANUM; i++) {
+			sprintf(str,"pointArr_Red[%d] = %d \n", i, data.pointArr_Red[i].x);
+			HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
+			sprintf(str,"pointArr_Red[%d] = %d \n", i, data.pointArr_Red[i].y);
+			HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
+			sprintf(str,"pointArr_Blue[%d] = %d \n", i, data.pointArr_Blue[i].x);
+			HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
+			sprintf(str,"pointArr_Blue[%d] = %d \n", i, data.pointArr_Blue[i].y);
+			HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
+			HAL_UART_Transmit(&huart1, "\n", strlen("\n"), 100);
+
+			}
+		}
+		sprintf(str,"Lis_flag = %d",Lis_flag);
+//		HAL_UART_Transmit(&huart1, , , 100);
 	}
 }
 
