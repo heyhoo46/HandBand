@@ -210,7 +210,7 @@ void StartPresenter(void const * argument)
   {
 	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 	Presenter_Execute();
-    osDelay(1000);
+    osDelay(100);
   }
   /* USER CODE END StartPresenter */
 }
