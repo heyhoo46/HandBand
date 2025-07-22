@@ -207,7 +207,6 @@ module SPI_Master_Top #(
     output wire                  done,         // 전체 시퀀스 완료 신호
     
     // 외부 데이터 인터페이스
-    output wire [5:0]            data_addr,    // 데이터 주소 (0~39)
     input  wire [7:0]            data_in,      // 외부에서 받는 데이터
     output wire                  data_req,     // 데이터 요청 신호
     input  wire                  data_valid,   // 데이터 유효 신호
@@ -246,8 +245,7 @@ module SPI_Master_Top #(
         .reset         (reset),
         .start_button  (start_debounced),  // 디바운스된 신호 사용
         .sequence_done (done),
-        .data_addr     (data_addr),        // 외부 데이터 인터페이스
-        .data_in       (data_in),
+        .data_in       (data_in),          // 외부 데이터 인터페이스 (주소 제거)
         .data_req      (data_req),
         .data_valid    (data_valid),
         .spi_start     (spi_start),
@@ -279,6 +277,7 @@ module SPI_Master_Top #(
     );
 
 endmodule
+
 
 // module SPI_Master_Top #(
 //     parameter DATA_WIDTH = 8,
