@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
@@ -61,12 +62,28 @@ static void MPU_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+	if (hspi->Instance == SPI1) {
+		rx_flag = 1;
+		//HAL_SPI_Receive_DMA(&hspi1, &rx_data, 1);
+	}
+}
+
 //void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
 //{
-//	if (hspi->Instance == SPI1) {
-//		rx_flag = 1;
-//		//HAL_SPI_Receive_DMA(&hspi1, &rx_data, 1);
-//	}
+//    if (hspi->Instance == SPI1) {
+//        SPI_flag = 1;  // 수신 완료 표시
+//    }
+//}
+
+//UART를 DMA로 송신 완료 했다는 신호
+//void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+//{
+//    if (huart->Instance == USART1) {
+//        // 전송 완료 처리
+//        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);  // 예시: LED 토글
+//    }
 //}
 
 
@@ -80,7 +97,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+	//uint8_t SPI_flag = 0;
   /* USER CODE END 1 */
 
   /* MPU Configuration--------------------------------------------------------*/
@@ -112,6 +129,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_SPI1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
@@ -122,7 +140,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	while (1)
 	{
-		if(!Listener_Execute()) continue;
+		Listener_CheckButton();
+		//if(!Listener_Execute()) continue;
 //		controller_excute();
 //		Presenter_Execute();
     /* USER CODE END WHILE */

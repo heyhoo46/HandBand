@@ -2,7 +2,7 @@
 
 user_t data;
 
-uint8_t rx_data;
+uint8_t rx_data[4];
 volatile uint8_t rx_flag = 0;
 volatile uint8_t tx_data;
 
@@ -17,7 +17,7 @@ uint8_t buffer_index = 0;
 
 Listener_State state = LIS_WAIT;
 
-void Listener_CheckButton();
+//void Listener_CheckButton();
 
 void Listener_Init()
 {
@@ -34,70 +34,86 @@ int Listener_Execute()
 
 void Listener_CheckButton()
 {
-	static uint32_t prevChkBtnTime = 0;
-	uint32_t curTick = HAL_GetTick();
-
-	switch(state)
-	{
-		case LIS_WAIT :
-				if(HAL_SPI_Receive(&hspi1, &rx_data, 1, 1000) == HAL_OK){
-					state = LIS_DATA;
-					prevChkBtnTime = HAL_GetTick();
-					cnt = 0;
-					Lis_flag = 0;
-				}
-			break;
-
-		case LIS_DATA:
-				if((HAL_GetTick() - prevChkBtnTime < 2000) && (cnt < DATANUM)){
-					while (cnt < DATANUM) {
-						for (int i = 0; i < 4; i++) {
-							if (HAL_SPI_Receive(&hspi1, &rx_data, 1, 1000) == HAL_OK) {
-								rx_buffer[i] = rx_data;
-
-//								char str1[50];
-//								sprintf(str1, "CNT = %d Received_SPI[%d]: %d\r\n", cnt, i, rx_buffer[i]);
-//								HAL_UART_Transmit(&huart1, (uint8_t *)str1, strlen(str1), 10);
-							}
-						}
-
-						data.pointArr_Red[cnt].x  = rx_buffer[0];
-						data.pointArr_Red[cnt].y  = rx_buffer[1];
-						data.pointArr_Blue[cnt].x = rx_buffer[2];
-						data.pointArr_Blue[cnt].y = rx_buffer[3];
-						cnt++;
-					}
-
-					// 결과 출력
-					for (int i = 0; i < DATANUM; i++) {
-						sprintf(str,"pointArr_Red[%d] = %d \n", i, data.pointArr_Red[i].x);
-						HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
-						sprintf(str,"pointArr_Red[%d] = %d \n", i, data.pointArr_Red[i].y);
-						HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
-						sprintf(str,"pointArr_Blue[%d] = %d \n", i, data.pointArr_Blue[i].x);
-						HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
-						sprintf(str,"pointArr_Blue[%d] = %d \n", i, data.pointArr_Blue[i].y);
-						HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
-						HAL_UART_Transmit(&huart1, "\n", strlen("\n"), 100);
-					}
-
-					char msg[] = "10 Points RX Complete!!!\r\n";
-					HAL_UART_Transmit(&huart1, (uint8_t *)msg, strlen(msg), 10);
-
-					if(cnt == DATANUM){
-						Lis_flag = 1;
-					}
-
-					cnt = 0;
-				}
-				else{
-					state = LIS_DATA;
-					prevChkBtnTime = curTick;
-				}
-			break;
+	if(HAL_SPI_Receive(&hspi1, rx_data, 4, 10) == HAL_OK){
+		char str1[50];
+		for(int i = 0; i < 4; i++) {
+			sprintf(str1, "Received_SPI: %d\r\n", rx_data[i]);
+			HAL_UART_Transmit(&huart1, (uint8_t *)str1, strlen(str1),100);
+		}
 	}
 }
 
+
+
+//	static uint32_t prevChkBtnTime = 0;
+//	uint32_t curTick = HAL_GetTick();
+//
+//	switch(state)
+//	{
+//		case LIS_WAIT :
+//				if(SPI_flag){
+//					state = LIS_DATA;
+//					prevChkBtnTime = HAL_GetTick();
+//					cnt = 0;
+//					Lis_flag = 0;
+//					SPI_flag = 0;
+//				}
+//		case LIS_DATA :
+//			HAL_SPI_Receive(&hspi1, &rx_data, 1, 1000);
+//					char str1[50];
+//					sprintf(str1, "Received_SPI: %d\r\n", rx_data);
+//					HAL_UART_Transmit(&huart1, (uint8_t *)str1, strlen(str1), 10);
+//			break;
+//
+//	}
+
+//		case LIS_DATA:
+//				if((HAL_GetTick() - prevChkBtnTime < 2000) && (cnt < DATANUM)){
+//					while (cnt < DATANUM) {
+//						for (int i = 0; i < 4; i++) {
+//							if (HAL_SPI_Receive(&hspi1, &rx_data, 1, 1000) == HAL_OK) {
+//								rx_buffer[i] = rx_data;
+//
+////								char str1[50];
+////								sprintf(str1, "CNT = %d Received_SPI[%d]: %d\r\n", cnt, i, rx_buffer[i]);
+////								HAL_UART_Transmit(&huart1, (uint8_t *)str1, strlen(str1), 10);
+//							}
+//						}
+//
+//						data.pointArr_Red[cnt].x  = rx_buffer[0];
+//						data.pointArr_Red[cnt].y  = rx_buffer[1];
+//						data.pointArr_Blue[cnt].x = rx_buffer[2];
+//						data.pointArr_Blue[cnt].y = rx_buffer[3];
+//						cnt++;
+//					}
+//
+//					// 결과 출력
+//					for (int i = 0; i < DATANUM; i++) {
+//						sprintf(str,"pointArr_Red[%d] = %d \n", i, data.pointArr_Red[i].x);
+//						HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
+//						sprintf(str,"pointArr_Red[%d] = %d \n", i, data.pointArr_Red[i].y);
+//						HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
+//						sprintf(str,"pointArr_Blue[%d] = %d \n", i, data.pointArr_Blue[i].x);
+//						HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
+//						sprintf(str,"pointArr_Blue[%d] = %d \n", i, data.pointArr_Blue[i].y);
+//						HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
+//						HAL_UART_Transmit(&huart1, "\n", strlen("\n"), 100);
+//					}
+//
+//					char msg[] = "10 Points RX Complete!!!\r\n";
+//					HAL_UART_Transmit(&huart1, (uint8_t *)msg, strlen(msg), 10);
+//
+//					if(cnt == DATANUM){
+//						Lis_flag = 1;
+//					}
+//
+//					cnt = 0;
+//				}
+//				else{
+//					state = LIS_DATA;
+//					prevChkBtnTime = curTick;
+//				}
+//			break;
 
 
 //void Listener_CheckButton()

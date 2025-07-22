@@ -15,12 +15,13 @@ typedef enum {LIS_WAIT, LIS_DATA} Listener_State;
 #include "Button.h"
 #include "vector.h"
 
-extern uint8_t rx_data;
+extern uint8_t rx_data[4];
 
 volatile extern uint8_t rx_flag;
 volatile extern uint8_t tx_data;
 
 void Listener_Init();
 int Listener_Execute();
+void Listener_CheckButton();
 
 #endif /* LISTENER_INC_LISTENER_H_ */
