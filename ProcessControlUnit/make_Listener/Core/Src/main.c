@@ -126,7 +126,6 @@ int main(void)
               HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
           }
 
-          HAL_Delay(100);  //
           i++;
           if( i == 4){
         	  i = 0;

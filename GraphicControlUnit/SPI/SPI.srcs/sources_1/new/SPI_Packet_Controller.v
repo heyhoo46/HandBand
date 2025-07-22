@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+// `timescale 1ns / 1ps
 
 //==============================================================================
 // SPI 패킷 전송 컨트롤러 모듈
@@ -127,6 +127,7 @@
 //                         byte_counter_next = byte_counter + 1;
 //                         spi_tx_data_next = tx_data[packet_counter * BYTES_PER_PACKET + byte_counter + 1];
 //                         spi_start_next = 1'b1;
+
 //                     end
 //                 end
 //             end
@@ -160,6 +161,8 @@
 
 // endmodule
 
+`timescale 1ns / 1ps
+
 module SPI_Packet_Controller #(
     parameter BYTES_PER_PACKET = 4,    // 한 번에 보낼 바이트 수
     parameter PACKET_COUNT = 10         // 총 패킷 수
@@ -169,42 +172,33 @@ module SPI_Packet_Controller #(
     
     // 사용자 인터페이스
     input wire start_button,        // 버튼 입력 (edge triggered)
-    output reg sequence_done,       // 전체 시퀀스 완료
     
-    // 외부 데이터 인터페이스
-    output reg [5:0] data_addr,     // 데이터 주소 (0~39)
-    input wire [7:0] data_in,       // 외부에서 받는 데이터
-    output reg data_req,            // 데이터 요청 신호
-    input wire data_valid,          // 데이터 유효 신호
+    // 외부 데이터 인터페이스 (32비트 한 개)
+    input wire [31:0] packet_data,  // 32비트 데이터
     
     // SPI Master 인터페이스  
     output reg spi_start,           // SPI 시작 신호
     output reg [7:0] spi_tx_data,   // SPI 전송 데이터
-    input wire spi_done,            // SPI 완료 신호
-    input wire spi_ready            // SPI 준비 신호
+    input wire spi_done             // SPI 완료 신호
 );
 
     // 0.1초 = 100ms = 12,500,000 클럭 (125MHz 기준)
     localparam TIMER_100MS = 12_500_000;
     
     // 상태 머신
-    localparam IDLE = 3'b000, 
-               REQ_DATA = 3'b001,       // 데이터 요청 상태
-               WAIT_DATA = 3'b010,      // 데이터 대기 상태
-               TRANSMIT = 3'b011, 
-               WAIT_TIMER = 3'b100,
-               COOLDOWN = 3'b101;
+    localparam IDLE = 2'b00, 
+               TRANSMIT = 2'b01, 
+               WAIT_TIMER = 2'b10,
+               COOLDOWN = 2'b11;
     
     // 상태 머신 및 제어 신호
-    reg [2:0] state, state_next;
+    reg [1:0] state, state_next;
     reg [31:0] timer_counter, timer_counter_next;
     reg [3:0] packet_counter, packet_counter_next;  // 0~9 (10개 패킷)
     reg [1:0] byte_counter, byte_counter_next;      // 0~3 (4바이트)
+    reg [31:0] current_packet, current_packet_next; // 현재 전송 중인 32비트 데이터
     reg spi_start_next;
     reg [7:0] spi_tx_data_next;
-    reg sequence_done_next;
-    reg [5:0] data_addr_next;
-    reg data_req_next;
     
     // 순차 로직
     always @(posedge clk) begin
@@ -213,21 +207,17 @@ module SPI_Packet_Controller #(
             timer_counter <= 0;
             packet_counter <= 0;
             byte_counter <= 0;
+            current_packet <= 32'h0;
             spi_start <= 1'b0;
             spi_tx_data <= 8'h00;
-            sequence_done <= 1'b0;
-            data_addr <= 6'b0;
-            data_req <= 1'b0;
         end else begin
             state <= state_next;
             timer_counter <= timer_counter_next;
             packet_counter <= packet_counter_next;
             byte_counter <= byte_counter_next;
+            current_packet <= current_packet_next;
             spi_start <= spi_start_next;
             spi_tx_data <= spi_tx_data_next;
-            sequence_done <= sequence_done_next;
-            data_addr <= data_addr_next;
-            data_req <= data_req_next;
         end
     end
     
@@ -238,39 +228,27 @@ module SPI_Packet_Controller #(
         timer_counter_next = timer_counter;
         packet_counter_next = packet_counter;
         byte_counter_next = byte_counter;
+        current_packet_next = current_packet;
         spi_start_next = 1'b0;
         spi_tx_data_next = spi_tx_data;
-        sequence_done_next = 1'b0;
-        data_addr_next = data_addr;
-        data_req_next = 1'b0;
+        
+        // 32비트에서 8비트 추출 (LSB 먼저)
+        case (byte_counter)
+            2'b00: spi_tx_data_next = current_packet[7:0];   // 첫 번째 바이트 (LSB)
+            2'b01: spi_tx_data_next = current_packet[15:8];  // 두 번째 바이트
+            2'b10: spi_tx_data_next = current_packet[23:16]; // 세 번째 바이트
+            2'b11: spi_tx_data_next = current_packet[31:24]; // 네 번째 바이트 (MSB)
+        endcase
         
         case (state)
             IDLE: begin
                 if (start_button) begin  // 디바운스된 버튼 edge 신호
-                    // 버튼 눌림 - 첫 번째 바이트 데이터 요청
+                    // 버튼 눌림 - 외부에서 받은 32비트 데이터 로드
                     packet_counter_next = 0;
                     byte_counter_next = 0;
-                    data_addr_next = 0;  // 첫 번째 바이트 주소
-                    data_req_next = 1'b1;
-                    state_next = REQ_DATA;
-                end
-            end
-            
-            REQ_DATA: begin
-                // 데이터 요청 후 대기
-                data_req_next = 1'b1;
-                state_next = WAIT_DATA;
-            end
-            
-            WAIT_DATA: begin
-                if (data_valid) begin
-                    // 유효한 데이터 받음 - SPI 전송 시작
-                    spi_tx_data_next = data_in;
+                    current_packet_next = packet_data;  // 외부 32비트 데이터 저장
                     spi_start_next = 1'b1;
                     state_next = TRANSMIT;
-                end else begin
-                    // 데이터 대기 중
-                    data_req_next = 1'b1;
                 end
             end
             
@@ -288,23 +266,21 @@ module SPI_Packet_Controller #(
                             state_next = WAIT_TIMER;
                         end
                     end else begin
-                        // 현재 패킷의 다음 바이트 데이터 요청
+                        // 현재 패킷의 다음 바이트 전송
                         byte_counter_next = byte_counter + 1;
-                        data_addr_next = packet_counter * BYTES_PER_PACKET + byte_counter + 1;
-                        data_req_next = 1'b1;
-                        state_next = REQ_DATA;
+                        spi_start_next = 1'b1;
                     end
                 end
             end
             
             WAIT_TIMER: begin
                 if (timer_counter == TIMER_100MS - 1) begin
-                    // 0.1초 대기 완료 - 다음 패킷 첫 바이트 데이터 요청
+                    // 0.1초 대기 완료 - 현재 packet_data 값을 새로 로드
                     packet_counter_next = packet_counter + 1;
                     byte_counter_next = 0;
-                    data_addr_next = (packet_counter + 1) * BYTES_PER_PACKET;
-                    data_req_next = 1'b1;
-                    state_next = REQ_DATA;
+                    current_packet_next = packet_data;  // 현재 packet_data 값 새로 로드
+                    spi_start_next = 1'b1;
+                    state_next = TRANSMIT;
                 end else begin
                     timer_counter_next = timer_counter + 1;
                 end
@@ -313,7 +289,6 @@ module SPI_Packet_Controller #(
             COOLDOWN: begin
                 if (timer_counter == TIMER_100MS - 1) begin
                     // 쿨다운 완료 - 시퀀스 완료 신호 출력 후 IDLE로
-                    sequence_done_next = 1'b1;
                     state_next = IDLE;
                 end else begin
                     timer_counter_next = timer_counter + 1;
