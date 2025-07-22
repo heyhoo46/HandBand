@@ -172,16 +172,14 @@ module SPI_Packet_Controller #(
     
     // 사용자 인터페이스
     input wire start_button,        // 버튼 입력 (edge triggered)
-    output reg sequence_done,       // 전체 시퀀스 완료
     
-    // 외부 데이터 인터페이스 (320비트 = 10 × 32비트)
-    input wire [319:0] all_packet_data,  // 10개 패킷을 하나의 벡터로
+    // 외부 데이터 인터페이스 (32비트 한 개)
+    input wire [31:0] packet_data,  // 32비트 데이터
     
     // SPI Master 인터페이스  
     output reg spi_start,           // SPI 시작 신호
     output reg [7:0] spi_tx_data,   // SPI 전송 데이터
-    input wire spi_done,            // SPI 완료 신호
-    input wire spi_ready            // SPI 준비 신호
+    input wire spi_done             // SPI 완료 신호
 );
 
     // 0.1초 = 100ms = 12,500,000 클럭 (125MHz 기준)
@@ -201,16 +199,6 @@ module SPI_Packet_Controller #(
     reg [31:0] current_packet, current_packet_next; // 현재 전송 중인 32비트 데이터
     reg spi_start_next;
     reg [7:0] spi_tx_data_next;
-    reg sequence_done_next;
-    
-    // 320비트 벡터에서 32비트 패킷 추출하는 함수
-    function [31:0] get_packet;
-        input [319:0] data;
-        input [3:0] packet_index;
-        begin
-            get_packet = data[packet_index*32 +: 32];  // 패킷별 32비트 추출
-        end
-    endfunction
     
     // 순차 로직
     always @(posedge clk) begin
@@ -222,7 +210,6 @@ module SPI_Packet_Controller #(
             current_packet <= 32'h0;
             spi_start <= 1'b0;
             spi_tx_data <= 8'h00;
-            sequence_done <= 1'b0;
         end else begin
             state <= state_next;
             timer_counter <= timer_counter_next;
@@ -231,7 +218,6 @@ module SPI_Packet_Controller #(
             current_packet <= current_packet_next;
             spi_start <= spi_start_next;
             spi_tx_data <= spi_tx_data_next;
-            sequence_done <= sequence_done_next;
         end
     end
     
@@ -245,9 +231,8 @@ module SPI_Packet_Controller #(
         current_packet_next = current_packet;
         spi_start_next = 1'b0;
         spi_tx_data_next = spi_tx_data;
-        sequence_done_next = 1'b0;
         
-        // 32비트에서 8비트 추출 (리틀엔디안: LSB 먼저)
+        // 32비트에서 8비트 추출 (LSB 먼저)
         case (byte_counter)
             2'b00: spi_tx_data_next = current_packet[7:0];   // 첫 번째 바이트 (LSB)
             2'b01: spi_tx_data_next = current_packet[15:8];  // 두 번째 바이트
@@ -258,10 +243,10 @@ module SPI_Packet_Controller #(
         case (state)
             IDLE: begin
                 if (start_button) begin  // 디바운스된 버튼 edge 신호
-                    // 버튼 눌림 - 첫 번째 패킷 로드
+                    // 버튼 눌림 - 외부에서 받은 32비트 데이터 로드
                     packet_counter_next = 0;
                     byte_counter_next = 0;
-                    current_packet_next = get_packet(all_packet_data, 0);  // 첫 번째 패킷 추출
+                    current_packet_next = packet_data;  // 외부 32비트 데이터 저장
                     spi_start_next = 1'b1;
                     state_next = TRANSMIT;
                 end
@@ -290,10 +275,10 @@ module SPI_Packet_Controller #(
             
             WAIT_TIMER: begin
                 if (timer_counter == TIMER_100MS - 1) begin
-                    // 0.1초 대기 완료 - 다음 패킷 로드
+                    // 0.1초 대기 완료 - 현재 packet_data 값을 새로 로드
                     packet_counter_next = packet_counter + 1;
                     byte_counter_next = 0;
-                    current_packet_next = get_packet(all_packet_data, packet_counter + 1);  // 다음 패킷 추출
+                    current_packet_next = packet_data;  // 현재 packet_data 값 새로 로드
                     spi_start_next = 1'b1;
                     state_next = TRANSMIT;
                 end else begin
@@ -304,7 +289,6 @@ module SPI_Packet_Controller #(
             COOLDOWN: begin
                 if (timer_counter == TIMER_100MS - 1) begin
                     // 쿨다운 완료 - 시퀀스 완료 신호 출력 후 IDLE로
-                    sequence_done_next = 1'b1;
                     state_next = IDLE;
                 end else begin
                     timer_counter_next = timer_counter + 1;
