@@ -35,13 +35,22 @@ int Listener_Execute()
 void Listener_CheckButton()
 {
 	if(HAL_SPI_Receive(&hspi1, rx_data, 4, 10) == HAL_OK){
-		char str1[50];
-		for(int i = 0; i < 4; i++) {
-			sprintf(str1, "Received_SPI: %d\r\n", rx_data[i]);
-			HAL_UART_Transmit(&huart1, (uint8_t *)str1, strlen(str1),100);
+		data.pointArr_Red[cnt].x  = rx_data[0];
+		data.pointArr_Red[cnt].y  = rx_data[1];
+		data.pointArr_Blue[cnt].x = rx_data[2];
+		data.pointArr_Blue[cnt].y = rx_data[3];
+		cnt++;
+		if(cnt == DATANUM){
+			Lis_flag = 1;
 		}
+
+//		char str1[50];
+//		for(int i = 0; i < 4; i++) {
+//			sprintf(str1, "Received_SPI: %d\r\n", rx_data[i]);
+//			HAL_UART_Transmit(&huart1, (uint8_t *)str1, strlen(str1),100);
 	}
 }
+
 
 
 
