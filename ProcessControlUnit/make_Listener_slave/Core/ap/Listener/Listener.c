@@ -49,15 +49,15 @@ void Listener_CheckButton()
 			break;
 
 		case LIS_DATA:
-				if((HAL_GetTick() - prevChkBtnTime < 1500) && (cnt < DATANUM)){
+				if((HAL_GetTick() - prevChkBtnTime < 2000) && (cnt < DATANUM)){
 					while (cnt < DATANUM) {
 						for (int i = 0; i < 4; i++) {
 							if (HAL_SPI_Receive(&hspi1, &rx_data, 1, 1000) == HAL_OK) {
 								rx_buffer[i] = rx_data;
 
-								char str1[50];
-								sprintf(str1, "CNT = %d Received_SPI[%d]: %d\r\n", cnt, i, rx_buffer[i]);
-								HAL_UART_Transmit(&huart1, (uint8_t *)str1, strlen(str1), 10);
+//								char str1[50];
+//								sprintf(str1, "CNT = %d Received_SPI[%d]: %d\r\n", cnt, i, rx_buffer[i]);
+//								HAL_UART_Transmit(&huart1, (uint8_t *)str1, strlen(str1), 10);
 							}
 						}
 
