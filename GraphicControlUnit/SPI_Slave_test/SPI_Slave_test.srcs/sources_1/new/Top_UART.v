@@ -1,13 +1,15 @@
 `timescale 1ns / 1ps
 
-module Top_UART (
+module Top_UART #(
+    parameter DATA_WIDTH = 32
+) (
     input  clk,
     input  rst,
     input  rx,
     output tx
 );
-    wire       w_rx_done;
-    wire [7:0] w_rx_data;
+    wire                  w_rx_done;
+    wire [DATA_WIDTH-1:0] w_rx_data;
 
     uart U_UART (
         .clk       (clk),

@@ -1,0 +1,9 @@
+simSetSimulator "-vcssv" -exec "./build/simv" -args \
+           "+UVM_TESTNAME=pixel_test +MEM_FILE=./red_blue_image_save_mem/image_004.mem"
+debImport "-dbdir" "./build/simv.daidir"
+debLoadSimResult /home/hedu53/dev1/0719_handsignal/build/wave.fsdb
+wvCreateWindow
+verdiSetActWin -win $_nWave2
+verdiWindowResize -win $_Verdi_1 "1063" "399" "900" "700"
+verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
+debExit

@@ -12,13 +12,15 @@ module SPI_Slave (
 
     parameter DATA_WIDTH = 32;
 
-    wire [7:0] si_data;
-    wire       si_done;
-    wire [7:0] so_data;
-    wire       so_start;
-    wire       so_done;
+    wire [DATA_WIDTH-1:0] si_data;
+    wire                  si_done;
+    wire [DATA_WIDTH-1:0] so_data;
+    wire                  so_start;
+    wire                  so_done;
 
-    SPI_Slave_Intf #(.DATA_WIDTH(DATA_WIDTH)) U_SPI_Slave_Intf (
+    SPI_Slave_Intf #(
+        .DATA_WIDTH(DATA_WIDTH)
+    ) U_SPI_Slave_Intf (
         .clk     (clk),
         .reset   (reset),
         .SCLK    (SCLK),
@@ -32,7 +34,9 @@ module SPI_Slave (
         .so_done (so_done)
     );
 
-    SPI_Slave_Reg #(.DATA_WIDTH(DATA_WIDTH)) U_SPI_Slave_Reg (
+    SPI_Slave_Reg #(
+        .DATA_WIDTH(DATA_WIDTH)
+    ) U_SPI_Slave_Reg (
         .clk     (clk),
         .reset   (reset),
         .SS      (SS),
@@ -41,27 +45,29 @@ module SPI_Slave (
         .so_data (so_data),
         .so_start(so_start),
         .so_done (so_done),
-        .done(done)
+        .done    (done)
         // input            so_ready
     );
 
 endmodule
 
-module SPI_Slave_Intf #(parameter DATA_WIDTH = 32)(
+module SPI_Slave_Intf #(
+    parameter DATA_WIDTH = 32
+) (
     // global singals
-    input        clk,
-    input        reset,
+    input                   clk,
+    input                   reset,
     // SPI signals
-    input        SCLK,
-    input        MOSI,
-    output       MISO,
-    input        SS,
+    input                   SCLK,
+    input                   MOSI,
+    output                  MISO,
+    input                   SS,
     //internal signals
     output [DATA_WIDTH-1:0] si_data,
-    output       si_done,
+    output                  si_done,
     input  [DATA_WIDTH-1:0] so_data,
-    input        so_start,
-    input        so_done
+    input                   so_start,
+    input                   so_done
 );
 
     reg sclk_sync0, sclk_sync1;
@@ -123,7 +129,7 @@ module SPI_Slave_Intf #(parameter DATA_WIDTH = 32)(
                 if (!SS) begin
                     if (sclk_rising) begin
                         si_data_next = {si_data_reg[DATA_WIDTH-2:0], MOSI};
-                        if (si_bit_cnt_reg == DATA_WIDTH-1) begin
+                        if (si_bit_cnt_reg == DATA_WIDTH - 1) begin
                             si_done_next    = 1'b1;
                             si_bit_cnt_next = 0;
                             si_state_next   = SI_IDLE;
@@ -176,7 +182,7 @@ module SPI_Slave_Intf #(parameter DATA_WIDTH = 32)(
                 end
             end
             SO_WAIT: begin
-                so_data_next    = so_data;
+                so_data_next  = so_data;
                 so_state_next = SO_PHASE;
             end
             SO_PHASE: begin
@@ -184,7 +190,7 @@ module SPI_Slave_Intf #(parameter DATA_WIDTH = 32)(
                     // MISO = so_data_next[7];
                     if (sclk_falling) begin
                         so_data_next = {so_data_reg[DATA_WIDTH-2:0], 1'b0};
-                        if (so_bit_cnt_reg == DATA_WIDTH-1) begin
+                        if (so_bit_cnt_reg == DATA_WIDTH - 1) begin
                             so_done_next    = 1'b1;
                             so_bit_cnt_next = 0;
                             so_state_next   = SO_IDLE;
@@ -200,18 +206,20 @@ module SPI_Slave_Intf #(parameter DATA_WIDTH = 32)(
     end
 endmodule
 
-module SPI_Slave_Reg #(parameter DATA_WIDTH = 32)(
+module SPI_Slave_Reg #(
+    parameter DATA_WIDTH = 32
+) (
     // global signals
-    input            clk,
-    input            reset,
+    input                       clk,
+    input                       reset,
     // internal signals
-    input            SS,
+    input                       SS,
     input      [DATA_WIDTH-1:0] si_data,
-    input            si_done,
+    input                       si_done,
     output reg [DATA_WIDTH-1:0] so_data,
-    output           so_start,
-    input            so_done,
-    input            done
+    output                      so_start,
+    input                       so_done,
+    input                       done
     // input            so_ready
 );
     localparam IDLE = 0, ADDR_PHASE = 1, WRITE_PHASE = 2, READ_PHASE = 3;
@@ -282,7 +290,7 @@ module SPI_Slave_Reg #(parameter DATA_WIDTH = 32)(
             READ_PHASE: begin
                 if (!SS) begin
                     // if (so_ready) begin
-                    if(done) begin
+                    if (done) begin
                         so_start_next = 1'b1;
                     end
                     case (addr_reg)
