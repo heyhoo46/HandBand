@@ -172,6 +172,7 @@ module SPI_Packet_Controller #(
     output reg sequence_done,       // 전체 시퀀스 완료
     
     // 외부 데이터 인터페이스
+    output reg [5:0] data_addr,     // 데이터 주소 (0~39)
     input wire [7:0] data_in,       // 외부에서 받는 데이터
     output reg data_req,            // 데이터 요청 신호
     input wire data_valid,          // 데이터 유효 신호
@@ -202,6 +203,7 @@ module SPI_Packet_Controller #(
     reg spi_start_next;
     reg [7:0] spi_tx_data_next;
     reg sequence_done_next;
+    reg [5:0] data_addr_next;
     reg data_req_next;
     
     // 순차 로직
@@ -214,6 +216,7 @@ module SPI_Packet_Controller #(
             spi_start <= 1'b0;
             spi_tx_data <= 8'h00;
             sequence_done <= 1'b0;
+            data_addr <= 6'b0;
             data_req <= 1'b0;
         end else begin
             state <= state_next;
@@ -223,6 +226,7 @@ module SPI_Packet_Controller #(
             spi_start <= spi_start_next;
             spi_tx_data <= spi_tx_data_next;
             sequence_done <= sequence_done_next;
+            data_addr <= data_addr_next;
             data_req <= data_req_next;
         end
     end
@@ -237,6 +241,7 @@ module SPI_Packet_Controller #(
         spi_start_next = 1'b0;
         spi_tx_data_next = spi_tx_data;
         sequence_done_next = 1'b0;
+        data_addr_next = data_addr;
         data_req_next = 1'b0;
         
         case (state)
@@ -245,6 +250,7 @@ module SPI_Packet_Controller #(
                     // 버튼 눌림 - 첫 번째 바이트 데이터 요청
                     packet_counter_next = 0;
                     byte_counter_next = 0;
+                    data_addr_next = 0;  // 첫 번째 바이트 주소
                     data_req_next = 1'b1;
                     state_next = REQ_DATA;
                 end
@@ -284,6 +290,7 @@ module SPI_Packet_Controller #(
                     end else begin
                         // 현재 패킷의 다음 바이트 데이터 요청
                         byte_counter_next = byte_counter + 1;
+                        data_addr_next = packet_counter * BYTES_PER_PACKET + byte_counter + 1;
                         data_req_next = 1'b1;
                         state_next = REQ_DATA;
                     end
@@ -295,6 +302,7 @@ module SPI_Packet_Controller #(
                     // 0.1초 대기 완료 - 다음 패킷 첫 바이트 데이터 요청
                     packet_counter_next = packet_counter + 1;
                     byte_counter_next = 0;
+                    data_addr_next = (packet_counter + 1) * BYTES_PER_PACKET;
                     data_req_next = 1'b1;
                     state_next = REQ_DATA;
                 end else begin
