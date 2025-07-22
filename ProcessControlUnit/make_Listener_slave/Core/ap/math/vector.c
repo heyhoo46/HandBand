@@ -6,6 +6,11 @@
  */
 #include <vector.h>
 
+// Common Memory
+user_t data;
+Polar Red_ctrl_vector;
+Polar Blue_ctrl_vector;
+
 /*	calculateVector
  * 	2차원공간 벡터 계산 함수
  */

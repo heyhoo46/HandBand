@@ -27,8 +27,11 @@
 /* USER CODE BEGIN Includes */
 #include "string.h"
 #include <stdio.h>
+
 #include "vector.h"
 #include "Listener.h"
+#include "Controller.h"
+#include "Presenter.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -140,10 +143,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	while (1)
 	{
-		Listener_CheckButton();
-		//if(!Listener_Execute()) continue;
-//		controller_excute();
-//		Presenter_Execute();
+		if(!Listener_Execute()) continue;
+		controller_excute();
+		Presenter_Execute();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
