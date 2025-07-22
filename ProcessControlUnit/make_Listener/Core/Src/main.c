@@ -26,6 +26,9 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include "string.h"
+#include "stm32h7xx_hal.h"
+#include "Button.h"
+#include "vector.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,7 +61,7 @@ static void MPU_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+	Button_Handler_t hBtnClick;
 /* USER CODE END 0 */
 
 /**
@@ -70,7 +73,7 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
 
-	uint8_t tx_data[4] = {0xaa, 0x55, 0xaa, 0x55};
+	uint8_t tx_data[4] = {0x00, 0x01, 0x02, 0x03};
 	uint8_t i = 0;
 
   /* USER CODE END 1 */
@@ -84,6 +87,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+  Button_Init(&hBtnClick, GPIOI, GPIO_PIN_6);
 
   /* USER CODE END Init */
 
@@ -106,22 +110,28 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if(i != 4){
-		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
-		  HAL_StatusTypeDef result = HAL_SPI_Transmit(&hspi1, &tx_data[i], 1, 1000);
-		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
-          if(result == HAL_OK){
-			  char str[50];
-			  sprintf(str,"SuCCEss, rx_buffer[%d] = %d \n", i, tx_data[i]);
-			  HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 1000);
+
+//		static uint32_t prevChkBtnTime = 0;
+//		uint32_t curTick = HAL_GetTick();
+//		if (curTick - prevChkBtnTime < 100) {
+//			return;
+//		}
+//		prevChkBtnTime = curTick;
+
+      if (Button_GetState(&hBtnClick) == ACT_RELEASED) {
+          HAL_StatusTypeDef result = HAL_SPI_Transmit(&hspi1, &tx_data[i], 1, 1000);
+          if (result == HAL_OK) {
+              char str[50];
+              sprintf(str, "Success, tx_data[%d] = %d\r\n", i, tx_data[i]);
+              HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
           }
-			  HAL_Delay(100);
-		  i++;
-	  }
-	  else {
-		  i = 0;
-	  }
-//	  HAL_Delay(100);
+
+          HAL_Delay(100);  //
+          i++;
+          if( i == 4){
+        	  i = 0;
+          }
+      }
   }
 }
     /* USER CODE END WHILE */

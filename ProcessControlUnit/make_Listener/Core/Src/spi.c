@@ -84,8 +84,8 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
   */
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SPI1;
     PeriphClkInitStruct.PLL3.PLL3M = 5;
-    PeriphClkInitStruct.PLL3.PLL3N = 55;
-    PeriphClkInitStruct.PLL3.PLL3P = 55;
+    PeriphClkInitStruct.PLL3.PLL3N = 75;
+    PeriphClkInitStruct.PLL3.PLL3P = 75;
     PeriphClkInitStruct.PLL3.PLL3Q = 2;
     PeriphClkInitStruct.PLL3.PLL3R = 2;
     PeriphClkInitStruct.PLL3.PLL3RGE = RCC_PLL3VCIRANGE_2;
