@@ -18,7 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "dma.h"
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
@@ -27,6 +26,8 @@
 /* USER CODE BEGIN Includes */
 #include "string.h"
 #include <stdio.h>
+#include "vector.h"
+#include "Listener.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,11 +48,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint8_t rx_data;
-uint8_t rx_flag = 0;
-
-uint8_t rx_buffer[Buffer_Size];
-uint8_t buffer_index = 0;
 
 /* USER CODE END PV */
 
@@ -65,13 +61,13 @@ static void MPU_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
-{
-	if (hspi->Instance == SPI1) {
-		rx_flag = 1;
-		//HAL_SPI_Receive_DMA(&hspi1, &rx_data, 1);
-	}
-}
+//void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
+//{
+//	if (hspi->Instance == SPI1) {
+//		rx_flag = 1;
+//		//HAL_SPI_Receive_DMA(&hspi1, &rx_data, 1);
+//	}
+//}
 
 
 /* USER CODE END 0 */
@@ -84,8 +80,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-//	uint8_t rx_buffer[Buffer_Size];
-//	uint8_t buffer_index = 0;
+
   /* USER CODE END 1 */
 
   /* MPU Configuration--------------------------------------------------------*/
@@ -105,7 +100,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  Listener_Init();
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -117,7 +112,6 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
   MX_SPI1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
@@ -128,27 +122,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	while (1)
 	{
-		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-//		HAL_Delay(100);
-
-		HAL_SPI_Receive_DMA(&hspi1, &rx_data, 1);
-
-		if(rx_flag == 1){
-			rx_flag = 0;
-			rx_buffer[buffer_index] = rx_data;
-
-			HAL_SPI_Receive_DMA(&hspi1, &rx_data, 1);
-
-			char str[50];
-			sprintf(str,"rx_buffer[%d] = %d \n", buffer_index, rx_buffer[buffer_index]);
-			HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 1000);
-
-			buffer_index++;
-
-			if(buffer_index == Buffer_Size) {
-				buffer_index = 0;
-			}
-		}
+		Listener_Execute();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

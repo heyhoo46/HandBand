@@ -107,13 +107,14 @@ int main(void)
   while (1)
   {
 	  if(i != 4){
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
 		  HAL_StatusTypeDef result = HAL_SPI_Transmit(&hspi1, &tx_data[i], 1, 1000);
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
           if(result == HAL_OK){
 			  char str[50];
 			  sprintf(str,"SuCCEss, rx_buffer[%d] = %d \n", i, tx_data[i]);
 			  HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 1000);
           }
-
 			  HAL_Delay(100);
 		  i++;
 	  }
@@ -121,12 +122,13 @@ int main(void)
 		  i = 0;
 	  }
 //	  HAL_Delay(100);
+  }
+}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
+
   /* USER CODE END 3 */
-}
 
 /**
   * @brief System Clock Configuration

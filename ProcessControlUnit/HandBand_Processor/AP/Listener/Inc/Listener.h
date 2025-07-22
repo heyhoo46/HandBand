@@ -12,13 +12,11 @@
 #include "usart.h"
 #include "gpio.h"
 
-extern volatile uint8_t rx_data;
-extern volatile uint8_t rx_flag;
-//extern uint8_t cnt = 0;
-//
-//extern uint8_t rx_buffer[Buffer_Size];
-//extern uint8_t buffer_index = 0;
+extern uint8_t rx_data;
+volatile extern uint8_t rx_flag;
+volatile extern uint8_t tx_data;
 
+extern uint8_t uart_tx_busy;
 
 void Listener_Init();
 void Listener_Execute();
