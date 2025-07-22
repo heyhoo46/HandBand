@@ -16,6 +16,6 @@ void controller_excute()
 	user_t user_data;
 	LC_Model_PopUser(&user_data);
 
-	Polar ctrl_vector = TemporalFramDifferencing(user_data.pointArr, DATANUM);
+	Polar ctrl_vector = TemporalFramDifferencing(user_data.pointArr_Red, DATANUM);
 	CP_Model_PushPolar(&ctrl_vector);
 }

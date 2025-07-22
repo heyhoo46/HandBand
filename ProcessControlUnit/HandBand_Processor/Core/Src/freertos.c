@@ -25,7 +25,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "Listener.h"
+#include "Controller.h"
+#include "Presenter.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -112,15 +114,15 @@ void MX_FREERTOS_Init(void) {
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of ListenerTask */
-  osThreadDef(ListenerTask, Listener, osPriorityIdle, 0, 128);
+  osThreadDef(ListenerTask, Listener, osPriorityNormal, 0, 128);
   ListenerTaskHandle = osThreadCreate(osThread(ListenerTask), NULL);
 
   /* definition and creation of ControllerTask */
-  osThreadDef(ControllerTask, Controller, osPriorityIdle, 0, 128);
+  osThreadDef(ControllerTask, Controller, osPriorityNormal, 0, 128);
   ControllerTaskHandle = osThreadCreate(osThread(ControllerTask), NULL);
 
   /* definition and creation of PresenterTask */
-  osThreadDef(PresenterTask, Presenter, osPriorityIdle, 0, 128);
+  osThreadDef(PresenterTask, Presenter, osPriorityNormal, 0, 128);
   PresenterTaskHandle = osThreadCreate(osThread(PresenterTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -157,9 +159,12 @@ void StartDefaultTask(void const * argument)
 void Listener(void const * argument)
 {
   /* USER CODE BEGIN Listener */
+	Listener_Init();
+
   /* Infinite loop */
   for(;;)
   {
+	  Listener_Execute();
     osDelay(1);
   }
   /* USER CODE END Listener */
