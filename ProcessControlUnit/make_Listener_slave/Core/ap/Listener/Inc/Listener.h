@@ -22,6 +22,5 @@ volatile extern uint8_t tx_data;
 
 void Listener_Init();
 int Listener_Execute();
-void Listener_CheckButton();
 
 #endif /* LISTENER_INC_LISTENER_H_ */

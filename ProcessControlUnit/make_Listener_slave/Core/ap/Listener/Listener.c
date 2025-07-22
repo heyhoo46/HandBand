@@ -8,7 +8,6 @@ volatile uint8_t tx_data;
 
 uint8_t cnt = 0;
 uint8_t tot_cnt = 0;
-uint8_t Lis_flag = 0;
 
 char str[50];
 
@@ -17,7 +16,7 @@ uint8_t buffer_index = 0;
 
 Listener_State state = LIS_WAIT;
 
-//void Listener_CheckButton();
+int Listener_CheckButton();
 
 void Listener_Init()
 {
@@ -27,41 +26,40 @@ void Listener_Init()
 
 int Listener_Execute()
 {
-	Listener_CheckButton();
-	return Lis_flag;
+	return Listener_CheckButton();
 }
 
-
-void Listener_CheckButton()
+int Listener_CheckButton()
 {
-	if(HAL_SPI_Receive(&hspi1, rx_data, 4, 10) == HAL_OK){
-
-			data.pointArr_Red[cnt].x  = rx_data[0];
-			data.pointArr_Red[cnt].y  = rx_data[1];
-			data.pointArr_Blue[cnt].x = rx_data[2];
-			data.pointArr_Blue[cnt].y = rx_data[3];
-			cnt++;
-
-		if(cnt == DATANUM){
-			cnt = 0;
-			Lis_flag = 1;
-
-		for (int i = 0; i < DATANUM; i++) {
-			sprintf(str,"pointArr_Red[%d] = %d \n", i, data.pointArr_Red[i].x);
-			HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
-			sprintf(str,"pointArr_Red[%d] = %d \n", i, data.pointArr_Red[i].y);
-			HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
-			sprintf(str,"pointArr_Blue[%d] = %d \n", i, data.pointArr_Blue[i].x);
-			HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
-			sprintf(str,"pointArr_Blue[%d] = %d \n", i, data.pointArr_Blue[i].y);
-			HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
-			HAL_UART_Transmit(&huart1, "\n", strlen("\n"), 100);
-
-			}
-		}
-		sprintf(str,"Lis_flag = %d",Lis_flag);
-//		HAL_UART_Transmit(&huart1, , , 100);
+	if(HAL_SPI_Receive(&hspi1, rx_data, 4, 10) != HAL_OK) {
+		return 0;
 	}
+
+	data.pointArr_Red[cnt].x  = rx_data[0];
+	data.pointArr_Red[cnt].y  = rx_data[1];
+	data.pointArr_Blue[cnt].x = rx_data[2];
+	data.pointArr_Blue[cnt].y = rx_data[3];
+	cnt++;
+
+	if(cnt != DATANUM) {
+		return 0;
+	}
+	cnt = 0;
+
+	// 디버깅 편의성을 위한 유아트 통신 (나중에 제거해도 됨)
+	for (int i = 0; i < DATANUM; i++) {
+		sprintf(str,"pointArr_Red[%d] = %d \n", i, data.pointArr_Red[i].x);
+		HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
+		sprintf(str,"pointArr_Red[%d] = %d \n", i, data.pointArr_Red[i].y);
+		HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
+		sprintf(str,"pointArr_Blue[%d] = %d \n", i, data.pointArr_Blue[i].x);
+		HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
+		sprintf(str,"pointArr_Blue[%d] = %d \n", i, data.pointArr_Blue[i].y);
+		HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
+		HAL_UART_Transmit(&huart1, "\n", strlen("\n"), 100);
+	}
+
+	return 1;
 }
 
 
