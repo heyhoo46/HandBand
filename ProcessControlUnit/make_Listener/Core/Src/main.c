@@ -27,8 +27,10 @@
 #include <stdio.h>
 #include "string.h"
 #include "stm32h7xx_hal.h"
-#include "Button.h"
+//#include "Button.h"
 #include "vector.h"
+#include "Listener.h"
+//#include "Listener.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -61,7 +63,6 @@ static void MPU_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-	Button_Handler_t hBtnClick;
 /* USER CODE END 0 */
 
 /**
@@ -72,10 +73,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
-	uint8_t tx_data[4] = {0x00, 0x01, 0x02, 0x03};
-	uint8_t i = 0;
-
+	uint8_t tx_data[1] = {0x01};
+	uint8_t cnt = 0;
   /* USER CODE END 1 */
 
   /* MPU Configuration--------------------------------------------------------*/
@@ -87,8 +86,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  Button_Init(&hBtnClick, GPIOI, GPIO_PIN_6);
-
+  //Listener_Init();
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -110,26 +108,15 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
-//		static uint32_t prevChkBtnTime = 0;
-//		uint32_t curTick = HAL_GetTick();
-//		if (curTick - prevChkBtnTime < 100) {
-//			return;
-//		}
-//		prevChkBtnTime = curTick;
-
-      if (Button_GetState(&hBtnClick) == ACT_RELEASED) {
-          HAL_StatusTypeDef result = HAL_SPI_Transmit(&hspi1, &tx_data[i], 1, 1000);
-          if (result == HAL_OK) {
-              char str[50];
-              sprintf(str, "Success, tx_data[%d] = %d\r\n", i, tx_data[i]);
-              HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
-          }
-
-          i++;
-          if( i == 4){
-        	  i = 0;
-          }
+      HAL_StatusTypeDef result = HAL_SPI_Transmit(&hspi1, &tx_data[0], 1, 1000);
+      if (result == HAL_OK) {
+          char str[50];
+          sprintf(str, "Success, tx_data[%d] = %d\r\n", 0, tx_data[0]);
+          HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
+          cnt++;
+      }
+      if(cnt == 1){
+    	  return;
       }
   }
 }
