@@ -20,10 +20,10 @@ module top_hand_signal (
     output [3:0] vgaGreen,
     output [3:0] vgaBlue,
     output [3:0] fndCom,
-    output [7:0] fndFont
-    // output logic SCLK,  // SPI Clock
-    // output logic MOSI,  // Master Out Slave In
-    // output logic CS
+    output [7:0] fndFont,
+    output logic SCLK,  // SPI Clock
+    output logic MOSI,  // Master Out Slave In
+    output logic CS
 );
     SCCB_core u_SCCB_core (
         .clk(clk),
@@ -102,16 +102,16 @@ assign blue_y8  = blue_y;
 logic [31:0] spi_data_in = { red_x8, blue_y8, blue_x8, red_y8 };
                         // red_x8, red_y8, blue_x8, blue_y8
 
-//   SPI_Master_Top u_spi_top(
-//     .clk(clk),   // 125MHz system clock
-//     .reset(reset), // Reset signal
-//     .start_raw(game_start),    // 원본 버튼 입력 (디바운스 전)
-//     .done(),         // 전체 시퀀스 완료 신호
-//     .packet_data(spi_data_in),      // 외부에서 받는 데이터
-//     .SCLK(SCLK),  // SPI Clock
-//     .MOSI(MOSI),  // Master Out Slave In
-//     .CS(CS)     // Chip Select
-// );
+  SPI_Master_Top u_spi_top(
+    .clk(clk),   // 125MHz system clock
+    .reset(reset), // Reset signal
+    .start_raw(game_start),    // 원본 버튼 입력 (디바운스 전)
+    .done(),         // 전체 시퀀스 완료 신호
+    .packet_data(spi_data_in),      // 외부에서 받는 데이터
+    .SCLK(SCLK),  // SPI Clock
+    .MOSI(MOSI),  // Master Out Slave In
+    .CS(CS)     // Chip Select
+);
 
 
 
