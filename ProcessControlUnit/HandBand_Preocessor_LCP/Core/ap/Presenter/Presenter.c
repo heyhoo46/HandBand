@@ -104,7 +104,7 @@ void Presenter_Execute(void) {
 	// ── 4. 디버그 출력 ──
 	char str[160];
 	int len = sprintf(str,
-			"TEST: angle=%3u(idx=%d), mag=%3u(idx=%d), Effect=0x%04X\r\n",
+			"TEST: angle=%3d(idx=%d), mag=%3d(idx=%d), Effect=0x%04X\r\n",
 			Red_ctrl_vector.angle_deg, angIndex, Red_ctrl_vector.magnitude, magIndex,
 			(uint16_t) effect);
 
