@@ -71,7 +71,7 @@ int Listener_CheckButton()
 		HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
 		sprintf(str,"pointArr_Blue[%d] = %d \n", i, data.pointArr_Blue[i].y);
 		HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
-		HAL_UART_Transmit(&huart1, "\n", 1, 100);
+		HAL_UART_Transmit(&huart1, (uint8_t *)"\n", strlen("\n"), 100);
 	}
 
 	return 1;
