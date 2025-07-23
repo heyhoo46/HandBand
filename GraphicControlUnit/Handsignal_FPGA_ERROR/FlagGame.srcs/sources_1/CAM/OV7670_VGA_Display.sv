@@ -11,9 +11,9 @@ module OV7670_VGA_Display (
     input  logic       ov7670_v_sync,
     input  logic [7:0] ov7670_data,
     // ov7670 export signals
-    output logic [3:0] ov7670_Red,
-    output logic [3:0] ov7670_Green,
-    output logic [3:0] ov7670_Blue,
+    output logic [4:0] ov7670_Red,
+    output logic [5:0] ov7670_Green,
+    output logic [4:0] ov7670_Blue,
     output logic       ov7670_en,
     // vga export signals
     output logic       vga_en,

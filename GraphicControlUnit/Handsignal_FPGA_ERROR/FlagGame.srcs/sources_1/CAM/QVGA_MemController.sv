@@ -12,9 +12,9 @@ module QVGA_MemController (
     output logic [16:0] rAddr,
     input  logic [15:0] rData,
     // export side
-    output logic [ 3:0] red_port,
-    output logic [ 3:0] green_port,
-    output logic [ 3:0] blue_port
+    output logic [ 4:0] red_port,
+    output logic [ 5:0] green_port,
+    output logic [ 4:0] blue_port
 );
 
     logic display_en;
@@ -35,6 +35,6 @@ module QVGA_MemController (
     assign rAddr = display_en ? (qvga_y * 320 + qvga_x) : 17'd0;
 
     // Color extraction from 16-bit packed RGB: R[15:12], G[10:7], B[4:1]
-    assign {red_port, green_port, blue_port} = display_en ? {rData[15:12], rData[10:7], rData[4:1]} : 12'b0;
+    assign {red_port, green_port, blue_port} = display_en ? {rData[15:11], rData[10:5], rData[4:0]} : 12'b0;
 
 endmodule
