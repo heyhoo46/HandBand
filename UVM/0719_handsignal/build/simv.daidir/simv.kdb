@@ -1,7 +1,7 @@
 rc file Version 1.0
 
 [Design]
-COMPILE_PATH=/home/hedu53/dev1/0719_handsignal
+COMPILE_PATH=/home/hedu53/HandBand/UVM/0719_handsignal
 VCS_HOME=/tools/synopsys/vcs/W-2024.09-SP1
 VERDI_HOME=/tools/synopsys/verdi/W-2024.09-SP2
 SystemC=FALSE
