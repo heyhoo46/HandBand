@@ -14,8 +14,8 @@
 
 //Heeju Use Structure
 typedef struct {
-	float x; //(8bit)
-	float y; //( 8bit)
+	int x; //(8bit)
+	int y; //( 8bit)
 } Point;
 
 typedef struct {
