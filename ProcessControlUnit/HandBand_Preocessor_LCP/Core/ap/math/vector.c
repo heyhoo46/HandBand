@@ -35,6 +35,7 @@ Polar convertVectorToPolarInt(Point vec) {
 
     double angle_rad = atan2(vec_y_double, vec_x_double);
     polar_vec.angle_deg = (int)round(angle_rad * (180.0 / M_PI));
+    if(polar_vec.angle_deg < 0) polar_vec.angle_deg += 360;
 
     return polar_vec;
 }
