@@ -15,7 +15,7 @@ class SerialReceiver(threading.Thread):
         self.serial_connection = None
         print(f"UART 리시버 시작 준비: {self.port} @ {self.baudrate}bps")
 
-    def run(self):
+    def run(self): #스레드 클래스의 run 오버라이드
         try:
             self.serial_connection = serial.Serial(self.port, self.baudrate, timeout=1)
             print(f"UART 포트 {self.port} 연결 성공.")
@@ -43,7 +43,7 @@ class SerialReceiver(threading.Thread):
                 print(f"UART 포트 {self.port} 닫힘.")
             self.stopped.set()
 
-    def stop(self):
+    def stop(self): #스레드 클래스의 STOP 오버라이드
         self.stopped.set()
         print("UART 리시버 종료 신호 전송.")
 

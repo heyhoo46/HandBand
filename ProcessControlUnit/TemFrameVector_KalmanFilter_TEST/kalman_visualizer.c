@@ -1,11 +1,11 @@
-#include "raylib.h"
 #include "TemFrameVector_KalmanFilter.h" // 칼만 필터 헤더 파일 포함
+#include "raylib.h"
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include <math.h>
 #include <string.h> // for sprintf, strlen, strcpy
+#include <time.h>
 
 // --- Global variables for visualization ---
 #define MAX_POINTS 100 // 최대 시각화할 점의 개수
@@ -14,7 +14,8 @@ Vector2 filteredPoints[MAX_POINTS];
 int pointCount = 0;
 
 // Function to add points to our global arrays
-void add_points(Vector2 original, Vector2 filtered) {
+void add_points(Vector2 original, Vector2 filtered)
+{
     if (pointCount < MAX_POINTS) {
         originalPoints[pointCount] = original;
         filteredPoints[pointCount] = filtered;
@@ -23,7 +24,8 @@ void add_points(Vector2 original, Vector2 filtered) {
 }
 
 // --- Main Visualization Function ---
-int main(void) {
+int main(void)
+{
     // Initialization
     const int screenWidth = 800;
     const int screenHeight = 600;
@@ -33,16 +35,16 @@ int main(void) {
     // --- Original Path Data (from previous Python example, scaled for visualization) ---
     // Note: These are example raw measurements. In a real scenario, they would come from a sensor.
     float initial_raw_points[10][2] = {
-        {0.00f, 1.05f},   // P0
-        {0.50f, 1.40f},   // P1
-        {1.00f, 1.95f},   // P2
-        {1.50f, 2.90f},   // P3
-        {2.00f, 4.05f},   // P4
-        {2.50f, 5.50f},   // P5
-        {3.00f, 8.05f},   // P6
-        {3.50f, 11.20f},  // P7
-        {4.00f, 16.03f},  // P8 (exponential trend)
-        {3.00f, -5.00f}   // P9 (outlier breaking the trend)
+        { 0.00f, 1.05f }, // P0
+        { 0.50f, 1.40f }, // P1
+        { 1.00f, 1.95f }, // P2
+        { 1.50f, 2.90f }, // P3
+        { 2.00f, 4.05f }, // P4
+        { 2.50f, 5.50f }, // P5
+        { 3.00f, 8.05f }, // P6
+        { 3.50f, 11.20f }, // P7
+        { 4.00f, 16.03f }, // P8 (exponential trend)
+        { 3.00f, -5.00f } // P9 (outlier breaking the trend)
     };
     int num_raw_points = sizeof(initial_raw_points) / sizeof(initial_raw_points[0]);
 
@@ -53,14 +55,14 @@ int main(void) {
 
     // Initial state based on the first point of the raw data
     KalmanFilter_Init(&myKalmanFilter, dt,
-                      initial_raw_points[0][0], initial_raw_points[0][1],
-                      0.0f, 0.0f); // Initial velocity assumed to be zero (float 0.0f)
+        initial_raw_points[0][0], initial_raw_points[0][1],
+        0.0f, 0.0f); // Initial velocity assumed to be zero (float 0.0f)
 
     // --- Visualization Scaling and Offset ---
     // Adjust these values to fit your data range into the screen
-    float scale_x = 80.0f;    // Pixels per unit X
-    float scale_y = 30.0f;    // Pixels per unit Y
-    float offset_x = screenWidth / 4.0f;     // Center the graph horizontally
+    float scale_x = 80.0f; // Pixels per unit X
+    float scale_y = 30.0f; // Pixels per unit Y
+    float offset_x = screenWidth / 4.0f; // Center the graph horizontally
     float offset_y = screenHeight * 0.7f; // Move the origin to bottom-left for positive Y upwards
 
     SetTargetFPS(60); // Set our game to run at 60 frames-per-second
@@ -82,23 +84,19 @@ int main(void) {
                 float measured_y = initial_raw_points[data_idx][1];
 
                 // Kalman Filter Predict & Update
-                // 출력 변수를 float 타입으로 변경합니다.
                 float updated_x_float, updated_y_float;
                 KalmanFilter_Update(&myKalmanFilter, measured_x, measured_y,
-                                    &updated_x_float, &updated_y_float);
-
-                // 이제 updated_x_float, updated_y_float 자체가 float 타입의 필터링된 값입니다.
-                // FIXED_TO_FLOAT 변환은 더 이상 필요 없습니다.
+                    &updated_x_float, &updated_y_float);
 
                 // Add points for drawing
-                add_points( (Vector2){ measured_x, measured_y },
-                            (Vector2){ updated_x_float, updated_y_float } ); // float 값을 직접 사용
+                add_points((Vector2) { measured_x, measured_y },
+                    (Vector2) { updated_x_float, updated_y_float }); // float 값을 직접 사용
 
                 data_idx++;
                 simulation_time_accumulator -= time_per_data_point; // Subtract processed time
             }
         }
-        
+
         // Drawing
         BeginDrawing();
         ClearBackground(RAYWHITE); // Clear the background to white
@@ -116,9 +114,9 @@ int main(void) {
         // --- Draw Original Path ---
         for (int i = 0; i < pointCount - 1; i++) {
             Vector2 p1_orig = { originalPoints[i].x * scale_x + offset_x, originalPoints[i].y * -scale_y + offset_y };
-            Vector2 p2_orig = { originalPoints[i+1].x * scale_x + offset_x, originalPoints[i+1].y * -scale_y + offset_y };
+            Vector2 p2_orig = { originalPoints[i + 1].x * scale_x + offset_x, originalPoints[i + 1].y * -scale_y + offset_y };
             // raylib doesn't have direct dashed line. Draw multiple small lines for approximation
-            DrawLine( (int)p1_orig.x, (int)p1_orig.y, (int)p2_orig.x, (int)p2_orig.y, SKYBLUE);
+            DrawLine((int)p1_orig.x, (int)p1_orig.y, (int)p2_orig.x, (int)p2_orig.y, SKYBLUE);
         }
         for (int i = 0; i < pointCount; i++) {
             Vector2 p_orig = { originalPoints[i].x * scale_x + offset_x, originalPoints[i].y * -scale_y + offset_y };
@@ -129,7 +127,7 @@ int main(void) {
         // --- Draw Filtered Path ---
         for (int i = 0; i < pointCount - 1; i++) {
             Vector2 p1_filtered = { filteredPoints[i].x * scale_x + offset_x, filteredPoints[i].y * -scale_y + offset_y };
-            Vector2 p2_filtered = { filteredPoints[i+1].x * scale_x + offset_x, filteredPoints[i+1].y * -scale_y + offset_y };
+            Vector2 p2_filtered = { filteredPoints[i + 1].x * scale_x + offset_x, filteredPoints[i + 1].y * -scale_y + offset_y };
             DrawLineEx(p1_filtered, p2_filtered, 2, GREEN); // Draw thicker line for filtered
         }
         for (int i = 0; i < pointCount; i++) {
@@ -141,8 +139,8 @@ int main(void) {
         // --- Draw Final Damped Displacement Vector ---
         if (pointCount > 1) {
             Vector2 first_filtered_point = { filteredPoints[0].x * scale_x + offset_x, filteredPoints[0].y * -scale_y + offset_y };
-            Vector2 last_filtered_point = { filteredPoints[pointCount-1].x * scale_x + offset_x, filteredPoints[pointCount-1].y * -scale_y + offset_y };
-            
+            Vector2 last_filtered_point = { filteredPoints[pointCount - 1].x * scale_x + offset_x, filteredPoints[pointCount - 1].y * -scale_y + offset_y };
+
             DrawLineEx(first_filtered_point, last_filtered_point, 3, RED); // Draw the displacement vector
             // Draw arrow head (simplified)
             DrawCircleV(last_filtered_point, 5, RED); // Just a larger circle for the arrowhead
@@ -155,12 +153,12 @@ int main(void) {
         {
             char filename[64]; // 파일명을 저장할 충분한 크기의 버퍼
             int counter = 1;
-            FILE *file;
+            FILE* file;
 
             while (true) {
                 // "testN.png" 형식으로 파일명 생성
                 sprintf(filename, "test%d.png", counter);
-                
+
                 // 파일이 이미 존재하는지 확인
                 file = fopen(filename, "r"); // "r" 모드로 열어서 존재 여부 확인
                 if (file) {
@@ -176,7 +174,6 @@ int main(void) {
             }
         }
         // --- 스크린샷 저장 기능 끝 ---
-
     }
 
     // De-Initialization
