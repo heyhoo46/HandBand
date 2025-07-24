@@ -14,8 +14,8 @@
 
 //Heeju Use Structure
 typedef struct {
-	int x; //(8bit)
-	int y; //( 8bit)
+	float x; //(8bit)
+	float y; //( 8bit)
 } Point;
 
 typedef struct {
@@ -27,8 +27,8 @@ typedef struct {
  * 	벡터의 극좌표표현 스트럭트
  */
 typedef struct {
-    int magnitude; // 크기
-    int angle_deg; // 각도 (도)
+	float magnitude; // 크기
+	float angle_deg; // 각도 (도)
 } Polar;
 
 extern user_t data;
