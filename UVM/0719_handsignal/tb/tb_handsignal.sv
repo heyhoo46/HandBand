@@ -312,6 +312,9 @@ class pixel_scoreboard extends uvm_scoreboard;
         fnd_value,
         (ri.blue_flag == exp_blue_zone && ri.red_flag == exp_red_zone) ? "PASS" : "FAIL"
       ), UVM_NONE);
+    `uvm_info("DEBUG", $sformatf("mem_file = '%s'", mem_file), UVM_NONE);
+    `uvm_info("DEBUG", $sformatf("img_name = '%s'", img_name), UVM_NONE);
+
   endtask
 
 
