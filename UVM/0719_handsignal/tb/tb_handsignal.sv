@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 `timescale 1ns/100ps
 `include "uvm_macros.svh"
+//uvm class library 전체 패키지 적용하기
 import uvm_pkg::*;
 
 //------------------------------------------------------------------------------
@@ -38,6 +39,7 @@ endinterface
 
 //------------------------------------------------------------------------------
 // 2) packet definitions: sequence‐item, result‐item
+//transaction data definitions
 //------------------------------------------------------------------------------
 class pixel_seq_item extends uvm_sequence_item;
   rand bit [ $clog2(640)-1 : 0 ] x_pixel;
@@ -50,6 +52,7 @@ class pixel_seq_item extends uvm_sequence_item;
   endfunction
 
   `uvm_object_utils_begin(pixel_seq_item)
+  // uvm factory에 class를 등록하는 매크로
     `uvm_field_int(x_pixel,     UVM_DEFAULT)
     `uvm_field_int(y_pixel,     UVM_DEFAULT)
     `uvm_field_int(zone_id,     UVM_DEFAULT)
@@ -316,9 +319,6 @@ class pixel_scoreboard extends uvm_scoreboard;
     `uvm_info("DEBUG", $sformatf("img_name = '%s'", img_name), UVM_NONE);
 
   endtask
-
-
-
 
 
 
