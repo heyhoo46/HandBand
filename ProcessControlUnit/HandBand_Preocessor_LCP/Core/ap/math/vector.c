@@ -17,7 +17,7 @@ Polar Blue_ctrl_vector;
 Point calculateVector(Point h1, Point h2)
 {
 	Point ret;
-	ret.x = h2.x - h1.y;
+	ret.x = h2.x - h1.x;
 	ret.y = h2.y - h1.y;
 	return ret;
 }
@@ -35,6 +35,7 @@ Polar convertVectorToPolarInt(Point vec) {
 
     double angle_rad = atan2(vec_y_double, vec_x_double);
     polar_vec.angle_deg = (int)round(angle_rad * (180.0 / M_PI));
+//    if(polar_vec.angle_deg < 0) polar_vec.angle_deg += 360;
 
     return polar_vec;
 }

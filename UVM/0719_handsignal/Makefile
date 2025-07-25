@@ -39,7 +39,7 @@ vcs:
 
 simv: 
 	@echo ">>> Running SIM with MEM_FILE=$(MEM_FILE)"
-	$(SIMV) $(SIMV_OPT)
+	$(SIMV) $(SIMV_OPT) |& tee -a $(BUILD_DIR)/sim.log
 
 run-%:
 	@$(MAKE) IMG_ID=$* simv
@@ -56,3 +56,10 @@ run_all:
 	  echo ">>> IMAGE $$id <<<"; \
 	  $(MAKE) run-$$id; \
 	done
+	@$(MAKE) summary
+
+summary:
+	@echo "=== [Generating Summary from simv logs] ==="
+	@grep "SUMMARY IMG=" $(BUILD_DIR)/sim.log > $(BUILD_DIR)/summary.log
+	@python3 gen_csv.py $(BUILD_DIR)/summary.log $(BUILD_DIR)/result_summary.csv
+	@echo "=== [Done] result saved to $(BUILD_DIR)/result_summary.csv ==="

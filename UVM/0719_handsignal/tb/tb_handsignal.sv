@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 `timescale 1ns/100ps
 `include "uvm_macros.svh"
+//uvm class library 전체 패키지 적용하기
 import uvm_pkg::*;
 
 //------------------------------------------------------------------------------
@@ -38,6 +39,7 @@ endinterface
 
 //------------------------------------------------------------------------------
 // 2) packet definitions: sequence‐item, result‐item
+//transaction data definitions
 //------------------------------------------------------------------------------
 class pixel_seq_item extends uvm_sequence_item;
   rand bit [ $clog2(640)-1 : 0 ] x_pixel;
@@ -50,6 +52,7 @@ class pixel_seq_item extends uvm_sequence_item;
   endfunction
 
   `uvm_object_utils_begin(pixel_seq_item)
+  // uvm factory에 class를 등록하는 매크로
     `uvm_field_int(x_pixel,     UVM_DEFAULT)
     `uvm_field_int(y_pixel,     UVM_DEFAULT)
     `uvm_field_int(zone_id,     UVM_DEFAULT)
@@ -278,16 +281,46 @@ class pixel_scoreboard extends uvm_scoreboard;
   endfunction
 
   // monitor 로부터 결과 받으면 비교
-  function void write(result_item ri);
+  task automatic write(result_item ri);
+    string img_name;
+    string img_id;
+    int fnd_value;
+
+    if (!$value$plusargs("MEM_FILE=%s", img_name)) begin
+      img_name = "unknown";
+    end
+
+    // 예: "image_042.mem" 또는 "bigdot_099.mem" → "042", "099"
+    img_id = img_name.substr(img_name.len()-8, 3);
+
+    fnd_value = (ri.red_flag  % 8) * 1000 +
+                (ri.red_flag  / 8) *  100 +
+                (ri.blue_flag % 8) *   10 +
+                (ri.blue_flag / 8);
+
     if (ri.blue_flag == exp_blue_zone && ri.red_flag == exp_red_zone) begin
       `uvm_info("SCO", "*** TEST PASSED ***", UVM_NONE);
     end else begin
       `uvm_error("SCO",
         $sformatf("Mismatch DUT(blue=%0d,red=%0d) <> REF(blue=%0d,red=%0d)",
-                   ri.blue_flag, ri.red_flag,
-                   exp_blue_zone, exp_red_zone));
+                  ri.blue_flag, ri.red_flag,
+                  exp_blue_zone, exp_red_zone));
     end
-  endfunction
+
+    `uvm_info("SCO",
+      $sformatf("SUMMARY IMG=%s REF=(B:%0d,R:%0d) DUT=(B:%0d,R:%0d) FND=%0d RESULT=%s",
+        img_id,
+        exp_blue_zone, exp_red_zone,
+        ri.blue_flag,  ri.red_flag,
+        fnd_value,
+        (ri.blue_flag == exp_blue_zone && ri.red_flag == exp_red_zone) ? "PASS" : "FAIL"
+      ), UVM_NONE);
+    `uvm_info("DEBUG", $sformatf("mem_file = '%s'", mem_file), UVM_NONE);
+    `uvm_info("DEBUG", $sformatf("img_name = '%s'", img_name), UVM_NONE);
+
+  endtask
+
+
 
 endclass
 
