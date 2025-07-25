@@ -33,7 +33,7 @@ module top_hand_signal (
         .siod(ov7670_sda)
     );
 
-    localparam NX = 10, NY = 8, ZONES = NX * NY, ZBW = $clog2(ZONES);
+    localparam NX = 20, NY = 16, ZONES = NX * NY, ZBW = $clog2(ZONES);
     wire [ZBW-1:0] zone_id;
     wire [3:0] ov7670_Red, ov7670_Green, ov7670_Blue;
     wire [9:0] x_pixel, y_pixel;
@@ -58,14 +58,20 @@ module top_hand_signal (
         .y_pixel      (y_pixel)
     );
 
-    AreaSel  u_AreaSel (
+    AreaSel #(
+        .NX(NX),
+        .NY(NY)
+    )  u_AreaSel (
         .x_pixel(x_pixel),
         .y_pixel(y_pixel),
         .zone_id(zone_id)
     );
 
     wire [6:0] blue_flag, red_flag;
-    hand_signal u_hand_signal (
+    hand_signal #(
+        .NX(NX),
+        .NY(NY)
+    )u_hand_signal (
         .clk        (clk),
         .rst        (reset),
         .pclk       (w_pclk),
@@ -128,7 +134,10 @@ logic [31:0] spi_data_in = { red_x8, blue_y8, blue_x8, red_y8 };
         .fndFont(fndFont)
     );
 
-    print_grid u_print_grid (
+    print_grid #(
+        .NX(NX),
+        .NY(NY)
+    ) u_print_grid (
         .R        (ov7670_Red),
         .G        (ov7670_Green),
         .B        (ov7670_Blue),
@@ -146,8 +155,8 @@ endmodule
 module print_grid #(
     parameter X_SIZE = 640,   // 화면 폭
     parameter Y_SIZE = 480,   // 화면 높이
-    parameter NX     = 10,    // 가로 칸 수
-    parameter NY     = 8     // 세로 칸 수
+    parameter NX     = 20,    // 가로 칸 수
+    parameter NY     = 16     // 세로 칸 수
 ) (
     input        [3:0] R,
     input        [3:0] G,
@@ -182,8 +191,8 @@ endmodule
 module AreaSel #(
     parameter  IMG_WIDTH  = 640, 
     parameter  IMG_HEIGHT = 480,  
-    parameter  NX         = 10,   
-    parameter  NY         = 8    
+    parameter  NX         = 20,   
+    parameter  NY         = 16    
 ) (
     input  [ $clog2(IMG_WIDTH)-1:0] x_pixel,
     input  [ $clog2(IMG_HEIGHT)-1:0] y_pixel,
@@ -204,8 +213,8 @@ endmodule
 module hand_signal #(
     parameter IMG_WIDTH = 640,
     parameter IMG_HEIGHT = 480,
-    parameter NX       = 10,
-    parameter NY       = 8,
+    parameter NX       = 20,
+    parameter NY       = 16,
     parameter ZONES      = NX * NY,
     parameter IMG_WB = $clog2(IMG_WIDTH),
     parameter IMG_HB = $clog2(IMG_HEIGHT)
