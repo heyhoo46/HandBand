@@ -23,7 +23,7 @@ static uint8_t AngletoIndexNum(uint16_t angle_deg) {
 uint8_t MagnitudeToIndexNum(uint16_t magnitude) {
 	const uint16_t exclude_range = 0;
 	const uint16_t max_range = 100;
-	const uint16_t threshold = exclude_range + (max_range - exclude_range) / 2; // 10 + 45 = 55
+	const uint16_t threshold = exclude_range + (max_range - exclude_range) / 2;
 
 	if (magnitude <= exclude_range)
 		return 0xFF; //무효값
