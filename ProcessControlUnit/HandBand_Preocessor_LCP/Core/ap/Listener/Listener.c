@@ -9,8 +9,6 @@ volatile uint8_t tx_data;
 uint8_t cnt = 0;
 uint8_t tot_cnt = 0;
 
-char str[50];
-
 uint8_t rx_buffer[Buffer_Size];
 uint8_t buffer_index = 0;
 
@@ -33,6 +31,8 @@ int Listener_Execute()
 
 int Listener_CheckButton()
 {
+	char str[50];
+
 	static uint32_t prevTime = 0;
 	if(cnt > 0) {
 		if(HAL_GetTick() - prevTime > 200) {
@@ -62,17 +62,11 @@ int Listener_CheckButton()
 	cnt = 0;
 
 	// 디버깅용 UART 출력
-//	for (int i = 0; i < DATANUM; i++) {
-//		sprintf(str,"pointArr_Red[%d] = %d \n", i, data.pointArr_Red[i].x);
-//		HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
-//		sprintf(str,"pointArr_Red[%d] = %d \n", i, data.pointArr_Red[i].y);
-//		HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
-//		sprintf(str,"pointArr_Blue[%d] = %d \n", i, data.pointArr_Blue[i].x);
-//		HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
-//		sprintf(str,"pointArr_Blue[%d] = %d \n", i, data.pointArr_Blue[i].y);
-//		HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
-//		HAL_UART_Transmit(&huart1, "\n", 1, 100);
-//	}
+	HAL_UART_Transmit(&huart1, "Rx, Ry, Bx, By\n", strlen("Rx, Ry, Bx, By\n"), 100);
+	for (int i = 0; i < DATANUM; i++) {
+		sprintf(str,"[%d, %d]\t [%d, %d]\n", data.pointArr_Red[i].x, data.pointArr_Red[i].y, data.pointArr_Blue[i].x, data.pointArr_Blue[i].y);
+		HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
+	}
 
 	return 1;
 }
