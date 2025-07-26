@@ -1,6 +1,18 @@
 `timescale 1ns / 1ps
 
-module top_hand_signal (
+module top_hand_signal #(
+    parameter IMG_WIDTH = 680,
+    parameter IMG_HEIGHT = 480,
+    parameter NX = 2,
+    parameter NY = 2,
+    parameter IMG_WB = $clog2(IMG_WIDTH),
+    parameter IMG_HB = $clog2(IMG_HEIGHT),
+    parameter DATA_WIDTH = 8,
+    parameter SLAVE_CS = 2,
+    parameter BYTES_PER_PACKET = 4,
+    parameter PACKET_COUNT = 10,
+    parameter SCLK_DIV = 25
+) (
     input              clk,
     input              reset,
     input              game_start,
@@ -33,7 +45,7 @@ module top_hand_signal (
         .siod(ov7670_sda)
     );
 
-    localparam NX = 20, NY = 16, ZONES = NX * NY, ZBW = $clog2(ZONES);
+    localparam ZONES = NX * NY, ZBW = $clog2(ZONES);
     wire [ZBW-1:0] zone_id;
     wire [3:0] ov7670_Red, ov7670_Green, ov7670_Blue;
     wire [9:0] x_pixel, y_pixel;
@@ -57,10 +69,11 @@ module top_hand_signal (
         .x_pixel      (x_pixel),
         .y_pixel      (y_pixel)
     );
-
     AreaSel #(
-        .NX(NX),
-        .NY(NY)
+        .IMG_WIDTH (IMG_WIDTH),
+        .IMG_HEIGHT(IMG_HEIGHT),
+        .NX        (NX),
+        .NY        (NY)
     ) u_AreaSel (
         .x_pixel(x_pixel),
         .y_pixel(y_pixel),
@@ -69,8 +82,13 @@ module top_hand_signal (
 
     wire [6:0] blue_flag, red_flag;
     hand_signal #(
-        .NX(NX),
-        .NY(NY)
+        .IMG_WIDTH (IMG_WIDTH),
+        .IMG_HEIGHT(IMG_HEIGHT),
+        .NX        (NX),
+        .NY        (NY),
+        .ZONES     (ZONES),
+        .IMG_WB    (IMG_WB),
+        .IMG_HB    (IMG_HB)
     ) u_hand_signal (
         .clk        (clk),
         .rst        (reset),
@@ -108,7 +126,13 @@ module top_hand_signal (
     logic [31:0] spi_data_in = {red_x8, blue_y8, blue_x8, red_y8};
     // red_x8, red_y8, blue_x8, blue_y8
 
-    SPI_Master_Top u_spi_top (
+    SPI_Master_Top #(
+        .DATA_WIDTH(DATA_WIDTH),
+        .SLAVE_CS(SLAVE_CS),
+        .BYTES_PER_PACKET(BYTES_PER_PACKET),
+        .PACKET_COUNT(PACKET_COUNT),
+        .SCLK_DIV(SCLK_DIV)
+    ) u_spi_top (
         .clk        (clk),          // 125MHz system clock
         .reset      (reset),        // Reset signal
         .start_raw  (game_start),   // 원본 버튼 입력 (디바운스 전)
@@ -120,9 +144,9 @@ module top_hand_signal (
     );
 
     wire [15:0] fnd_value = red_x * 1000 +  // red X 위치
-        red_y * 100 +  // red Y 위치
-        blue_x * 10 +  // blue X 위치
-        blue_y;  // blue Y 위치
+    red_y * 100 +  // red Y 위치
+    blue_x * 10 +  // blue X 위치
+    blue_y;  // blue Y 위치
     fndController u_fndController (
         .clk    (clk),
         .reset  (reset),
@@ -133,8 +157,10 @@ module top_hand_signal (
     );
 
     print_grid #(
-        .NX(NX),
-        .NY(NY)
+        .X_SIZE(IMG_WIDTH),
+        .Y_SIZE(IMG_HEIGHT),
+        .NX    (NX),
+        .NY    (NY)
     ) u_print_grid (
         .R        (ov7670_Red),
         .G        (ov7670_Green),
