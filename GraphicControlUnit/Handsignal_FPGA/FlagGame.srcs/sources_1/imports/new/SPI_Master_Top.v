@@ -60,7 +60,7 @@ module SPI_Master_Top #(
     SPI_Master #(
         .SLAVE_CS  (SLAVE_CS),
         .DATA_WIDTH(DATA_WIDTH),
-        .SCLK_DIV  (125)
+        .SCLK_DIV  (25)
     ) U_SPI_Master (
         .clk      (clk),
         .reset    (reset),

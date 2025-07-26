@@ -1,5 +1,5 @@
-/home/hedu53/dev1/0719_handsignal/rtl/handsignal.sv
-/home/hedu53/dev1/0719_handsignal/tb/tb_handsignal.sv
+/home/hedu53/HandBand/UVM/0719_handsignal/rtl/handsignal.sv
+/home/hedu53/HandBand/UVM/0719_handsignal/tb/tb_handsignal.sv
 /tools/synopsys/vcs/W-2024.09-SP1/etc/uvm-1.2/base/uvm_barrier.svh
 /tools/synopsys/vcs/W-2024.09-SP1/etc/uvm-1.2/base/uvm_base.svh
 /tools/synopsys/vcs/W-2024.09-SP1/etc/uvm-1.2/base/uvm_bottomup_phase.svh

@@ -1,0 +1,9 @@
+{"vcs1":{"timestamp_begin":1753323357.087618227, "rt":7.36, "ut":7.46, "st":0.31}}
+{"vcselab":{"timestamp_begin":1753323364.510808997, "rt":0.18, "ut":0.13, "st":0.04}}
+{"link":{"timestamp_begin":1753323364.732658113, "rt":0.67, "ut":0.55, "st":0.14}}
+{"SNPS_VCS_INTERNAL_ROOT_START_TIME": 1753323356.639654374}
+{"VCS_COMP_START_TIME": 1753323356.639654374}
+{"VCS_COMP_END_TIME": 1753323365.499538665}
+{"VCS_USER_OPTIONS": "-full64 -sverilog -ntb_opts uvm-1.2 -uvm +incdir+./tb -timescale=1ns/100ps -debug_access+all -kdb -Mdir=./build/csrc -o ./build/simv -l ./build/comp.log ./rtl/handsignal.sv ./tb/tb_handsignal.sv"}
+{"vcs1": {"peak_mem": 452120}}
+{"vcselab": {"peak_mem": 161632}}
