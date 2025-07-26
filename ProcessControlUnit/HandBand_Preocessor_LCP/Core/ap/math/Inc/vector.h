@@ -27,8 +27,8 @@ typedef struct {
  * 	벡터의 극좌표표현 스트럭트
  */
 typedef struct {
-    int magnitude; // 크기
-    int angle_deg; // 각도 (도)
+    double magnitude; // 크기
+    float angle_deg; // 각도 (도)
 } Polar;
 
 extern user_t data;
