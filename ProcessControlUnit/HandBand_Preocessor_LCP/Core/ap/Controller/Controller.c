@@ -32,6 +32,6 @@ void controller_excute()
 	temp_Polar = TemporalFramDifferencing(data.pointArr_Red, DATANUM);
 	memcpy(&Red_ctrl_vector, &temp_Polar  , sizeof(Polar));
 
-	temp_Polar = TemporalFramDifferencing(data.pointArr_Blue, DATANUM);
-	memcpy(&Blue_ctrl_vector, &temp_Polar  , sizeof(Polar));
+//	temp_Polar = TemporalFramDifferencing(data.pointArr_Blue, DATANUM);
+//	memcpy(&Blue_ctrl_vector, &temp_Polar  , sizeof(Polar));
 }
