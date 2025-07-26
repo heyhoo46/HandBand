@@ -4,7 +4,8 @@ module SPI_Master_Top #(
     parameter DATA_WIDTH = 8,
     parameter SLAVE_CS   = 2,
     parameter BYTES_PER_PACKET = 4,   // 한 번에 보낼 바이트 수
-    parameter PACKET_COUNT = 10       // 총 패킷 수
+    parameter PACKET_COUNT = 10,       // 총 패킷 수
+    parameter SCLK_DIV = 125
 ) (
     // Global signals
     input wire clk,   // 125MHz system clock
@@ -60,7 +61,7 @@ module SPI_Master_Top #(
     SPI_Master #(
         .SLAVE_CS  (SLAVE_CS),
         .DATA_WIDTH(DATA_WIDTH),
-        .SCLK_DIV  (25)
+        .SCLK_DIV  (SCLK_DIV)
     ) U_SPI_Master (
         .clk      (clk),
         .reset    (reset),
