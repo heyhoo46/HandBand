@@ -57,27 +57,30 @@ module SPI_Master_Top #(
         .spi_done    (spi_done)
     );
 
-    clk_divider u_clk_divider (
-        .clk    (clk),
-        .reset   (reset),
-        .sclk_out(sclk_out)
-    );
-
-    spi_master u_spi_master (
-        .mclk    (sclk_out),
-        .rst     (rst),
-        .load    (load),
-        .miso    (miso),
-        .start   (start),
-        .read    (read),
-        .data_in (data_in),
-        .data_out(data_out),
-        .mosi    (mosi),
-        .cs      (cs),
-        .sclk    (sclk)
+    // SPI Master 인스턴스
+    SPI_Master #(
+        .SLAVE_CS  (SLAVE_CS),
+        .DATA_WIDTH(DATA_WIDTH),
+        .SCLK_DIV  (SCLK_DIV)
+    ) U_SPI_Master (
+        .clk      (clk),
+        .reset    (reset),
+        .cpol     (1'b0),
+        .cpha     (1'b0),
+        .start    (spi_start),
+        .tx_data  (spi_tx_data),
+        .rx_data  (),
+        .done     (spi_done),
+        .ready    (spi_ready),
+        .slave_sel(1'b0),
+        .SCLK     (SCLK),
+        .MOSI     (spi_mosi),
+        .MISO     (),
+        .CS       (CS)
     );
 
 endmodule
+`timescale 1ns / 1ps
 
 module SPI_Packet_Controller #(
     parameter BYTES_PER_PACKET = 4,  // 한 번에 보낼 바이트 수
@@ -102,13 +105,10 @@ module SPI_Packet_Controller #(
     localparam TIMER_100MS = 12_500_000;
 
     // 상태 머신
-    localparam IDLE = 2'b00, 
-               TRANSMIT = 2'b01, 
-               WAIT_TIMER = 2'b10,
-               COOLDOWN = 2'b11;
+    localparam IDLE = 0, TRANSMIT = 1, WAIT_TIMER = 2, COOLDOWN = 3, MARGIN = 4;
 
     // 상태 머신 및 제어 신호
-    reg [1:0] state, state_next;
+    reg [2:0] state, state_next;
     reg [31:0] timer_counter, timer_counter_next;
     reg [3:0] packet_counter, packet_counter_next;  // 0~9 (10개 패킷)
     reg [1:0] byte_counter, byte_counter_next;  // 0~3 (4바이트)
@@ -190,8 +190,18 @@ module SPI_Packet_Controller #(
                     end else begin
                         // 현재 패킷의 다음 바이트 전송
                         byte_counter_next = byte_counter + 1;
-                        spi_start_next = 1'b1;
+                        state_next = MARGIN;
                     end
+                end
+            end
+
+            MARGIN: begin
+                if (timer_counter == 125-1) begin
+                    // 0.1초 대기 완료 - 현재 packet_data 값을 새로 로드
+                    spi_start_next = 1'b1;
+                    state_next = TRANSMIT;
+                end else begin
+                    timer_counter_next = timer_counter + 1;
                 end
             end
 
@@ -345,89 +355,222 @@ module SPI_Master #(
     end
 endmodule
 
-// clk_divider.v
-// 시스템 클럭을 분주하여 SPI 클럭 생성 모듈
-module clk_divider (
-    input wire clk,     // 마스터 클럭 (예: 125MHz)
-    input wire reset,    // 리셋 신호 (액티브 하이 가정)
-    output reg sclk_out  // 분주된 SPI 클럭 출력
-);
+// `timescale 1ns / 1ps
 
-    // 파라미터로 분주비 설정 (시스템 클럭 / 원하는 SPI 클럭)
-    // 125MHz / 5.208MHz = 24
-    localparam CLK_DIV_FACTOR = 24;
+// module SPI_Master #(
+//     parameter SLAVE_CS   = 2,
+//     parameter DATA_WIDTH = 8,
+//     parameter SCLK_DIV   = 125  // 125MHz/SCLK_DIV = SPI clock
+// ) (
+//     // global signals
+//     input            clk,
+//     input            reset,
+//     // internal signals
+//     input            cpol,
+//     input            cpha,
+//     input            start,
+//     input      [7:0] tx_data,
+//     output     [7:0] rx_data,
+//     output reg       done,
+//     output reg       ready,
+//     input            slave_sel,
+//     //external port
+//     output           SCLK,
+//     output           MOSI,
+//     input            MISO,
+//     output     [1:0] CS
+// );
 
-    // 카운터 비트 폭 계산: $clog2(CLK_DIV_FACTOR)
-    // CLK_DIV_FACTOR=24 -> $clog2(24) = 5 (0~23)
-    reg [$clog2(CLK_DIV_FACTOR)-1:0] counter_reg;
+//     reg [1:0] cs_reg;
+//     assign CS = cs_reg;
 
-    always @(posedge clk or posedge reset) begin // reset은 액티브 하이로 가정
-        if (reset) begin
-            counter_reg <= 0;
-            sclk_out <= 0; // 초기 클럭 상태 (CPOL=0을 따르려면 0으로 시작)
-        end else begin
-            if (counter_reg == (CLK_DIV_FACTOR/2) - 1) begin // 카운터가 절반에 도달하면 클럭 토글
-                sclk_out <= ~sclk_out;
-                counter_reg <= 0;  // 카운터 리셋
-            end else begin
-                counter_reg <= counter_reg + 1;
-            end
-        end
-    end
+//     localparam IDLE = 0, CP_DELAY = 1, CP0 = 2, CP1 = 3;
 
-endmodule
+//     reg [1:0] state, state_next;
+//     reg [7:0] temp_tx_data_next, temp_tx_data_reg;
+//     reg [7:0] temp_rx_data_next, temp_rx_data_reg;
+//     reg [$clog2(SCLK_DIV)-1:0] sclk_counter_next, sclk_counter_reg;
+//     reg [$clog2(DATA_WIDTH)-1:0] bit_counter_next, bit_counter_reg;
+//     wire r_sclk;
 
-/*###################################################################*\
-##              Module Name: spi_master                              ##
-##              Project Name: spi_protocol                           ##
-##              Date:   9/12/2023                                    ##
-##              Author: Kholoud Ebrahim Darwseh                      ##
-\*###################################################################*/
+//     assign MOSI = temp_tx_data_reg[7];
+//     assign rx_data = temp_rx_data_reg;
+//     assign r_sclk = (state_next == CP1 && ~cpha) || (state_next == CP0 && cpha);
+//     assign SCLK = cpol ? ~r_sclk : r_sclk;
 
-module spi_master (
-    mclk,
-    rst,
-    load,
-    read,
-    miso,
-    start,
-    data_in,
-    data_out,
-    mosi,
-    sclk,
-    cs
-);
-    input mclk, rst, load, miso, start, read;
-    input [7:0] data_in;
-    output [7:0] data_out;
-    output reg mosi, cs;
-    output sclk;
 
-    integer count;
-    reg [7:0] shift_reg;
-    reg [7:0] data_out_reg;
+//     always @(posedge clk, posedge reset) begin
+//         if (reset) begin
+//             state <= IDLE;
+//             temp_tx_data_reg <= 0;
+//             temp_rx_data_reg <= 0;
+//             sclk_counter_reg <= 0;
+//             bit_counter_reg <= 0;
+//         end else begin
+//             state <= state_next;
+//             temp_tx_data_reg <= temp_tx_data_next;
+//             temp_rx_data_reg <= temp_rx_data_next;
+//             sclk_counter_reg <= sclk_counter_next;
+//             bit_counter_reg <= bit_counter_next;
+//         end
+//     end
 
-    assign data_out = read ? data_out_reg : 8'h00;
-    assign sclk = mclk;
+//     always @(*) begin
+//         state_next        = state;
+//         temp_tx_data_next = temp_tx_data_reg;
+//         temp_rx_data_next = temp_rx_data_reg;
+//         ready             = 0;
+//         done              = 0;
+//         cs_reg            = {SLAVE_CS{1'b1}};
+//         sclk_counter_next = sclk_counter_reg;
+//         bit_counter_next  = bit_counter_reg;
+//         case (state)
+//             IDLE: begin
+//                 ready             = 1;
+//                 cs_reg[slave_sel] = 1'b1;
+//                 if (start) begin
+//                     temp_tx_data_next = tx_data;
+//                     ready             = 0;
+//                     sclk_counter_next = 0;
+//                     bit_counter_next  = 0;
+//                     cs_reg[slave_sel] = 1'b0;
+//                     state_next        = cpha ? CP_DELAY : CP0;
+//                 end
+//             end
+//             CP_DELAY: begin
+//                 cs_reg[slave_sel] = 1'b0;
+//                 if (sclk_counter_reg == SCLK_DIV - 1) begin
+//                     sclk_counter_next = 0;
+//                     state_next = CP0;
+//                 end else begin
+//                     sclk_counter_next = sclk_counter_reg + 1;
+//                 end
+//             end
+//             CP0: begin
+//                 cs_reg[slave_sel] = 1'b0;
+//                 if (sclk_counter_reg == SCLK_DIV - 1) begin
+//                     temp_rx_data_next = {temp_rx_data_reg[6:0], MISO};
+//                     sclk_counter_next = 0;
+//                     state_next        = CP1;
+//                 end else begin
+//                     sclk_counter_next = sclk_counter_reg + 1;
+//                 end
+//             end
+//             CP1: begin
+//                 cs_reg[slave_sel] = 1'b0;
+//                 if (sclk_counter_reg == SCLK_DIV - 1) begin
+//                     if (bit_counter_reg == DATA_WIDTH - 1) begin
+//                         done = 1;
+//                         if (start) begin
+//                             // 연속 전송 - 즉시 다음 바이트 시작
+//                             temp_tx_data_next = tx_data;
+//                             sclk_counter_next = 0;
+//                             bit_counter_next  = 0;
+//                             state_next        = cpha ? CP_DELAY : CP0;
+//                         end else begin
+//                             state_next = IDLE;
+//                         end
+//                     end else begin
+//                         temp_tx_data_next = {temp_tx_data_reg[6:0], 1'b0};
+//                         sclk_counter_next = 0;
+//                         bit_counter_next  = bit_counter_reg + 1;
+//                         state_next        = CP0;
+//                     end
+//                 end else begin
+//                     sclk_counter_next = sclk_counter_reg + 1;
+//                 end
+//             end
+//         endcase
+//     end
+// endmodule
 
-    always @(posedge sclk, negedge rst)
-        if (!rst) begin
-            shift_reg    <= 0;
-            cs           <= 0;
-            mosi         <= 0;
-            data_out_reg <= 0;
-        end else begin
-            if (start) begin
-                if (load) begin
-                    shift_reg <= data_in;
-                    count     <= 0;
-                end else if (read) begin
-                    data_out_reg <= shift_reg;
-                end else if (count <= 8) begin
-                    shift_reg <= {miso, shift_reg[7:1]};
-                    mosi      <= shift_reg[0];
-                    count     <= count + 1;
-                end
-            end
-        end
-endmodule : spi_master
+// `timescale 1ns / 1ps
+
+// module SPI_Master #(
+//     parameter DATA_WIDTH = 8,
+//     parameter SCLK_DIV = 125  // 125MHz/125 = 1MHz SPI clock
+// ) (
+//     // Global signals
+//     input  wire                  clk,
+//     input  wire                  reset,
+//     // Control signals
+//     input  wire                  enable,
+//     input  wire [DATA_WIDTH-1:0] tx_data,
+//     output reg  [DATA_WIDTH-1:0] rx_data,
+//     // SPI interface
+//     output reg                   SCLK,
+//     output wire                  MOSI,
+//     input  wire                  MISO,
+//     output reg                   CS
+// );
+
+//     // 간단한 상태 머신
+//     localparam IDLE = 0, ACTIVE = 1;
+
+//     reg state;
+//     reg [7:0] counter;
+//     reg [3:0] bit_count;
+//     reg [7:0] shift_reg;
+
+//     // MOSI는 shift register의 MSB로 직접 연결
+//     assign MOSI = shift_reg[7];
+
+//     always @(posedge clk) begin
+//         if (reset) begin
+//             state <= IDLE;
+//             counter <= 8'h00;
+//             bit_count <= 4'h0;
+//             shift_reg <= 8'h00;
+//             rx_data <= 8'h00;
+//             SCLK <= 1'b0;
+//             CS <= 1'b1;
+//         end else begin
+//             case (state)
+//                 IDLE: begin
+//                     CS <= 1'b1;
+//                     SCLK <= 1'b0;
+//                     counter <= 8'h00;
+//                     bit_count <= 4'h0;
+
+//                     if (enable) begin
+//                         shift_reg <= tx_data;  // 새 데이터 로드
+//                         state <= ACTIVE;
+//                         CS <= 1'b0;
+//                     end
+//                 end
+
+//                 ACTIVE: begin
+//                     CS <= 1'b0;
+
+//                     if (counter == (SCLK_DIV/2 - 1)) begin
+//                         counter <= 8'h00;
+//                         SCLK <= ~SCLK;
+
+//                         if (SCLK == 1'b1) begin
+//                             // Falling edge
+//                             bit_count <= bit_count + 1;
+
+//                             if (bit_count == 4'd7) begin
+//                                 // 8비트 완료
+//                                 if (enable) begin
+//                                     shift_reg <= tx_data;  // 다음 데이터
+//                                     bit_count <= 4'h0;
+//                                 end else begin
+//                                     state <= IDLE;
+//                                 end
+//                             end else begin
+//                                 shift_reg <= {shift_reg[6:0], 1'b0};
+//                             end
+//                         end else begin
+//                             // Rising edge - MISO 샘플링
+//                             rx_data <= {rx_data[6:0], MISO};
+//                         end
+//                     end else begin
+//                         counter <= counter + 1;
+//                     end
+//                 end
+//             endcase
+//         end
+//     end
+
+// endmodule
