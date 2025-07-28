@@ -60,15 +60,6 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-int __io_putchar(int ch)
-{
-	HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 1000);
-
-	return ch;
-}
-
-extern uint16_t distance;
-extern uint32_t echoTime;
 
 /* USER CODE END 0 */
 
@@ -106,9 +97,18 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  Button_Init(&hBtnClick1, GPIOC, GPIO_PIN_0);
-  Button_Init(&hBtnClick2, GPIOC, GPIO_PIN_1);
-  DF_Init(0x10);
+  //left
+  Button_Init(&hBtnDo, GPIOC, GPIO_PIN_10);
+  Button_Init(&hBtnRe, GPIOC, GPIO_PIN_12);
+  Button_Init(&hBtnMi, GPIOA, GPIO_PIN_13);
+  Button_Init(&hBtnPa, GPIOA, GPIO_PIN_14);
+  //right
+  Button_Init(&hBtnSol, GPIOC, GPIO_PIN_0);
+  Button_Init(&hBtnLa, GPIOC, GPIO_PIN_1);
+  Button_Init(&hBtnSi, GPIOB, GPIO_PIN_0);
+  Button_Init(&hBtnDDO, GPIOA, GPIO_PIN_4);
+
+  DF_Init(0x1E);
 
   //Initial 0001 mp3 sound
 //  DF_PlayFromStart();
@@ -119,22 +119,40 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
-	  if(Button_GetState(&hBtnClick1) == ACT_RELEASED){
-		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, SET);
+//	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, RESET);
+	  if(Button_GetState(&hBtnDo) == ACT_RELEASED){
 		  Send_cmd(0x03, 0x00, 0x01);
 	  }
-	  else if(Button_GetState(&hBtnClick2) == ACT_RELEASED){
-		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, RESET);
+	  else if(Button_GetState(&hBtnRe) == ACT_RELEASED){
 		  Send_cmd(0x03, 0x00, 0x02);
 	  }
+	  else if(Button_GetState(&hBtnMi) == ACT_RELEASED){
+		  Send_cmd(0x03, 0x00, 0x03);
+	  }
+	  else if(Button_GetState(&hBtnPa) == ACT_RELEASED){
+		  Send_cmd(0x03, 0x00, 0x04);
+	  }
+	  else if(Button_GetState(&hBtnSol) == ACT_RELEASED){
+		  Send_cmd(0x03, 0x00, 0x05);
+	  }
+	  else if(Button_GetState(&hBtnLa) == ACT_RELEASED){
+		  Send_cmd(0x03, 0x00, 0x06);
+	  }
+	  else if(Button_GetState(&hBtnSi) == ACT_RELEASED){
+		  Send_cmd(0x03, 0x00, 0x07);
+	  }
+	  else if(Button_GetState(&hBtnDDO) == ACT_PUSHED){
+//		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, SET);
+		  Send_cmd(0x03, 0x00, 0x08);
+	  }
+
 //	  Check_Key();
 
 	  /// ultra callback
 //	  Ultra_RunCallBack();
 //
 //      if(1 <= distance && distance < 5){
-//    	  //play DO (play, 0000 file)
+//    	  //play DO (play, 0000 file?
 //    	  Send_cmd(0x03,0x00,0x00);
 //      }
 //      else if(5 <= distance && distance < 10){
