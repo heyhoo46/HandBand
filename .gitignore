@@ -10,7 +10,6 @@
 **/Drivers/**
 **/Middlewares/**
 #Exclude CubeIDE Files
-.cproject
 
 #Exclude vivado Trees
 **/**.runs/**
