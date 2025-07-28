@@ -97,7 +97,7 @@ int main(void)
   MX_SPI1_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  HAL_UART_Transmit(&huart2, "run\n", strlen("run\n"), 100);
   /* USER CODE END 2 */
 
   /* Infinite loop */

@@ -19,9 +19,9 @@ module SPI_Master_Top #(
     input wire [31:0] packet_data,  // 32비트 데이터
 
     // SPI interface
-    output wire                SCLK,  // SPI Clock
-    output wire                MOSI,  // Master Out Slave In
-    output wire [SLAVE_CS-1:0] CS     // Chip Select
+    output wire SCLK,  // SPI Clock
+    output wire MOSI,  // Master Out Slave In
+    output wire CS     // Chip Select
 );
 
     // 내부 신호들
@@ -196,7 +196,7 @@ module SPI_Packet_Controller #(
             end
 
             MARGIN: begin
-                if (timer_counter == 125-1) begin
+                if (timer_counter == 125 - 1) begin
                     // 0.1초 대기 완료 - 현재 packet_data 값을 새로 로드
                     spi_start_next = 1'b1;
                     state_next = TRANSMIT;
@@ -256,11 +256,11 @@ module SPI_Master #(
     output           SCLK,
     output           MOSI,
     input            MISO,
-    output     [1:0] CS
+    output           CS
 );
 
-    reg [1:0] cs_reg;
-    assign CS = cs_reg;
+    reg cs_reg;
+    assign CS = ~cs_reg;
 
     localparam IDLE = 0, CP_DELAY = 1, CP0 = 2, CP1 = 3;
 
@@ -298,25 +298,25 @@ module SPI_Master #(
         temp_rx_data_next = temp_rx_data_reg;
         ready             = 0;
         done              = 0;
-        cs_reg            = {SLAVE_CS{1'b1}};
+        cs_reg            = 1'b1;
         sclk_counter_next = sclk_counter_reg;
         bit_counter_next  = bit_counter_reg;
 
         case (state)
             IDLE: begin
-                ready             = 1;
-                cs_reg[slave_sel] = 1'b1;
+                ready  = 1;
+                cs_reg = 1'b1;
                 if (start) begin
                     temp_tx_data_next = tx_data;
                     ready             = 0;
                     sclk_counter_next = 0;
                     bit_counter_next  = 0;
-                    cs_reg[slave_sel] = 1'b0;
+                    cs_reg            = 1'b0;
                     state_next        = cpha ? CP_DELAY : CP0;
                 end
             end
             CP_DELAY: begin
-                cs_reg[slave_sel] = 1'b0;
+                cs_reg = 1'b0;
                 if (sclk_counter_reg == SCLK_DIV - 1) begin
                     sclk_counter_next = 0;
                     state_next = CP0;
@@ -325,7 +325,7 @@ module SPI_Master #(
                 end
             end
             CP0: begin
-                cs_reg[slave_sel] = 1'b0;
+                cs_reg = 1'b0;
                 if (sclk_counter_reg == SCLK_DIV - 1) begin
                     temp_rx_data_next = {temp_rx_data_reg[6:0], MISO};
                     sclk_counter_next = 0;
@@ -335,7 +335,7 @@ module SPI_Master #(
                 end
             end
             CP1: begin
-                cs_reg[slave_sel] = 1'b0;
+                cs_reg = 1'b0;
                 if (sclk_counter_reg == SCLK_DIV - 1) begin
                     if (bit_counter_reg == DATA_WIDTH - 1) begin
                         done = 1;
@@ -427,18 +427,18 @@ endmodule
 //         case (state)
 //             IDLE: begin
 //                 ready             = 1;
-//                 cs_reg[slave_sel] = 1'b1;
+//                 cs_reg = 1'b1;
 //                 if (start) begin
 //                     temp_tx_data_next = tx_data;
 //                     ready             = 0;
 //                     sclk_counter_next = 0;
 //                     bit_counter_next  = 0;
-//                     cs_reg[slave_sel] = 1'b0;
+//                     cs_reg = 1'b0;
 //                     state_next        = cpha ? CP_DELAY : CP0;
 //                 end
 //             end
 //             CP_DELAY: begin
-//                 cs_reg[slave_sel] = 1'b0;
+//                 cs_reg = 1'b0;
 //                 if (sclk_counter_reg == SCLK_DIV - 1) begin
 //                     sclk_counter_next = 0;
 //                     state_next = CP0;
@@ -447,7 +447,7 @@ endmodule
 //                 end
 //             end
 //             CP0: begin
-//                 cs_reg[slave_sel] = 1'b0;
+//                 cs_reg = 1'b0;
 //                 if (sclk_counter_reg == SCLK_DIV - 1) begin
 //                     temp_rx_data_next = {temp_rx_data_reg[6:0], MISO};
 //                     sclk_counter_next = 0;
@@ -457,7 +457,7 @@ endmodule
 //                 end
 //             end
 //             CP1: begin
-//                 cs_reg[slave_sel] = 1'b0;
+//                 cs_reg = 1'b0;
 //                 if (sclk_counter_reg == SCLK_DIV - 1) begin
 //                     if (bit_counter_reg == DATA_WIDTH - 1) begin
 //                         done = 1;
