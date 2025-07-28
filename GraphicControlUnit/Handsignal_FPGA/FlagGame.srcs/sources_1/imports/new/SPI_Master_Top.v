@@ -292,7 +292,7 @@ module SPI_Master #(
         case (state)
             IDLE: begin
                 ready             = 1;
-                cs_reg[slave_sel] = 1'b1;
+                cs_reg[slave_sel] = 1'b0;
                 if (start) begin
                     temp_tx_data_next = tx_data;
                     ready             = 0;
@@ -303,7 +303,7 @@ module SPI_Master #(
                 end
             end
             CP_DELAY: begin
-                cs_reg[slave_sel] = 1'b0;
+                cs_reg[slave_sel] = 1'b1;
                 if (sclk_counter_reg == SCLK_DIV - 1) begin
                     sclk_counter_next = 0;
                     state_next = CP0;
@@ -312,7 +312,7 @@ module SPI_Master #(
                 end
             end
             CP0: begin
-                cs_reg[slave_sel] = 1'b0;
+                cs_reg[slave_sel] = 1'b1;
                 if (sclk_counter_reg == SCLK_DIV - 1) begin
                     temp_rx_data_next = {temp_rx_data_reg[6:0], MISO};
                     sclk_counter_next = 0;
@@ -322,7 +322,7 @@ module SPI_Master #(
                 end
             end
             CP1: begin
-                cs_reg[slave_sel] = 1'b0;
+                cs_reg[slave_sel] = 1'b1;
                 if (sclk_counter_reg == SCLK_DIV - 1) begin
                     if (bit_counter_reg == DATA_WIDTH - 1) begin
                         done = 1;
