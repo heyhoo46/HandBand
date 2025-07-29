@@ -31,18 +31,19 @@ def uart_listener(manager):
     print(f"✅ UART Connected: {uart_port}")
 
     while True:
-        data = str(ser.readline().strip())[2:-1]  # 1바이트 블록 읽기
+        data = str(ser.readline().strip())[2:-1]  # read UART
         if not data: continue
         temp = list(data.split(','))
         angle, mag, cmd = list(temp[1].split())
-        point = list(temp[0].split('='))[:-1]
-
+        point = [list(map(int,string[1:-1].split())) for string in (list(temp[0].split('='))[:-1])]
+        
         new_idx = None
 
         print(f"{cmd}, {angle}")
         print(*point,sep = ', ') 
 
         if cmd in ['E', 'e']: 
+            print(f"ERROR Code: {cmd}")
             continue
 
         # 일반 이펙트 매핑
@@ -77,7 +78,9 @@ def uart_listener(manager):
 
 def gif_set(fname, total_ms=None, speed=1.0):
     """GIF 로드 후 RGBA 프레임, count, interval_ms 반환"""
-    gif = Image.open(fname)
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    image_path = os.path.join(script_directory, fname)
+    gif = Image.open(image_path)
     frames = [f.convert("RGBA") for f in ImageSequence.Iterator(gif)]
     count = len(frames)
     # duration 설정
@@ -129,7 +132,9 @@ class EffectThread:
         # 사운드 독립 재생
         ch = pygame.mixer.find_channel()
         if ch:
-            snd = pygame.mixer.Sound(self.sound_file)
+            script_directory = os.path.dirname(os.path.abspath(__file__))
+            image_path = os.path.join(script_directory, self.sound_file)
+            snd = pygame.mixer.Sound(image_path)
             ch.play(snd)
     def is_alive(self):
         return (time.time() - self.start_time) < self.duration
@@ -641,7 +646,9 @@ class rgb_flash_eft:
             self.last_switch = now
 
             # 🔊 색상 바뀔 때마다 사운드 실행
-            sound("lamp.wav").start()
+            script_directory = os.path.dirname(os.path.abspath(__file__))
+            image_path = os.path.join(script_directory, "lamp.wav")
+            sound(image_path).start()
 
         overlay = np.full_like(frame, self.current_color, dtype=np.uint8)
         filtered = cv2.addWeighted(frame, 1 - self.ALPHA, overlay, self.ALPHA, 0)
@@ -819,7 +826,9 @@ def video_start():
     flame_frames, flame_count, flame_interval = gifs["Flame.gif"]
     purple_frames, _, purple_interval         = gifs["Purple_Flame.gif"]
     # fog 전처리
-    fog_raw = [f.convert("RGBA") for f in ImageSequence.Iterator(Image.open("fog2.gif"))]
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    image_path = os.path.join(script_directory, "fog2.gif")
+    fog_raw = [f.convert("RGBA") for f in ImageSequence.Iterator(Image.open(image_path))]
     bbox = fog_eft.compute_common_bbox(fog_raw)
     fog_frames = [f.crop(bbox) for f in fog_raw]
     fog_mirror = [ImageOps.mirror(f) for f in fog_frames]
