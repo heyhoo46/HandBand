@@ -62,7 +62,12 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+int __io_putchar(int ch)
+{
+	HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 1000);
 
+	return ch;
+}
 /* USER CODE END 0 */
 
 /**
@@ -97,7 +102,7 @@ int main(void)
   MX_SPI1_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_UART_Transmit(&huart2, "run\n", strlen("run\n"), 100);
+//  HAL_UART_Transmit(&huart2, "run\n", strlen("run\n"), 100);
   /* USER CODE END 2 */
 
   /* Infinite loop */
