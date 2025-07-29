@@ -9,8 +9,14 @@
 
 enum {PUSHED=0, RELEASED};
 
-Button_Handler_t hBtnClick1;
-Button_Handler_t hBtnClick2;
+Button_Handler_t hBtnDo;
+Button_Handler_t hBtnRe;
+Button_Handler_t hBtnMi;
+Button_Handler_t hBtnPa;
+Button_Handler_t hBtnSol;
+Button_Handler_t hBtnLa;
+Button_Handler_t hBtnSi;
+Button_Handler_t hBtnDDO;
 
 
 void Button_Init(Button_Handler_t *hbtn, GPIO_TypeDef * GPIOx, uint16_t pinNum)

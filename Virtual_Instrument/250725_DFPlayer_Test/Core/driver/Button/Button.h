@@ -17,8 +17,15 @@ typedef struct {
 	uint32_t prevState;
 }Button_Handler_t;
 
-extern Button_Handler_t hBtnClick1;
-extern Button_Handler_t hBtnClick2;
+extern Button_Handler_t hBtnDo;
+extern Button_Handler_t hBtnRe;
+extern Button_Handler_t hBtnMi;
+extern Button_Handler_t hBtnPa;
+extern Button_Handler_t hBtnSol;
+extern Button_Handler_t hBtnLa;
+extern Button_Handler_t hBtnSi;
+extern Button_Handler_t hBtnDDO;
+
 
 void Button_Init(Button_Handler_t *hbtn, GPIO_TypeDef * GPIOx, uint16_t pinNum);
 button_state_t Button_GetState(Button_Handler_t *hbtn);
