@@ -47,21 +47,21 @@ def uart_listener(manager):
             continue
 
         # 일반 이펙트 매핑
-        if cmd == '\xbb':      # D
+        if cmd == '-':      # D
             new_idx = 5          # flame
-        elif cmd == '\xcc':    # U
+        elif cmd == '-':    # U
             new_idx = 6          # purple flame
-        elif cmd == '\x66':    # f
+        elif cmd == '-':    # f
             new_idx = 7          # fog
-        elif cmd == '\x77':    # w
+        elif cmd == '-':    # w
             new_idx = 0          # spotlight (기본)
-        elif cmd == '\xee':    # î
+        elif cmd == 'b':    # î
             new_idx = 4          # confetti
-        elif cmd == '\xff':    # ÿ
+        elif cmd == '-':    # ÿ
             new_idx = 5          # rgb_flash
-        elif cmd == 'b':    # DC1
+        elif cmd == '-':    # DC1
             new_idx = 6          # blur
-        elif cmd == '\x22':    # "
+        elif cmd == '-':    # "
             new_idx = 7          # zoom
 
         # Spotlight 전용: left/right/all
@@ -522,7 +522,7 @@ class spotlight_eft:
 class confetti_eft:
     # 기준 해상도 (이 해상도를 기준으로 스케일을 계산)
     BASE_WIDTH  = 640
-    BASE_HEIGHT = 360
+    BASE_HEIGHT = 480
 
     # ▶ 크기 조절용 외부 파라미터 (기본값 1.0)
     CONFETTI_SIZE_SCALE = 0.7
