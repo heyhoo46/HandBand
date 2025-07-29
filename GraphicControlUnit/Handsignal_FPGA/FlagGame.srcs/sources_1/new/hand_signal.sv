@@ -3,8 +3,8 @@
 module top_hand_signal #(
     parameter IMG_WIDTH = 680,
     parameter IMG_HEIGHT = 480,
-    parameter NX = 2,
-    parameter NY = 2,
+    parameter NX = 10,
+    parameter NY = 8,
     parameter IMG_WB = $clog2(IMG_WIDTH),
     parameter IMG_HB = $clog2(IMG_HEIGHT),
     parameter DATA_WIDTH = 8,
@@ -143,10 +143,7 @@ module top_hand_signal #(
         .CS         (CS)            // Chip Select
     );
 
-    wire [15:0] fnd_value = red_x * 1000 +  // red X 위치
-    red_y * 100 +  // red Y 위치
-    blue_x * 10 +  // blue X 위치
-    blue_y;  // blue Y 위치
+    wire [15:0] fnd_value = red_x * 100 + red_y;
     fndController u_fndController (
         .clk    (clk),
         .reset  (reset),
@@ -330,8 +327,8 @@ endmodule
 
 module rgb_color_detect #(
     parameter ABS_TH   = 6,
-    parameter MARGIN_1 = 2,
-    parameter MARGIN_2 = 3,
+    parameter MARGIN_1 = 5,
+    parameter MARGIN_2 = 5,
     parameter HIST_LEN = 4
 ) (
     input  logic       pclk,
