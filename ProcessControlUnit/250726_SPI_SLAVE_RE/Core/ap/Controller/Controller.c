@@ -20,7 +20,7 @@ void controller_excute()
 	// Initial state based on the first point of the raw data
 	KalmanFilter_Init(&myKalmanFilter, dt, (float)data.pointArr_Red[0].x, (float)data.pointArr_Red[0].y, 0.0f, 0.0f); // Initial velocity assumed to be zero (float 0.0f)
 	float x_float, y_float;
-	for(int i = 0; i < DATANUM; i++) {
+	for(int i = 1; i < DATANUM; i++) {
 		Point measured = data.pointArr_Red[i];
 		KalmanFilter_Update(&myKalmanFilter, measured, &x_float, &y_float);
 	}
@@ -28,8 +28,8 @@ void controller_excute()
 
 
 
-//	temp_Polar = convertVectorToPolarInt((Point){(int)x_float, (int)y_float});
-	temp_Polar = TemporalFramDifferencing(data.pointArr_Red, DATANUM);
+	temp_Polar = convertVectorToPolarInt((Point){(int)x_float, (int)y_float});
+//	temp_Polar = TemporalFramDifferencing(data.pointArr_Red, DATANUM);
 	memcpy(&Red_ctrl_vector, &temp_Polar  , sizeof(Polar));
 
 //	temp_Polar = TemporalFramDifferencing(data.pointArr_Blue, DATANUM);
