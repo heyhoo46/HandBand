@@ -24,6 +24,8 @@
 **.str
 **backup**
 **.bkp
+#Exclude vitis File
+.analytics
 
 #Exept gitignore
 !.gitignore
