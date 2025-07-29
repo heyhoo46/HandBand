@@ -2,40 +2,13 @@ import threading, pygame, time, os, cv2, serial, random, math
 from PIL import Image, ImageSequence, ImageOps
 import numpy as np
 from collections import deque
-
-# 전역 변수 및 락
-overlay_on = False #기본값은 효과를 실행하지 X
-effect_request = False # 새로운 이펙트 실행
-overlay_lock = threading.Lock() # Thread를 독립적으로 실행시키기 위함
-spot_state = 0        # spotlight 상태 (0:left, 1:right, 2:all)
-
-uart_port = "COM17"
-uart_baudrate = 115200
-
-cam_num = 1
-maximum_frame_rate = 30
-
-eft_num = 0
-channel_map = {}
-
-gif_base_path = r"C:/harman/Double_effect_stage/"
-sound_base_addr = "C:/harman/Double_effect_stage/"
-
-# 캠 프레임
-cam_frame = None #(0, 1)
-
-# pygame 초기화 (사운드용)
-pygame.init()
-pygame.mixer.init()
-
-
 class sound(threading.Thread):
     def __init__(self, path):
         super().__init__()
         self.path = path
 
     def run(self):
-        mp3_path = os.path.join(sound_base_addr, self.path)
+        mp3_path = os.path.join(self.path)
         if not os.path.exists(mp3_path):
             print("❌ 사운드 파일 없음")
             return  # overlay_on을 제어하지 않음
@@ -104,8 +77,7 @@ def uart_listener(manager):
 
 def gif_set(fname, total_ms=None, speed=1.0):
     """GIF 로드 후 RGBA 프레임, count, interval_ms 반환"""
-    path = os.path.join(gif_base_path, fname)
-    gif = Image.open(path)
+    gif = Image.open(fname)
     frames = [f.convert("RGBA") for f in ImageSequence.Iterator(gif)]
     count = len(frames)
     # duration 설정
@@ -157,7 +129,7 @@ class EffectThread:
         # 사운드 독립 재생
         ch = pygame.mixer.find_channel()
         if ch:
-            snd = pygame.mixer.Sound(os.path.join(sound_base_addr, self.sound_file))
+            snd = pygame.mixer.Sound(self.sound_file)
             ch.play(snd)
     def is_alive(self):
         return (time.time() - self.start_time) < self.duration
@@ -847,7 +819,7 @@ def video_start():
     flame_frames, flame_count, flame_interval = gifs["Flame.gif"]
     purple_frames, _, purple_interval         = gifs["Purple_Flame.gif"]
     # fog 전처리
-    fog_raw = [f.convert("RGBA") for f in ImageSequence.Iterator(Image.open(os.path.join(gif_base_path,"fog2.gif")))]
+    fog_raw = [f.convert("RGBA") for f in ImageSequence.Iterator(Image.open("fog2.gif"))]
     bbox = fog_eft.compute_common_bbox(fog_raw)
     fog_frames = [f.crop(bbox) for f in fog_raw]
     fog_mirror = [ImageOps.mirror(f) for f in fog_frames]
@@ -907,6 +879,30 @@ def video_start():
                 cv2.setWindowProperty("Fire", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_NORMAL)
 
     cv2.destroyAllWindows()
+
+# 전역 변수 및 락
+overlay_on = False #기본값은 효과를 실행하지 X
+effect_request = False # 새로운 이펙트 실행
+overlay_lock = threading.Lock() # Thread를 독립적으로 실행시키기 위함
+spot_state = 0        # spotlight 상태 (0:left, 1:right, 2:all)
+
+print("PORT NUM:")
+uart_port = "COM"+str(input())
+uart_baudrate = 115200
+
+print("CAM NUM:")
+cam_num = int(input())
+maximum_frame_rate = 30
+
+eft_num = 0
+channel_map = {}
+
+# 캠 프레임
+cam_frame = None #(0, 1)
+
+# pygame 초기화 (사운드용)
+pygame.init()
+pygame.mixer.init()
 
 if __name__ == "__main__":
     video_start()
