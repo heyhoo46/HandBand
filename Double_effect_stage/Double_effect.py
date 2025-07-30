@@ -46,28 +46,29 @@ def uart_listener(manager):
             print(f"ERROR Code: {cmd}")
             continue
 
+        # f g h
+        # e x a
+        # d c b
         # 일반 이펙트 매핑
-        if cmd == '-':      # D
-            new_idx = 5          # flame
-        elif cmd == '-':    # U
-            new_idx = 6          # purple flame
-        elif cmd == '-':    # f
-            new_idx = 7          # fog
-        elif cmd == '-':    # w
-            new_idx = 0          # spotlight (기본)
-        elif cmd == 'b':    # î
-            new_idx = 4          # confetti
-        elif cmd == '-':    # ÿ
-            new_idx = 5          # rgb_flash
-        elif cmd == '-':    # DC1
-            new_idx = 6          # blur
-        elif cmd == '-':    # "
-            new_idx = 7          # zoom
-
+        if cmd == 'e': # Flame
+            new_idx = 0 
+        elif cmd == '-': # purple_Flame
+            new_idx = 1
+        elif cmd == 'd': # fog
+            new_idx = 2 
         # Spotlight 전용: left/right/all
-        elif cmd in ('c', 'a', 'd'):
+        elif cmd in ('f', 'g', 'h'):
             new_idx = 3          # spotlight 이펙트 인덱스
-            spot_state = {'c':0, 'a':1, 'd':2}[cmd]
+            spot_state = {'f':0, 'g':1, 'h':2}[cmd]
+        elif cmd == 'c':    # 꽃가루
+            new_idx = 4 
+        elif cmd == 'a':    # rgb 조명
+            new_idx = 5 
+        elif cmd == 'b':    # Blur
+            new_idx = 6
+        elif cmd == 'd':    # 줌인아웃
+            new_idx = 7
+
 
         # 들어온 바이트가 매핑에 없으면 무시
         if new_idx is None:
@@ -101,9 +102,9 @@ class FrameGrabber(threading.Thread):
         cap.set(cv2.CAP_PROP_FOURCC,      fourcc)
         cap.set(cv2.CAP_PROP_AUTOFOCUS,   0)
         cap.set(cv2.CAP_PROP_BUFFERSIZE,  0)
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT,1080)
-        cap.set(cv2.CAP_PROP_FPS,         maximum_frame_rate)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1080)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT,720)
+        cap.set(cv2.CAP_PROP_FPS, maximum_frame_rate)
         self.cap = cap
         self.queue = queue
         self.lock  = lock
@@ -156,7 +157,7 @@ class EffectManager:
             for i,t in enumerate(self.active):
                 if t.idx == idx:
                     obj = self.factories[idx]()
-                    if idx==3: obj.set_state(spot_state)
+                    if idx == 3: obj.set_state(spot_state)
                     thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
                     thr.start()
                     self.active[i] = thr
@@ -164,7 +165,7 @@ class EffectManager:
             # 신규 슬록 있으면
             if len(self.active) < self.MAX_CONCURRENT:
                 obj = self.factories[idx]()
-                if idx==3: obj.set_state(spot_state)
+                if idx == 3: obj.set_state(spot_state)
                 thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
                 thr.start()
                 self.active.append(thr)
@@ -814,7 +815,7 @@ def video_start():
     while True:
         with queue_lock:
             if frame_queue:
-                sample = frame_queue[0].copy()
+                sample = frame_queue.popleft()
                 break
         time.sleep(0.01)
     h, w = sample.shape[:2]
@@ -871,7 +872,7 @@ def video_start():
         with queue_lock:
             if not frame_queue:
                 continue
-            frame = frame_queue[0].copy()
+            frame = frame_queue.popleft()
 
         out = manager.composite(frame)
         cv2.imshow("Fire", out)
