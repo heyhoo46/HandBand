@@ -63,6 +63,6 @@ void Presenter_Execute(void) {
 		printf("[%d %d]=", data.pointArr_Red[i].x, data.pointArr_Red[i].y);
 	}
 	printf(",%f %f %c\n", Red_ctrl_vector.angle_deg, Red_ctrl_vector.magnitude, effect);
-	printf("%c", effect);
+//	printf("%c", effect);
 }
 
