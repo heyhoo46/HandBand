@@ -3,8 +3,8 @@
 module top_hand_signal #(
     parameter IMG_WIDTH = 680,
     parameter IMG_HEIGHT = 480,
-    parameter NX = 10,
-    parameter NY = 8,
+    parameter NX = 20,
+    parameter NY = 16,
     parameter IMG_WB = $clog2(IMG_WIDTH),
     parameter IMG_HB = $clog2(IMG_HEIGHT),
     parameter DATA_WIDTH = 8,
@@ -326,7 +326,7 @@ endmodule
 
 
 module rgb_color_detect #(
-    parameter ABS_TH   = 6,
+    parameter ABS_TH   = 3,
     parameter MARGIN_1 = 5,
     parameter MARGIN_2 = 5,
     parameter HIST_LEN = 4
