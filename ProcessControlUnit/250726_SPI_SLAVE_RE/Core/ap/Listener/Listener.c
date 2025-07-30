@@ -38,7 +38,7 @@ int Listener_CheckButton()
 		if(HAL_GetTick() - prevTime > 200) {
 			cnt = 0;
 			sprintf(str, "E");
-			HAL_UART_Transmit(&huart2, (uint8_t *)str, strlen(str), 100);
+//			HAL_UART_Transmit(&huart2, (uint8_t *)str, strlen(str), 100);
 			return 0;
 		}
 	}

@@ -28,8 +28,8 @@ void controller_excute()
 
 
 
-	temp_Polar = convertVectorToPolarInt((Point){(int)x_float, (int)y_float});
-//	temp_Polar = TemporalFramDifferencing(data.pointArr_Red, DATANUM);
+//	temp_Polar = convertVectorToPolarInt((Point){(int)x_float, (int)y_float});
+	temp_Polar = TemporalFramDifferencing(data.pointArr_Red, DATANUM);
 	memcpy(&Red_ctrl_vector, &temp_Polar  , sizeof(Polar));
 
 //	temp_Polar = TemporalFramDifferencing(data.pointArr_Blue, DATANUM);
