@@ -81,9 +81,6 @@ vcom -work xpm  -93 \
 "C:/Xilinx/Vivado/2020.2/data/ip/xpm/xpm_VCOMP.vhd" \
 
 vcom -work xil_defaultlib  -93 \
-"../../../bd/system/ipshared/40b8/hdl/LineBuffer.vhd" \
-"../../../bd/system/ipshared/40b8/hdl/AXI_BayerToRGB.vhd" \
-"../../../bd/system/ip/system_AXI_BayerToRGB_1_0/sim/system_AXI_BayerToRGB_1_0.vhd" \
 "../../../bd/system/ipshared/30c9/hdl/StoredGammaCoefs.vhd" \
 "../../../bd/system/ipshared/30c9/hdl/AXI_GammaCorrection.vhd" \
 "../../../bd/system/ip/system_AXI_GammaCorrection_0_0/sim/system_AXI_GammaCorrection_0_0.vhd" \
@@ -270,7 +267,9 @@ vlog -work xil_defaultlib  "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_
 vcom -work xil_defaultlib  -93 \
 "../../../bd/system/ip/system_AXI4_HandSignal_0_0/sim/system_AXI4_HandSignal_0_0.vhd" \
 "../../../bd/system/ip/system_SPI_Master_Top_0_0/sim/system_SPI_Master_Top_0_0.vhd" \
-"../../../bd/system/sim/system.vhd" \
+"../../../bd/system/ipshared/dfeb/LineBuffer.vhd" \
+"../../../bd/system/ipshared/dfeb/system_AXI_BayerToRGB_v2.vhd" \
+"../../../bd/system/ip/system_system_AXI_BayerToRG_0_0/sim/system_system_AXI_BayerToRG_0_0.vhd" \
 
 vlog -work axi_protocol_converter_v2_1_22  "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_MIPI_CSI_2_RX_0_0/hdl/line_buffer/hdl" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ipshared/7860/hdl" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ipshared/d0f7" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ipshared/ec67/hdl" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ipshared/34f8/hdl" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_MIPI_CSI_2_RX_0_0/hdl/ila_vidclk/hdl/verilog" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_MIPI_CSI_2_RX_0_0/hdl/ila_rxclk_lane/hdl/verilog" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_MIPI_CSI_2_RX_0_0/hdl/ila_rxclk/hdl/verilog" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_MIPI_D_PHY_RX_0_0/hdl/ila_scnn_refclk/hdl/verilog" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_MIPI_D_PHY_RX_0_0/hdl/ila_sfen_refclk/hdl/verilog" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_MIPI_D_PHY_RX_0_0/hdl/ila_sfen_rxclk/hdl/verilog" "+incdir+C:/Xilinx/Vivado/2020.2/data/xilinx_vip/include" \
 "../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ipshared/5cee/hdl/axi_protocol_converter_v2_1_vl_rfs.v" \
@@ -279,6 +278,9 @@ vlog -work xil_defaultlib  "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_
 "../../../bd/system/ip/system_auto_pc_0/sim/system_auto_pc_0.v" \
 "../../../bd/system/ip/system_auto_pc_1/sim/system_auto_pc_1.v" \
 "../../../bd/system/ip/system_auto_pc_2/sim/system_auto_pc_2.v" \
+
+vcom -work xil_defaultlib  -93 \
+"../../../bd/system/sim/system.vhd" \
 
 vlog -work xil_defaultlib \
 "glbl.v"

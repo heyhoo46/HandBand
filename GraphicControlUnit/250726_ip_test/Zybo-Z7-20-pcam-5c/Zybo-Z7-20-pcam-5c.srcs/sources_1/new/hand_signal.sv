@@ -29,6 +29,8 @@ module hand_signal #(
         .R        (R),
         .G        (G),
         .B        (B),
+        // .tuser      (tuser),    // frame 시작
+        // .tlast      (tlast), 
         .is_blue  (is_color1),
         .is_red   (is_color2)
     );

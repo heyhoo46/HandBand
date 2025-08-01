@@ -1,10 +1,10 @@
 -- Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
--- Date        : Mon Jul 21 15:50:19 2025
+-- Date        : Mon Jul 21 15:50:18 2025
 -- Host        : DESKTOP-7CFQ9ND running 64-bit major release  (build 9200)
--- Command     : write_vhdl -force -mode funcsim
---               c:/Users/kccistc/Desktop/Zybo-Z7-20-pcam-5c-2019.1/Zybo-Z7-20-pcam-5c-2019.1/vivado_proj/Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_AXI_GammaCorrection_0_0/system_AXI_GammaCorrection_0_0_sim_netlist.vhdl
+-- Command     : write_vhdl -force -mode funcsim -rename_top system_AXI_GammaCorrection_0_0 -prefix
+--               system_AXI_GammaCorrection_0_0_ system_AXI_GammaCorrection_0_0_sim_netlist.vhdl
 -- Design      : system_AXI_GammaCorrection_0_0
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -24,8 +24,6 @@ entity system_AXI_GammaCorrection_0_0_StoredGammaCoefs is
     E : in STD_LOGIC_VECTOR ( 0 to 0 );
     StreamClk : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of system_AXI_GammaCorrection_0_0_StoredGammaCoefs : entity is "StoredGammaCoefs";
 end system_AXI_GammaCorrection_0_0_StoredGammaCoefs;
 
 architecture STRUCTURE of system_AXI_GammaCorrection_0_0_StoredGammaCoefs is
@@ -20984,8 +20982,6 @@ entity system_AXI_GammaCorrection_0_0_AXI_GammaCorrection is
   attribute C_S_AXI_ADDR_WIDTH of system_AXI_GammaCorrection_0_0_AXI_GammaCorrection : entity is 3;
   attribute C_S_AXI_DATA_WIDTH : integer;
   attribute C_S_AXI_DATA_WIDTH of system_AXI_GammaCorrection_0_0_AXI_GammaCorrection : entity is 32;
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of system_AXI_GammaCorrection_0_0_AXI_GammaCorrection : entity is "AXI_GammaCorrection";
   attribute kAXI_InputDataWidth : integer;
   attribute kAXI_InputDataWidth of system_AXI_GammaCorrection_0_0_AXI_GammaCorrection : entity is 32;
   attribute kAXI_OutputDataWidth : integer;
