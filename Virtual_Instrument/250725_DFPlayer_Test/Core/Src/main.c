@@ -108,7 +108,7 @@ int main(void)
   Button_Init(&hBtnSi, GPIOB, GPIO_PIN_0);
   Button_Init(&hBtnDDO, GPIOA, GPIO_PIN_4);
 
-  DF_Init(0x1E);
+  DF_Init(0x0F);
 
   //Initial 0001 mp3 sound
 //  DF_PlayFromStart();
@@ -120,25 +120,25 @@ int main(void)
   while (1)
   {
 //	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, RESET);
-	  if(Button_GetState(&hBtnDo) == ACT_RELEASED){
+	  if(Button_GetState(&hBtnDo) == ACT_PUSHED){
 		  Send_cmd(0x03, 0x00, 0x01);
 	  }
-	  else if(Button_GetState(&hBtnRe) == ACT_RELEASED){
+	  else if(Button_GetState(&hBtnRe) == ACT_PUSHED){
 		  Send_cmd(0x03, 0x00, 0x02);
 	  }
-	  else if(Button_GetState(&hBtnMi) == ACT_RELEASED){
+	  else if(Button_GetState(&hBtnMi) == ACT_PUSHED){
 		  Send_cmd(0x03, 0x00, 0x03);
 	  }
-	  else if(Button_GetState(&hBtnPa) == ACT_RELEASED){
+	  else if(Button_GetState(&hBtnPa) == ACT_PUSHED){
 		  Send_cmd(0x03, 0x00, 0x04);
 	  }
-	  else if(Button_GetState(&hBtnSol) == ACT_RELEASED){
+	  else if(Button_GetState(&hBtnSol) == ACT_PUSHED){
 		  Send_cmd(0x03, 0x00, 0x05);
 	  }
-	  else if(Button_GetState(&hBtnLa) == ACT_RELEASED){
+	  else if(Button_GetState(&hBtnLa) == ACT_PUSHED){
 		  Send_cmd(0x03, 0x00, 0x06);
 	  }
-	  else if(Button_GetState(&hBtnSi) == ACT_RELEASED){
+	  else if(Button_GetState(&hBtnSi) == ACT_PUSHED){
 		  Send_cmd(0x03, 0x00, 0x07);
 	  }
 	  else if(Button_GetState(&hBtnDDO) == ACT_PUSHED){
