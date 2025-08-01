@@ -1,4 +1,4 @@
-#include "TemFrameVector_KalmanFilter.h"
+#include "kalman_filter.h"
 #include <math.h>   // fabsf (절대값), fmaxf (최대값) 등을 위해 필요합니다.
 
 // 행렬 연산 함수들 (모든 int32_t -> float으로 변경)
@@ -127,11 +127,12 @@ void KalmanFilter_Predict(KalmanFilter_t *kf, float *predicted_x, float *predict
     *predicted_y = kf->state[1]; // 예측된 y 위치 반환
 }
 
-// --- 칼만 필터 업데이트 함수 ---float measured_x, float measured_y
-void KalmanFilter_Update(KalmanFilter_t *kf, Point measured, float *updated_x, float *updated_y) {
+// --- 칼만 필터 업데이트 함수 ---
+void KalmanFilter_Update(KalmanFilter_t *kf, float measured_x, float measured_y,
+                         float *updated_x, float *updated_y) {
     float measurement[2]; // 측정값 배열 (float)
-    measurement[0] = measured.x;
-    measurement[1] = measured.y;
+    measurement[0] = measured_x;
+    measurement[1] = measured_y;
 
     // 1. 잔차(Residual) 계산: y = z - H * x_hat
     // (H * x_hat) 계산

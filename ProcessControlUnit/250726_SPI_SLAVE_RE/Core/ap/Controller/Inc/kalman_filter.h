@@ -1,8 +1,7 @@
-#ifndef TEMFRAMEVECTOR_KALMANFILTER_H
-#define TEMFRAMEVECTOR_KALMANFILTER_H
+#ifndef KALMANFILTER_H
+#define KALMANFILTER_H
 
 #include <stdint.h> // 이 헤더는 C99 표준 타입을 위해 포함하지만, 직접 int32_t를 사용하지는 않습니다.
-#include <vector.h>
 
 // --- 칼만 필터 공분산 파라미터 기본 값 정의 ---
 // 이제 float 값을 그대로 사용합니다.
@@ -54,6 +53,7 @@ void KalmanFilter_Init(KalmanFilter_t *kf, float dt,
                        float initial_x, float initial_y,
                        float initial_vx, float initial_vy);
 void KalmanFilter_Predict(KalmanFilter_t *kf, float *predicted_x, float *predicted_y);
-void KalmanFilter_Update(KalmanFilter_t *kf, Point measured,float *updated_x, float *updated_y);
+void KalmanFilter_Update(KalmanFilter_t *kf, float measured_x, float measured_y,
+                         float *updated_x, float *updated_y);
 
 #endif // TEMFRAMEVECTOR_KALMANFILTER_H
