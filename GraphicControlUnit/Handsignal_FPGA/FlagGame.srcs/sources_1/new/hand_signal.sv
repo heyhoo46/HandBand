@@ -3,8 +3,8 @@
 module top_hand_signal #(
     parameter IMG_WIDTH = 680,
     parameter IMG_HEIGHT = 480,
-    parameter NX = 20,
-    parameter NY = 16,
+    parameter NX = 10,
+    parameter NY = 8,
     parameter IMG_WB = $clog2(IMG_WIDTH),
     parameter IMG_HB = $clog2(IMG_HEIGHT),
     parameter DATA_WIDTH = 8,
@@ -123,7 +123,7 @@ module top_hand_signal #(
     assign blue_x8 = blue_x;
     assign blue_y8 = blue_y;
 
-    logic [31:0] spi_data_in = {red_x8, blue_y8, blue_x8, red_y8};
+    logic [31:0] spi_data_in = {blue_y8, blue_x8, red_y8, red_x8};
     // red_x8, red_y8, blue_x8, blue_y8
 
     SPI_Master_Top #(
