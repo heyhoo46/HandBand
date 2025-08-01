@@ -50,10 +50,10 @@ int Listener_CheckButton()
 	prevTime = HAL_GetTick();  // 수신 성공했을 때만 시간 갱신
 
 	// 수신 성공 시 처리
-	data.pointArr_Red[cnt].x  = rx_data[0];
-	data.pointArr_Red[cnt].y  = rx_data[1];
-	data.pointArr_Blue[cnt].x = rx_data[2];
-	data.pointArr_Blue[cnt].y = rx_data[3];
+	data.pointArr_Red[cnt].x  = (float) rx_data[0];
+	data.pointArr_Red[cnt].y  = (float) rx_data[1];
+	data.pointArr_Blue[cnt].x = (float) rx_data[2];
+	data.pointArr_Blue[cnt].y = (float) rx_data[3];
 	cnt++;
 
 	if(cnt != DATANUM) {
