@@ -3,28 +3,6 @@
 	"modules": {
 		"system": {
 			"proto_instances": {
-				"/AXI_BayerToRGB_1/AXI_Slave_Interface": {
-					"interface": "xilinx.com:interface:axis:1.0",
-					"ports": {
-						"ACLK": { "actual": "StreamClk"},
-						"TDATA": { "actual": "s_axis_video_tdata"},
-						"TLAST": { "actual": "s_axis_video_tlast"},
-						"TREADY": { "actual": "s_axis_video_tready"},
-						"TUSER": { "actual": "s_axis_video_tuser"},
-						"TVALID": { "actual": "s_axis_video_tvalid"}
-					}
-				},
-				"/AXI_BayerToRGB_1/AXI_Stream_Master": {
-					"interface": "xilinx.com:interface:axis:1.0",
-					"ports": {
-						"ACLK": { "actual": "StreamClk"},
-						"TDATA": { "actual": "m_axis_video_tdata"},
-						"TLAST": { "actual": "m_axis_video_tlast"},
-						"TREADY": { "actual": "m_axis_video_tready"},
-						"TUSER": { "actual": "m_axis_video_tuser"},
-						"TVALID": { "actual": "m_axis_video_tvalid"}
-					}
-				},
 				"/AXI_GammaCorrection_0/m_axis_video": {
 					"interface": "xilinx.com:interface:axis:1.0",
 					"ports": {
@@ -1436,6 +1414,28 @@
 						"WREADY": { "actual": "s_axi_wready[0:0]"},
 						"WSTRB": { "actual": "s_axi_wstrb[3:0]"},
 						"WVALID": { "actual": "s_axi_wvalid[0:0]"}
+					}
+				},
+				"/system_AXI_BayerToRG_0/AXI_Slave_Interface": {
+					"interface": "xilinx.com:interface:axis:1.0",
+					"ports": {
+						"ACLK": { "actual": "StreamClk"},
+						"TDATA": { "actual": "s_axis_video_tdata"},
+						"TLAST": { "actual": "s_axis_video_tlast"},
+						"TREADY": { "actual": "s_axis_video_tready"},
+						"TUSER": { "actual": "s_axis_video_tuser"},
+						"TVALID": { "actual": "s_axis_video_tvalid"}
+					}
+				},
+				"/system_AXI_BayerToRG_0/AXI_Stream_Master": {
+					"interface": "xilinx.com:interface:axis:1.0",
+					"ports": {
+						"ACLK": { "actual": "StreamClk"},
+						"TDATA": { "actual": "m_axis_video_tdata"},
+						"TLAST": { "actual": "m_axis_video_tlast"},
+						"TREADY": { "actual": "m_axis_video_tready"},
+						"TUSER": { "actual": "m_axis_video_tuser"},
+						"TVALID": { "actual": "m_axis_video_tvalid"}
 					}
 				},
 				"/video_dynclk/s_axi_lite": {

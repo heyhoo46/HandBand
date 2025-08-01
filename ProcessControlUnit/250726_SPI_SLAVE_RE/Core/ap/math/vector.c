@@ -28,18 +28,11 @@ Point calculateVector(Point h1, Point h2)
 Polar convertVectorToPolarInt(Point vec) {
 	Polar polar_vec;
 
-    double vec_x_double = (double)vec.x;
-    double vec_y_double = (double)vec.y;
-    double x_square = vec_x_double * vec_x_double;
-    double y_square = vec_y_double * vec_y_double;
-    double mag = sqrt(x_square + y_square);
+    polar_vec.magnitude = sqrt(vec.x * vec.x + vec.y * vec.y);
 
-    polar_vec.magnitude = sqrt(vec_x_double * vec_x_double + vec_y_double * vec_y_double);
-
-    double angle_rad = atan2(vec_y_double, vec_x_double);
+    float angle_rad = atan2(vec.x, vec.y);
     polar_vec.angle_deg = angle_rad * (180.0 / M_PI);
     if(polar_vec.angle_deg < 0) polar_vec.angle_deg += 360;
-
 
     return polar_vec;
 }

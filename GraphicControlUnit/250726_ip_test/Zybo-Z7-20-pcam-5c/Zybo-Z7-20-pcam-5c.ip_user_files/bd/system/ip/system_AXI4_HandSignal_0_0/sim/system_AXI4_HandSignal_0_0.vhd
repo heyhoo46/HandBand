@@ -122,10 +122,10 @@ ARCHITECTURE system_AXI4_HandSignal_0_0_arch OF system_AXI4_HandSignal_0_0 IS
 BEGIN
   U0 : AXI4_HandSignal
     GENERIC MAP (
-      IMG_WIDTH => 1920,
-      IMG_HEIGHT => 1080,
-      NX => 4,
-      NY => 4
+      IMG_WIDTH => 1280,
+      IMG_HEIGHT => 720,
+      NX => 10,
+      NY => 8
     )
     PORT MAP (
       aclk => aclk,

@@ -18,9 +18,6 @@
   "C:/Xilinx/Vivado/2020.2/data/ip/xpm/xpm_VCOMP.vhd" \
 -endlib
 -makelib ies_lib/xil_defaultlib \
-  "../../../bd/system/ipshared/40b8/hdl/LineBuffer.vhd" \
-  "../../../bd/system/ipshared/40b8/hdl/AXI_BayerToRGB.vhd" \
-  "../../../bd/system/ip/system_AXI_BayerToRGB_1_0/sim/system_AXI_BayerToRGB_1_0.vhd" \
   "../../../bd/system/ipshared/30c9/hdl/StoredGammaCoefs.vhd" \
   "../../../bd/system/ipshared/30c9/hdl/AXI_GammaCorrection.vhd" \
   "../../../bd/system/ip/system_AXI_GammaCorrection_0_0/sim/system_AXI_GammaCorrection_0_0.vhd" \
@@ -207,7 +204,9 @@
 -makelib ies_lib/xil_defaultlib \
   "../../../bd/system/ip/system_AXI4_HandSignal_0_0/sim/system_AXI4_HandSignal_0_0.vhd" \
   "../../../bd/system/ip/system_SPI_Master_Top_0_0/sim/system_SPI_Master_Top_0_0.vhd" \
-  "../../../bd/system/sim/system.vhd" \
+  "../../../bd/system/ipshared/dfeb/LineBuffer.vhd" \
+  "../../../bd/system/ipshared/dfeb/system_AXI_BayerToRGB_v2.vhd" \
+  "../../../bd/system/ip/system_system_AXI_BayerToRG_0_0/sim/system_system_AXI_BayerToRG_0_0.vhd" \
 -endlib
 -makelib ies_lib/axi_protocol_converter_v2_1_22 \
   "../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ipshared/5cee/hdl/axi_protocol_converter_v2_1_vl_rfs.v" \
@@ -216,6 +215,9 @@
   "../../../bd/system/ip/system_auto_pc_0/sim/system_auto_pc_0.v" \
   "../../../bd/system/ip/system_auto_pc_1/sim/system_auto_pc_1.v" \
   "../../../bd/system/ip/system_auto_pc_2/sim/system_auto_pc_2.v" \
+-endlib
+-makelib ies_lib/xil_defaultlib \
+  "../../../bd/system/sim/system.vhd" \
 -endlib
 -makelib ies_lib/xil_defaultlib \
   glbl.v

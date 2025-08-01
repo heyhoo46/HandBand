@@ -8,9 +8,9 @@
 #ifndef CONTROLLER_INC_CONTROLLER_H_
 #define CONTROLLER_INC_CONTROLLER_H_
 
+#include <kalman_filter.h>
 #include <TemporalFramDifferencing.h>
 #include <string.h>
-#include <TemFrameVector_KalmanFilter.h>
 
 void controller_init();
 void controller_excute();

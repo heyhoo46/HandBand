@@ -2,19 +2,11 @@
 <Root MajorVersion="0" MinorVersion="39">
   <CompositeFile CompositeFileTopName="system" CanBeSetAsTop="false" CanDisplayChildGraph="true">
     <Description>Composite Fileset</Description>
-    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1753754494"/>
-    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1753754494"/>
-    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1753754494"/>
-    <Generation Name="HW_HANDOFF" State="GENERATED" Timestamp="1753754494"/>
+    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1754036278"/>
+    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1754036278"/>
+    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1754036278"/>
+    <Generation Name="HW_HANDOFF" State="GENERATED" Timestamp="1754036278"/>
     <FileCollection Name="SOURCES" Type="SOURCES">
-      <File Name="ip\system_AXI_BayerToRGB_1_0\system_AXI_BayerToRGB_1_0.xci" Type="IP">
-        <Instance HierarchyPath="AXI_BayerToRGB_1"/>
-        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
-        <Library Name="xil_defaultlib"/>
-        <UsedIn Val="SYNTHESIS"/>
-        <UsedIn Val="IMPLEMENTATION"/>
-        <UsedIn Val="SIMULATION"/>
-      </File>
       <File Name="ip\system_AXI_GammaCorrection_0_0\system_AXI_GammaCorrection_0_0.xci" Type="IP">
         <Instance HierarchyPath="AXI_GammaCorrection_0"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
@@ -169,6 +161,14 @@
       </File>
       <File Name="ip\system_SPI_Master_Top_0_0\system_SPI_Master_Top_0_0.xci" Type="IP">
         <Instance HierarchyPath="SPI_Master_Top_0"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip\system_system_AXI_BayerToRG_0_0\system_system_AXI_BayerToRG_0_0.xci" Type="IP">
+        <Instance HierarchyPath="system_AXI_BayerToRG_0"/>
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>

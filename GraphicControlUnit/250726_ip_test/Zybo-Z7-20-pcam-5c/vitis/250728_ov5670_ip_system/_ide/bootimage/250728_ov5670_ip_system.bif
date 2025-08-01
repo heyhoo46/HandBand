@@ -1,0 +1,12 @@
+/* C:/Users/kccistc/AppData/Local/Temp/bootgen_250728_ov5670_ip_system10783414480875865023/sd_card_temp/boot.bif */
+/* Command to create bitstream .bin file:       */
+/*   bootgen -image <bif_file> -split bin -w    */
+/* Command to create BOOT.BIN file:             */
+/*   bootgen  -image <bif_file> -w -o i BOOT.BIN */
+/*system_wrapper_1*/
+the_ROM_image:
+{
+ [bootloader] C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/vitis/system_wrapper_1/export/system_wrapper_1/sw/system_wrapper_1/boot/fsbl.elf
+ C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/vitis/250728_ov5670_ip/_ide/bitstream/system_wrapper_v2.bit
+ C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/vitis/250728_ov5670_ip/Debug/250728_ov5670_ip.elf
+}

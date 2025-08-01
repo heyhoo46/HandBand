@@ -6,8 +6,6 @@
  */
 #include <Controller.h>
 
-KalmanFilter_t myKalmanFilter;
-
 void controller_init()
 {
 
@@ -15,23 +13,29 @@ void controller_init()
 
 void controller_excute()
 {
-	float dt = 0.5f; // Time step between data points (e.g., in seconds)
-	// Matches the interval used to generate the sample points (0.5 for x-axis increase)
-	// Initial state based on the first point of the raw data
-	KalmanFilter_Init(&myKalmanFilter, dt, (float)data.pointArr_Red[0].x, (float)data.pointArr_Red[0].y, 0.0f, 0.0f); // Initial velocity assumed to be zero (float 0.0f)
-	float x_float, y_float;
-	for(int i = 1; i < DATANUM; i++) {
-		Point measured = data.pointArr_Red[i];
-		KalmanFilter_Update(&myKalmanFilter, measured, &x_float, &y_float);
+	double dt = 0.1;
+	KalmanFilter_t kf;
+	Point V0 = calculateVector(data.pointArr_Red[0], data.pointArr_Red[1]);
+	double initial_vx = (double)V0.x / dt;
+	double initial_vy = (double)V0.y / dt;
+
+	KalmanFilter_Init(&kf, dt, initial_vx, initial_vy, 0.0, 0.0);
+
+	float updated[2];   // 업데이트(스무딩)된 x, y를 저장할 배열
+
+	// 칼만 필터 루프
+	for (int i = 1; i < DATANUM - 1; i++) {
+		Point v = calculateVector(data.pointArr_Red[i], data.pointArr_Red[i+1]);
+		KalmanFilter_Predict(&kf, &(v.x), &(v.y));
+		KalmanFilter_Update(&kf, v.x, v.y, &(updated[0]), &(updated[1]));
 	}
-	Polar temp_Polar;
 
 
+	Polar kalPolar = convertVectorToPolarInt((Point){(float)updated[0],(float)updated[1]});
+	Polar vectorsumPolar = TemporalFramDifferencing(data.pointArr_Red, DATANUM);
 
-	temp_Polar = convertVectorToPolarInt((Point){(int)x_float, (int)y_float});
-//	temp_Polar = TemporalFramDifferencing(data.pointArr_Red, DATANUM);
-	memcpy(&Red_ctrl_vector, &temp_Polar  , sizeof(Polar));
+	memcpy(&Red_ctrl_vector, &kalPolar , sizeof(Polar));
 
-//	temp_Polar = TemporalFramDifferencing(data.pointArr_Blue, DATANUM);
-//	memcpy(&Blue_ctrl_vector, &temp_Polar  , sizeof(Polar));
+	//	temp_Polar = TemporalFramDifferencing(data.pointArr_Blue, DATANUM);
+	//	memcpy(&Blue_ctrl_vector, &temp_Polar  , sizeof(Polar));
 }
