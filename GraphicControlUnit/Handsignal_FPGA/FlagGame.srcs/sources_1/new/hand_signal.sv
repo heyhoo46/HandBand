@@ -123,7 +123,7 @@ module top_hand_signal #(
     assign blue_x8 = blue_x;
     assign blue_y8 = blue_y;
 
-    logic [31:0] spi_data_in = {red_x8, blue_y8, blue_x8, red_y8};
+    logic [31:0] spi_data_in = {blue_y8, blue_x8, red_y8, red_x8};
     // red_x8, red_y8, blue_x8, blue_y8
 
     SPI_Master_Top #(
@@ -326,7 +326,7 @@ endmodule
 
 
 module rgb_color_detect #(
-    parameter ABS_TH   = 6,
+    parameter ABS_TH   = 3,
     parameter MARGIN_1 = 5,
     parameter MARGIN_2 = 5,
     parameter HIST_LEN = 4

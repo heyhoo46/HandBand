@@ -15,7 +15,7 @@
 Polar TemporalFramDifferencing(Point* data, int dataNum)
 {
 	Point BigVector = {0,0};
-	for(int i = 0; i < dataNum - 1; i++) {
+	for(int i = 1; i < dataNum - 1; i++) {
 		Point vector =  calculateVector(data[i], data[i+1]);
 		BigVector = vectorSum(BigVector, vector);
 	}

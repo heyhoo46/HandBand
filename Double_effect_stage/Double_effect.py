@@ -2,40 +2,13 @@ import threading, pygame, time, os, cv2, serial, random, math
 from PIL import Image, ImageSequence, ImageOps
 import numpy as np
 from collections import deque
-
-# 전역 변수 및 락
-overlay_on = False #기본값은 효과를 실행하지 X
-effect_request = False # 새로운 이펙트 실행
-overlay_lock = threading.Lock() # Thread를 독립적으로 실행시키기 위함
-spot_state = 0        # spotlight 상태 (0:left, 1:right, 2:all)
-
-uart_port = "COM17"
-uart_baudrate = 115200
-
-cam_num = 1
-maximum_frame_rate = 30
-
-eft_num = 0
-channel_map = {}
-
-gif_base_path = r"C:/harman/Double_effect_stage/"
-sound_base_addr = "C:/harman/Double_effect_stage/"
-
-# 캠 프레임
-cam_frame = None #(0, 1)
-
-# pygame 초기화 (사운드용)
-pygame.init()
-pygame.mixer.init()
-
-
 class sound(threading.Thread):
     def __init__(self, path):
         super().__init__()
         self.path = path
 
     def run(self):
-        mp3_path = os.path.join(sound_base_addr, self.path)
+        mp3_path = os.path.join(self.path)
         if not os.path.exists(mp3_path):
             print("❌ 사운드 파일 없음")
             return  # overlay_on을 제어하지 않음
@@ -51,61 +24,86 @@ class sound(threading.Thread):
 
 # 공용 def
 def uart_listener(manager):
-    global spot_state  # spotlight 상태를 전역에서 설정하기 위해 필요
+    global spot_state
+    
+    ser = None # 초기 시리얼 객체는 None으로 설정
+    
+    while True: # 무한 재연결 시도 루프
+        # 1. 시리얼 포트 연결 시도
+        if ser is None or not ser.is_open:
+            print("UART 연결을 시도 중...")
+            try:
+                ser = serial.Serial(uart_port, uart_baudrate, timeout=1)
+                print(f"✅ UART Connected: {uart_port}")
+            except serial.SerialException as e:
+                print(f"⚠️ UART 연결 실패: {e}")
+                print("5초 후 재연결을 시도합니다...")
+                time.sleep(5)
+                continue # 연결 실패 시 다음 루프에서 다시 시도
+        
+        # 2. 연결이 성공적으로 이루어졌다면 데이터 수신 시작
+        try:
+            # timeout=1초로 설정했기 때문에 readline()은 1초 후에도 데이터가 없으면 빈 바이트를 반환
+            input_string = ser.readline().strip()
+            
+            # 읽어온 데이터가 없을 경우
+            if not input_string:
+                continue
 
-    # timeout=None 으로 설정해서 read()가 데이터가 올 때까지 블록됨
-    ser = serial.Serial(uart_port, uart_baudrate, timeout=None)
-    print(f"✅ UART Connected: {uart_port}")
+            data = str(input_string)[2:-1]  # read UART
+            if not data:
+                continue
 
-    while True:
-        data = str(ser.readline().strip())[2:-1]  # 1바이트 블록 읽기
-        if not data: continue
-        temp = list(data.split(','))
-        angle, mag, cmd = list(temp[1].split())
-        point = list(temp[0].split('='))[:-1]
+            # 기존 데이터 처리 로직
+            temp = list(data.split(','))
+            angle, mag, cmd = list(temp[1].split())
+            point = [list(map(float, string[1:-1].split())) for string in (list(temp[0].split('='))[:-1])]
+            
+            new_idx = None
+            print(f"{cmd}, {angle}")
+            print(*point, sep=', ')
 
-        new_idx = None
+            if cmd in ['E']:
+                print(f"ERROR Code: {cmd}")
+                continue
 
-        print(f"{cmd}, {angle}")
-        print(*point,sep = ', ') 
+            # 이펙트 매핑 로직
+            if cmd == 'e': new_idx = 0
+            elif cmd == '-': new_idx = 1
+            elif cmd == 'd': new_idx = 2
+            elif cmd in ('f', 'g', 'h'):
+                new_idx = 3
+                spot_state = {'f': 0, 'g': 1, 'h': 2}[cmd]
+            elif cmd == 'c': new_idx = 4
+            elif cmd == 'a': new_idx = 5
+            elif cmd == 'b': new_idx = 6
+            elif cmd == 'd': new_idx = 7
 
-        if cmd in ['E', 'e']: 
-            continue
+            if new_idx is None:
+                continue
 
-        # 일반 이펙트 매핑
-        if cmd == '\xbb':      # D
-            new_idx = 5          # flame
-        elif cmd == '\xcc':    # U
-            new_idx = 6          # purple flame
-        elif cmd == '\x66':    # f
-            new_idx = 7          # fog
-        elif cmd == '\x77':    # w
-            new_idx = 0          # spotlight (기본)
-        elif cmd == '\xee':    # î
-            new_idx = 4          # confetti
-        elif cmd == '\xff':    # ÿ
-            new_idx = 5          # rgb_flash
-        elif cmd == 'b':    # DC1
-            new_idx = 6          # blur
-        elif cmd == '\x22':    # "
-            new_idx = 7          # zoom
+            print(f"act {cmd}, {angle}")
+            manager.enqueue(new_idx)
 
-        # Spotlight 전용: left/right/all
-        elif cmd in ('c', 'a', 'd'):
-            new_idx = 3          # spotlight 이펙트 인덱스
-            spot_state = {'c':0, 'a':1, 'd':2}[cmd]
-
-        # 들어온 바이트가 매핑에 없으면 무시
-        if new_idx is None:
-            continue
-
-        print(f"act {cmd}, {angle}")
-        manager.enqueue(new_idx)
+        except serial.SerialException as e:
+            # 통신 중 예외 발생 시 (포트 끊김, 권한 오류 등)
+            print(f"❌ UART 통신 중 오류 발생: {e}")
+            print("연결이 끊어졌습니다. 재연결을 시도합니다...")
+            if ser.is_open:
+                ser.close() # 기존 포트를 닫고
+            ser = None # 시리얼 객체를 초기화하여 다음 루프에서 재연결 시도
+            time.sleep(2) # 짧은 대기 후 재시도
+        
+        except Exception as e:
+            # 다른 종류의 예상치 못한 예외 처리
+            print(f"🚨 예상치 못한 오류 발생: {e}")
+            time.sleep(1)
 
 def gif_set(fname, total_ms=None, speed=1.0):
     """GIF 로드 후 RGBA 프레임, count, interval_ms 반환"""
-    path = os.path.join(gif_base_path, fname)
-    gif = Image.open(path)
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    image_path = os.path.join(script_directory, fname)
+    gif = Image.open(image_path)
     frames = [f.convert("RGBA") for f in ImageSequence.Iterator(gif)]
     count = len(frames)
     # duration 설정
@@ -126,9 +124,9 @@ class FrameGrabber(threading.Thread):
         cap.set(cv2.CAP_PROP_FOURCC,      fourcc)
         cap.set(cv2.CAP_PROP_AUTOFOCUS,   0)
         cap.set(cv2.CAP_PROP_BUFFERSIZE,  0)
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT,1080)
-        cap.set(cv2.CAP_PROP_FPS,         maximum_frame_rate)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1080)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT,720)
+        cap.set(cv2.CAP_PROP_FPS, maximum_frame_rate)
         self.cap = cap
         self.queue = queue
         self.lock  = lock
@@ -157,7 +155,9 @@ class EffectThread:
         # 사운드 독립 재생
         ch = pygame.mixer.find_channel()
         if ch:
-            snd = pygame.mixer.Sound(os.path.join(sound_base_addr, self.sound_file))
+            script_directory = os.path.dirname(os.path.abspath(__file__))
+            image_path = os.path.join(script_directory, self.sound_file)
+            snd = pygame.mixer.Sound(image_path)
             ch.play(snd)
     def is_alive(self):
         return (time.time() - self.start_time) < self.duration
@@ -179,7 +179,7 @@ class EffectManager:
             for i,t in enumerate(self.active):
                 if t.idx == idx:
                     obj = self.factories[idx]()
-                    if idx==3: obj.set_state(spot_state)
+                    if idx == 3: obj.set_state(spot_state)
                     thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
                     thr.start()
                     self.active[i] = thr
@@ -187,7 +187,7 @@ class EffectManager:
             # 신규 슬록 있으면
             if len(self.active) < self.MAX_CONCURRENT:
                 obj = self.factories[idx]()
-                if idx==3: obj.set_state(spot_state)
+                if idx == 3: obj.set_state(spot_state)
                 thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
                 thr.start()
                 self.active.append(thr)
@@ -545,7 +545,7 @@ class spotlight_eft:
 class confetti_eft:
     # 기준 해상도 (이 해상도를 기준으로 스케일을 계산)
     BASE_WIDTH  = 640
-    BASE_HEIGHT = 360
+    BASE_HEIGHT = 480
 
     # ▶ 크기 조절용 외부 파라미터 (기본값 1.0)
     CONFETTI_SIZE_SCALE = 0.7
@@ -669,7 +669,9 @@ class rgb_flash_eft:
             self.last_switch = now
 
             # 🔊 색상 바뀔 때마다 사운드 실행
-            sound("lamp.wav").start()
+            script_directory = os.path.dirname(os.path.abspath(__file__))
+            image_path = os.path.join(script_directory, "lamp.wav")
+            sound(image_path).start()
 
         overlay = np.full_like(frame, self.current_color, dtype=np.uint8)
         filtered = cv2.addWeighted(frame, 1 - self.ALPHA, overlay, self.ALPHA, 0)
@@ -835,7 +837,7 @@ def video_start():
     while True:
         with queue_lock:
             if frame_queue:
-                sample = frame_queue[0].copy()
+                sample = frame_queue.popleft()
                 break
         time.sleep(0.01)
     h, w = sample.shape[:2]
@@ -847,7 +849,9 @@ def video_start():
     flame_frames, flame_count, flame_interval = gifs["Flame.gif"]
     purple_frames, _, purple_interval         = gifs["Purple_Flame.gif"]
     # fog 전처리
-    fog_raw = [f.convert("RGBA") for f in ImageSequence.Iterator(Image.open(os.path.join(gif_base_path,"fog2.gif")))]
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    image_path = os.path.join(script_directory, "fog2.gif")
+    fog_raw = [f.convert("RGBA") for f in ImageSequence.Iterator(Image.open(image_path))]
     bbox = fog_eft.compute_common_bbox(fog_raw)
     fog_frames = [f.crop(bbox) for f in fog_raw]
     fog_mirror = [ImageOps.mirror(f) for f in fog_frames]
@@ -890,7 +894,7 @@ def video_start():
         with queue_lock:
             if not frame_queue:
                 continue
-            frame = frame_queue[0].copy()
+            frame = frame_queue.popleft()
 
         out = manager.composite(frame)
         cv2.imshow("Fire", out)
@@ -907,6 +911,30 @@ def video_start():
                 cv2.setWindowProperty("Fire", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_NORMAL)
 
     cv2.destroyAllWindows()
+
+# 전역 변수 및 락
+overlay_on = False #기본값은 효과를 실행하지 X
+effect_request = False # 새로운 이펙트 실행
+overlay_lock = threading.Lock() # Thread를 독립적으로 실행시키기 위함
+spot_state = 0        # spotlight 상태 (0:left, 1:right, 2:all)
+
+print("PORT NUM:")
+uart_port = "COM"+str(input())
+uart_baudrate = 115200
+
+print("CAM NUM:")
+cam_num = int(input())
+maximum_frame_rate = 30
+
+eft_num = 0
+channel_map = {}
+
+# 캠 프레임
+cam_frame = None #(0, 1)
+
+# pygame 초기화 (사운드용)
+pygame.init()
+pygame.mixer.init()
 
 if __name__ == "__main__":
     video_start()

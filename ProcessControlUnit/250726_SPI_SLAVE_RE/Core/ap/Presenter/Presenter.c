@@ -14,8 +14,8 @@ static uint8_t Presenter_Effect(float angle_deg, double magnitude);
 static uint8_t AngletoIndexNum(uint16_t angle_deg) {
 	angle_deg = angle_deg % 360;
 
-//	uint16_t shifted = (angle_deg + 22) % 360;
-//	return shifted / 45; // [0 ~ 7]
+	//	uint16_t shifted = (angle_deg + 22) % 360;
+	//	return shifted / 45; // [0 ~ 7]
 	return angle_deg / 45; // [0 ~ 7]
 }
 
@@ -32,12 +32,42 @@ uint8_t MagnitudeToIndexNum(double magnitude) {
 }
 
 int angle_mapIdx(float angle_deg) {
-	if(angle_deg > 360.0) 	return 8;	// ERROR TOO BIG ANG
-	if(angle_deg > 315) 	return 0;
-	if(angle_deg > 225) 	return 3;
-	if(angle_deg > 135) 	return 2;
-	if(angle_deg > 45)		return 1;
-	return 0;
+	// 각도를 0 ~ 360도 범위로 정규화 (선택 사항, 입력 각도가 항상 양수라면 불필요)
+	// 예: -10도 -> 350도, 370도 -> 10도
+	angle_deg = fmod(angle_deg, 360.0f); // 부동 소수점 나머지 연산
+	if (angle_deg < 0) {
+		angle_deg += 360.0f;
+	}
+
+	// 각 방향의 경계값 정의
+	// 0번 방향: -22.5 ~ 22.5 (또는 337.5 ~ 22.5)
+	// 각 방향은 45도 간격
+
+	if (angle_deg >= 337.5f || angle_deg < 22.5f) {
+		return 0; // 0번 방향 (-22.5도 ~ 22.5도)
+	}
+	if (angle_deg >= 22.5f && angle_deg < 67.5f) {
+		return 1; // 1번 방향 (22.5도 ~ 67.5도)
+	}
+	if (angle_deg >= 67.5f && angle_deg < 112.5f) {
+		return 2; // 2번 방향 (67.5도 ~ 112.5도)
+	}
+	if (angle_deg >= 112.5f && angle_deg < 157.5f) {
+		return 3; // 3번 방향 (112.5도 ~ 157.5도)
+	}
+	if (angle_deg >= 157.5f && angle_deg < 202.5f) {
+		return 4; // 4번 방향 (157.5도 ~ 202.5도)
+	}
+	if (angle_deg >= 202.5f && angle_deg < 247.5f) {
+		return 5; // 5번 방향 (202.5도 ~ 247.5도)
+	}
+	if (angle_deg >= 247.5f && angle_deg < 292.5f) {
+		return 6; // 6번 방향 (247.5도 ~ 292.5도)
+	}
+	if (angle_deg >= 292.5f && angle_deg < 337.5f) {
+		return 7; // 7번 방향 (292.5도 ~ 337.5도)
+	}
+	return 0; // 예상치 못한 오류 (정규화 후에도 범위 밖일 경우)
 }
 
 //계산된 각도와 크기에 따라서 행해지는 Effect
@@ -54,15 +84,13 @@ void Presenter_Init() {
 }
 
 void Presenter_Execute(void) {
-	char pointStr[100];
-	char msgToPC[100];
 
 	uint8_t effect = Presenter_Effect(Red_ctrl_vector.angle_deg, Red_ctrl_vector.magnitude);
 
 	for (int i = 0; i < DATANUM; i++) {
-		printf("[%d %d]=", data.pointArr_Red[i].x, data.pointArr_Red[i].y);
+		printf("[%f %f]=", data.pointArr_Red[i].x, data.pointArr_Red[i].y);
 	}
 	printf(",%f %f %c\n", Red_ctrl_vector.angle_deg, Red_ctrl_vector.magnitude, effect);
-	printf("%c", effect);
+	//	printf("%c", effect);
 }
 
