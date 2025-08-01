@@ -84,13 +84,11 @@ void Presenter_Init() {
 }
 
 void Presenter_Execute(void) {
-	char pointStr[100];
-	char msgToPC[100];
 
 	uint8_t effect = Presenter_Effect(Red_ctrl_vector.angle_deg, Red_ctrl_vector.magnitude);
 
 	for (int i = 0; i < DATANUM; i++) {
-		printf("[%d %d]=", data.pointArr_Red[i].x, data.pointArr_Red[i].y);
+		printf("[%f %f]=", data.pointArr_Red[i].x, data.pointArr_Red[i].y);
 	}
 	printf(",%f %f %c\n", Red_ctrl_vector.angle_deg, Red_ctrl_vector.magnitude, effect);
 	//	printf("%c", effect);
