@@ -24,58 +24,80 @@ class sound(threading.Thread):
 
 # 공용 def
 def uart_listener(manager):
-    global spot_state  # spotlight 상태를 전역에서 설정하기 위해 필요
-
-    # timeout=None 으로 설정해서 read()가 데이터가 올 때까지 블록됨
-    ser = serial.Serial(uart_port, uart_baudrate, timeout=None)
-    print(f"✅ UART Connected: {uart_port}")
-
-    while True:
-        data = str(ser.readline().strip())[2:-1]  # read UART
-        if not data: continue
-        temp = list(data.split(','))
-        angle, mag, cmd = list(temp[1].split())
-        point = [list(map(int,string[1:-1].split())) for string in (list(temp[0].split('='))[:-1])]
+    global spot_state
+    
+    ser = None # 초기 시리얼 객체는 None으로 설정
+    
+    while True: # 무한 재연결 시도 루프
+        # 1. 시리얼 포트 연결 시도
+        if ser is None or not ser.is_open:
+            print("UART 연결을 시도 중...")
+            try:
+                ser = serial.Serial(uart_port, uart_baudrate, timeout=1)
+                print(f"✅ UART Connected: {uart_port}")
+            except serial.SerialException as e:
+                print(f"⚠️ UART 연결 실패: {e}")
+                print("5초 후 재연결을 시도합니다...")
+                time.sleep(5)
+                continue # 연결 실패 시 다음 루프에서 다시 시도
         
-        new_idx = None
+        # 2. 연결이 성공적으로 이루어졌다면 데이터 수신 시작
+        try:
+            # timeout=1초로 설정했기 때문에 readline()은 1초 후에도 데이터가 없으면 빈 바이트를 반환
+            input_string = ser.readline().strip()
+            
+            # 읽어온 데이터가 없을 경우
+            if not input_string:
+                continue
 
-        print(f"{cmd}, {angle}")
-        print(*point,sep = ', ') 
+            data = str(input_string)[2:-1]  # read UART
+            if not data:
+                continue
 
-        if cmd in ['E', 'e']: 
-            print(f"ERROR Code: {cmd}")
-            continue
+            # 기존 데이터 처리 로직
+            temp = list(data.split(','))
+            angle, mag, cmd = list(temp[1].split())
+            point = [list(map(float, string[1:-1].split())) for string in (list(temp[0].split('='))[:-1])]
+            
+            new_idx = None
+            print(f"{cmd}, {angle}")
+            print(*point, sep=', ')
 
-        # f g h
-        # e x a
-        # d c b
-        # 일반 이펙트 매핑
-        if cmd == 'e': # Flame
-            new_idx = 0 
-        elif cmd == '-': # purple_Flame
-            new_idx = 1
-        elif cmd == 'd': # fog
-            new_idx = 2 
-        # Spotlight 전용: left/right/all
-        elif cmd in ('f', 'g', 'h'):
-            new_idx = 3          # spotlight 이펙트 인덱스
-            spot_state = {'f':0, 'g':1, 'h':2}[cmd]
-        elif cmd == 'c':    # 꽃가루
-            new_idx = 4 
-        elif cmd == 'a':    # rgb 조명
-            new_idx = 5 
-        elif cmd == 'b':    # Blur
-            new_idx = 6
-        elif cmd == 'd':    # 줌인아웃
-            new_idx = 7
+            if cmd in ['E']:
+                print(f"ERROR Code: {cmd}")
+                continue
 
+            # 이펙트 매핑 로직
+            if cmd == 'e': new_idx = 0
+            elif cmd == '-': new_idx = 1
+            elif cmd == 'd': new_idx = 2
+            elif cmd in ('f', 'g', 'h'):
+                new_idx = 3
+                spot_state = {'f': 0, 'g': 1, 'h': 2}[cmd]
+            elif cmd == 'c': new_idx = 4
+            elif cmd == 'a': new_idx = 5
+            elif cmd == 'b': new_idx = 6
+            elif cmd == 'd': new_idx = 7
 
-        # 들어온 바이트가 매핑에 없으면 무시
-        if new_idx is None:
-            continue
+            if new_idx is None:
+                continue
 
-        print(f"act {cmd}, {angle}")
-        manager.enqueue(new_idx)
+            print(f"act {cmd}, {angle}")
+            manager.enqueue(new_idx)
+
+        except serial.SerialException as e:
+            # 통신 중 예외 발생 시 (포트 끊김, 권한 오류 등)
+            print(f"❌ UART 통신 중 오류 발생: {e}")
+            print("연결이 끊어졌습니다. 재연결을 시도합니다...")
+            if ser.is_open:
+                ser.close() # 기존 포트를 닫고
+            ser = None # 시리얼 객체를 초기화하여 다음 루프에서 재연결 시도
+            time.sleep(2) # 짧은 대기 후 재시도
+        
+        except Exception as e:
+            # 다른 종류의 예상치 못한 예외 처리
+            print(f"🚨 예상치 못한 오류 발생: {e}")
+            time.sleep(1)
 
 def gif_set(fname, total_ms=None, speed=1.0):
     """GIF 로드 후 RGBA 프레임, count, interval_ms 반환"""
