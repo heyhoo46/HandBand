@@ -27,6 +27,10 @@
 #Exclude vitis File
 .analytics
 
+#Exculde .venv
+**/.venv/**
+**/.HandBandVenv/**
+
 #Exept gitignore
 !.gitignore
 #Exept vivado xpr
