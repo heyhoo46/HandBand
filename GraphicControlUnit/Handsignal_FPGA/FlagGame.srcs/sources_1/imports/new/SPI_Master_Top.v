@@ -1,11 +1,13 @@
 `timescale 1ns / 1ps
 
 module SPI_Master_Top #(
-    parameter DATA_WIDTH       = 8,
-    parameter SLAVE_CS         = 2,
-    parameter BYTES_PER_PACKET = 4,    // 한 번에 보낼 바이트 수
-    parameter PACKET_COUNT     = 10,   // 총 패킷 수
-    parameter SCLK_DIV         = 125
+    parameter SYSCLK = 125_000_000,
+    parameter SYSCLK_DIV = 10,
+    parameter DATA_WIDTH = 8,
+    parameter SLAVE_CS = 2,
+    parameter BYTES_PER_PACKET = 4,  // 한 번에 보낼 바이트 수
+    parameter PACKET_COUNT = 10,  // 총 패킷 수
+    parameter SCLK_DIV = 125
 ) (
     // Global signals
     input wire clk,   // 125MHz system clock
@@ -45,7 +47,8 @@ module SPI_Master_Top #(
 
     // SPI 패킷 컨트롤러
     SPI_Packet_Controller #(
-        .SCLK_DIV        (SCLK_DIV),
+        .SYSCLK          (SYSCLK),
+        .SYSCLK_DIV      (SYSCLK_DIV),
         .BYTES_PER_PACKET(BYTES_PER_PACKET),
         .PACKET_COUNT    (PACKET_COUNT)
     ) U_Packet_Controller (
@@ -60,9 +63,9 @@ module SPI_Master_Top #(
 
     // SPI Master 인스턴스
     SPI_Master #(
-        .SLAVE_CS   (SLAVE_CS),
-        .DATA_WIDTH (DATA_WIDTH),
-        .SCLK_DIV(SCLK_DIV)
+        .SLAVE_CS  (SLAVE_CS),
+        .DATA_WIDTH(DATA_WIDTH),
+        .SCLK_DIV  (SCLK_DIV)
     ) U_SPI_Master (
         .clk      (clk),
         .reset    (reset),
@@ -84,9 +87,10 @@ endmodule
 `timescale 1ns / 1ps
 
 module SPI_Packet_Controller #(
-    parameter SCLK_DIV         = 125,
-    parameter BYTES_PER_PACKET = 4,    // 한 번에 보낼 바이트 수
-    parameter PACKET_COUNT     = 10    // 총 패킷 수
+    parameter SYSCLK = 125_000_000,
+    parameter SYSCLK_DIV = 10,
+    parameter BYTES_PER_PACKET = 4,  // 한 번에 보낼 바이트 수
+    parameter PACKET_COUNT = 10  // 총 패킷 수
 ) (
     input wire clk,
     input wire reset,
@@ -103,7 +107,7 @@ module SPI_Packet_Controller #(
     input  wire       spi_done      // SPI 완료 신호
 );
 
-    localparam TIMER_100MS = SCLK_DIV * 100_000;
+    localparam TIMER_100MS = SYSCLK / SYSCLK_DIV;
 
     // 상태 머신
     localparam IDLE = 2'b00, 
@@ -226,9 +230,9 @@ endmodule
 `timescale 1ns / 1ps
 
 module SPI_Master #(
-    parameter SLAVE_CS    = 2,
-    parameter DATA_WIDTH  = 8,
-    parameter SCLK_DIV = 125  // 125MHz/SCLK_DIV = SPI clock
+    parameter SLAVE_CS   = 2,
+    parameter DATA_WIDTH = 8,
+    parameter SCLK_DIV   = 125  // 125MHz/SCLK_DIV = SPI clock
 ) (
     // global signals
     input            clk,
