@@ -18,17 +18,14 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "tim.h"
+#include "spi.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "DFPLAYER_MINI.h"
-#include "Ultra.h"
+#include "NRF24L01.h"
 #include "Button.h"
-#include <stdio.h>
-#include "string.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -38,6 +35,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
+#define TRANSMITTER
+//#define RECEIVER
 
 /* USER CODE END PD */
 
@@ -50,11 +50,15 @@
 
 /* USER CODE BEGIN PV */
 
+uint8_t tx_data[NRF24L01P_PAYLOAD_LENGTH] = {1};
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 
 /* USER CODE END PFP */
 
@@ -92,26 +96,13 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_TIM2_Init();
+  MX_SPI2_Init();
   MX_USART2_UART_Init();
-  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  //left
-  Button_Init(&hBtnDo, GPIOC, GPIO_PIN_10);
-  Button_Init(&hBtnRe, GPIOC, GPIO_PIN_12);
-  Button_Init(&hBtnMi, GPIOA, GPIO_PIN_13);
-  Button_Init(&hBtnPa, GPIOA, GPIO_PIN_14);
-  //right
-  Button_Init(&hBtnSol, GPIOC, GPIO_PIN_0);
-  Button_Init(&hBtnLa, GPIOC, GPIO_PIN_1);
-  Button_Init(&hBtnSi, GPIOB, GPIO_PIN_0);
-  Button_Init(&hBtnDDO, GPIOA, GPIO_PIN_4);
+  Button_Init(&hBtnClick, GPIOC, GPIO_PIN_0);
 
-  DF_Init(0x0F);
-
-  //Initial 0001 mp3 sound
-//  DF_PlayFromStart();
+  nrf24l01p_tx_init(2500, _1Mbps);
 
   /* USER CODE END 2 */
 
@@ -119,76 +110,15 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, RESET);
-	  if(Button_GetState(&hBtnDo) == ACT_PUSHED){
-		  Send_cmd(0x03, 0x00, 0x01);
-	  }
-	  else if(Button_GetState(&hBtnRe) == ACT_PUSHED){
-		  Send_cmd(0x03, 0x00, 0x02);
-	  }
-	  else if(Button_GetState(&hBtnMi) == ACT_PUSHED){
-		  Send_cmd(0x03, 0x00, 0x03);
-	  }
-	  else if(Button_GetState(&hBtnPa) == ACT_PUSHED){
-		  Send_cmd(0x03, 0x00, 0x04);
-	  }
-	  else if(Button_GetState(&hBtnSol) == ACT_PUSHED){
-		  Send_cmd(0x03, 0x00, 0x05);
-	  }
-	  else if(Button_GetState(&hBtnLa) == ACT_PUSHED){
-		  Send_cmd(0x03, 0x00, 0x06);
-	  }
-	  else if(Button_GetState(&hBtnSi) == ACT_PUSHED){
-		  Send_cmd(0x03, 0x00, 0x07);
-	  }
-	  else if(Button_GetState(&hBtnDDO) == ACT_PUSHED){
-//		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, SET);
-		  Send_cmd(0x03, 0x00, 0x08);
-	  }
+	  if(Button_GetState(&hBtnClick) == ACT_PUSHED){
+//		  for(int i= 0; i < 8; i++)
+//			  tx_data[i]++;
+		  // transmit
+		  nrf24l01p_tx_transmit(tx_data);
+		  HAL_Delay(100);
 
-//	  Check_Key();
-
-	  /// ultra callback
-//	  Ultra_RunCallBack();
-//
-//      if(1 <= distance && distance < 5){
-//    	  //play DO (play, 0000 file?
-//    	  Send_cmd(0x03,0x00,0x00);
-//      }
-//      else if(5 <= distance && distance < 10){
-//    	  //play RE (play, 0001 file)
-//    	  Send_cmd(0x03,0x00,0x01);
-//      }
-//      else if(11 <= distance && distance < 15){
-//    	  //play MI (play, 0002 file)
-//    	  Send_cmd(0x03,0x00,0x02);
-//      }
-//      else if(15 <= distance && distance < 20){
-//    	  //play PA (play, 0003 file)
-//    	  Send_cmd(0x03,0x00,0x03);
-//      }
-//      else if(20 <= distance && distance < 25){
-//    	  //play SOL (play, 0004 file)
-//    	  Send_cmd(0x03,0x00,0x04);
-//      }
-//      else if(25 <= distance && distance < 30){
-//    	  //play LA (play, 0005 file)
-//    	  Send_cmd(0x03,0x00,0x05);
-//      }
-//      else if(30 <= distance && distance < 35){
-//    	  //play SI (play, 0006 file)
-//    	  Send_cmd(0x03,0x00,0x06);
-//      }
-//      else if(35 <= distance && distance < 40){
-//    	  //play LA (play, 0007 file)
-//    	  Send_cmd(0x03,0x00,0x07);
-//      }
-//
-//	  char str[50];
-//	  sprintf(str, "distance = %d \n", distance);
-//	  HAL_UART_Transmit(&huart2, &str, strlen(str), 10);
-
-//	  HAL_Delay(500);
+		  HAL_UART_Transmit(&huart2, tx_data, NRF24L01P_PAYLOAD_LENGTH, 10);
+	  }
 
     /* USER CODE END WHILE */
 
@@ -243,13 +173,16 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-// ultra callback
-//  void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-// {
-//  	if(htim->Instance == TIM2) {
-//  		Ultra_RunCallBack();
-//  	}
-//  }
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	if(GPIO_Pin == NRF24L01P_IRQ_PIN_NUMBER)
+	{
+		nrf24l01p_tx_irq();
+	}
+
+}
+
 /* USER CODE END 4 */
 
 /**
