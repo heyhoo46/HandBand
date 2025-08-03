@@ -47,6 +47,7 @@
 /* USER CODE BEGIN PV */
 
 uint8_t rx_data[NRF24L01P_PAYLOAD_LENGTH] = {};
+uint8_t rf_flag = 0;
 
 /* USER CODE END PV */
 
@@ -109,6 +110,15 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
 	  HAL_UART_Transmit(&huart2, rx_data, NRF24L01P_PAYLOAD_LENGTH, 10);
+
+	  if(rf_flag == 1){
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, SET); // GPIO ON
+		  HAL_Delay(1000);
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, RESET); // GPIO ON
+		  rf_flag = 0;
+		  rx_data[0] = 0x00;
+	  }
+
 	  HAL_Delay(100);
 
   }
@@ -167,6 +177,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	if(GPIO_Pin == NRF24L01P_IRQ_PIN_NUMBER)
 	{
 	    nrf24l01p_rx_receive(rx_data);
+	    if(rx_data[0] == 0x01){
+	    	rf_flag = 1;
+	    }
 	}
 }
 
