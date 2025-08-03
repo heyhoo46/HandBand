@@ -254,13 +254,13 @@ void nrf24l01p_rx_set_payload_widths(widths bytes)
 
 void nrf24l01p_clear_rx_dr()
 {
-	write_register(NRF24L01P_REG_STATUS, 0x40);
+//	write_register(NRF24L01P_REG_STATUS, 0x40);
 
 //	기존 코드
-//    uint8_t new_status = nrf24l01p_get_status();
-//    new_status |= 0x40;
-//
-//    write_register(NRF24L01P_REG_STATUS, new_status);
+    uint8_t new_status = nrf24l01p_get_status();
+    new_status |= 0x40;
+
+    write_register(NRF24L01P_REG_STATUS, new_status);
 }
 
 void nrf24l01p_clear_tx_ds()
