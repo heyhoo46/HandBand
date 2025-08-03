@@ -3,8 +3,8 @@
 module top_hand_signal #(
     parameter IMG_WIDTH = 680,
     parameter IMG_HEIGHT = 480,
-    parameter NX = 10,
-    parameter NY = 8,
+    parameter NX = 20,
+    parameter NY = 16,
     parameter IMG_WB = $clog2(IMG_WIDTH),
     parameter IMG_HB = $clog2(IMG_HEIGHT),
     parameter DATA_WIDTH = 8,
@@ -251,8 +251,8 @@ module hand_signal #(
     input      [$clog2(ZONES)-1:0] zone_id,
     input      [             11:0] pixel_COLOR,
     input                          pclk,
-    output reg [              6:0] blue_flag,
-    output reg [              6:0] red_flag
+    output reg [  $clog2(ZONES):0] blue_flag,
+    output reg [  $clog2(ZONES):0] red_flag
 );
 
     // RGB 분리
