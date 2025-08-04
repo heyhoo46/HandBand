@@ -100,15 +100,22 @@ class sound(threading.Thread):
         #         overlay_on = False
 
 
-'''  '''
+# 폭죽 : 0 , fog: 2, Spot:3, Confetti:4, RGB_light:5, Blur:6, Zoom:7, snow:8
 def eft_sel(cmd):
-    dt = {'e': 1}
-    return dt[cmd]
+    dt = {
+        'a': 8,
+        'b': 6,
+        'c': 0,
+        'd': 3,
+        'e': 4,
+        'f': 5,
+        'g': 2,
+        'h': 7
+        }
+    return dt.get(cmd)
 
 # 공용 def
 def uart_listener(manager):
-    global spot_state
-    
     ser = None # 초기 시리얼 객체는 None으로 설정
     
     while True: # 무한 재연결 시도 루프
@@ -149,7 +156,7 @@ def uart_listener(manager):
                 print(f"ERROR Code: {cmd}")
                 continue
 
-            new_idx = eft_sel()
+            new_idx = eft_sel(cmd)
 
             if new_idx is None:
                 continue
