@@ -1,168 +1,345 @@
-#include "kalman_filter.h"
-#include <math.h>   // fabsf (절대값), fmaxf (최대값) 등을 위해 필요합니다.
+#include "kalman_filter.h" // 자체 정의 헤더 파일 포함
+#include <stdio.h>         // 입출력 함수 (printf, fprintf) 사용
+#include <stdlib.h>        // 메모리 할당 (malloc, free), 프로그램 종료 (exit) 사용
+#include <math.h>          // 수학 함수 (fabs) 사용
 
-// 행렬 연산 함수들 (모든 int32_t -> float으로 변경)
+// --- 행렬 연산을 위한 보조 함수 (이 예제에서는 단순화됨) ---
+// 이 함수들은 이 컴파일 단위 내에서만 사용되므로 static으로 선언됩니다.
 
-void matrix_add(float *C, const float *A, const float *B, int rows, int cols) {
-    for (int i = 0; i < rows * cols; i++) {
+// 두 행렬을 곱하는 함수 (C = A * B)
+static void matrix_multiply(double *A, double *B, double *C, int rA, int cA, int rB, int cB) {
+    if (cA != rB) {
+        exit(1);
+    }
+    for (int i = 0; i < rA; i++) {
+        for (int j = 0; j < cB; j++) {
+            C[i * cB + j] = 0;
+            for (int k = 0; k < cA; k++) {
+                C[i * cB + j] += A[i * cA + k] * B[k * cB + j];
+            }
+        }
+    }
+}
+
+// 행렬을 전치하는 함수 (B = A_T)
+static void matrix_transpose(double *A, double *B, int rA, int cA) {
+    for (int i = 0; i < rA; i++) {
+        for (int j = 0; j < cA; j++) {
+            B[j * rA + i] = A[i * cA + j];
+        }
+    }
+}
+
+// 단위 행렬을 생성하는 함수
+static void identity_matrix(double *I, int n) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            I[i * n + j] = (i == j) ? 1.0 : 0.0;
+        }
+    }
+}
+
+// 두 행렬을 더하는 함수 (C = A + B)
+static void matrix_add(double *A, double *B, double *C, int r, int c) {
+    for (int i = 0; i < r * c; i++) {
         C[i] = A[i] + B[i];
     }
 }
 
-void matrix_subtract(float *C, const float *A, const float *B, int rows, int cols) {
-    for (int i = 0; i < rows * cols; i++) {
+// 두 행렬을 빼는 함수 (C = A - B)
+static void matrix_subtract(double *A, double *B, double *C, int r, int c) {
+    for (int i = 0; i < r * c; i++) {
         C[i] = A[i] - B[i];
     }
 }
 
-void matrix_multiply(float *C, const float *A, const float *B,
-                     int a_rows, int a_cols, int b_cols) {
-    for (int i = 0; i < a_rows; i++) {
-        for (int j = 0; j < b_cols; j++) {
-            float sum = 0.0f; // float 타입으로 초기화
-            for (int k = 0; k < a_cols; k++) {
-                sum += A[i * a_cols + k] * B[k * b_cols + j]; // float 곱셈
+// 행렬 역행렬 계산을 위한 LU 분해 함수 (단순화됨)
+// 성공 시 행렬식의 부호를 반환하고, 실패 시 -1을 반환합니다.
+static int ludcmp(double a[], int n, int indx[]) {
+    int i, imax, j, k;
+    double big, dum, sum, temp;
+    double *vv = (double *)malloc(n * sizeof(double));
+    if (!vv) {
+        return -1;
+    }
+    int d = 1; // 순열의 패리티
+
+    for (i = 0; i < n; i++) {
+        big = 0.0;
+        for (j = 0; j < n; j++) {
+            if ((temp = fabs(a[i * n + j])) > big)
+                big = temp;
+        }
+        if (big == 0.0) {
+            free(vv);
+            return -1;
+        }
+        vv[i] = 1.0 / big;
+    }
+
+    for (j = 0; j < n; j++) {
+        for (i = 0; i < j; i++) {
+            sum = a[i * n + j];
+            for (k = 0; k < i; k++) {
+                sum -= a[i * n + k] * a[k * n + j];
             }
-            C[i * b_cols + j] = sum;
+            a[i * n + j] = sum;
         }
+        big = 0.0;
+        for (i = j; i < n; i++) {
+            sum = a[i * n + j];
+            for (k = 0; k < j; k++) {
+                sum -= a[i * n + k] * a[k * n + j];
+            }
+            a[i * n + j] = sum;
+            if ((dum = vv[i] * fabs(sum)) >= big) {
+                big = dum;
+                imax = i;
+            }
+        }
+        if (j != imax) {
+            for (k = 0; k < n; k++) {
+                dum = a[imax * n + k];
+                a[imax * n + k] = a[j * n + k];
+                a[j * n + k] = dum;
+            }
+            d = -d;
+            vv[imax] = vv[j];
+        }
+        indx[j] = imax;
+        if (a[j * n + j] == 0.0) a[j * n + j] = 1.0e-20; // 매우 작은 숫자
+        if (j != n - 1) {
+            dum = 1.0 / (a[j * n + j]);
+            for (i = j + 1; i < n; i++) {
+                a[i * n + j] *= dum;
+            }
+        }
+    }
+    free(vv);
+    return d; // 행렬식 부호
+}
+
+// LU 분해를 사용하여 Ax=b를 푸는 함수
+static void lubksb(double a[], int n, int indx[], double b[]) {
+    int i, ii = 0, ip, j;
+    double sum;
+
+    for (i = 0; i < n; i++) {
+        ip = indx[i];
+        sum = b[ip];
+        b[ip] = b[i];
+        if (ii != 0) {
+            for (j = ii - 1; j < i; j++) {
+                sum -= a[i * n + j] * b[j];
+            }
+        } else if (sum != 0.0) {
+            ii = i + 1;
+        }
+        b[i] = sum;
+    }
+    for (i = n - 1; i >= 0; i--) {
+        sum = b[i];
+        for (j = i + 1; j < n; j++) {
+            sum -= a[i * n + j] * b[j];
+        }
+        b[i] = sum / a[i * n + i];
     }
 }
 
-void matrix_transpose(float *C, const float *A, int rows, int cols) {
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            C[j * rows + i] = A[i * cols + j];
+// LU 분해를 사용하여 행렬 역행렬을 계산하는 함수 (A_inv = LU_inverse)
+// 성공 시 0, 실패 시 -1을 반환합니다.
+static int matrix_inverse(double *A, double *A_inv, int n) {
+    double *lu = (double *)malloc(n * n * sizeof(double));
+    double *col = (double *)malloc(n * sizeof(double));
+    int *indx = (int *)malloc(n * sizeof(int));
+
+    if (!lu || !col || !indx) {
+        free(lu); free(col); free(indx);
+        return -1;
+    }
+
+    // A를 lu로 복사합니다. ludcmp는 입력 행렬을 수정하기 때문입니다.
+    for (int i = 0; i < n * n; i++) {
+        lu[i] = A[i];
+    }
+
+    if (ludcmp(lu, n, indx) == -1) { // LU 분해 수행
+        free(lu); free(col); free(indx);
+        return -1;
+    }
+
+    for (int j = 0; j < n; j++) {
+        for (int i = 0; i < n; i++) {
+            col[i] = 0.0;
+        }
+        col[j] = 1.0; // 단위 열 벡터
+
+        lubksb(lu, n, indx, col); // 역행렬의 열을 계산
+
+        for (int i = 0; i < n; i++) {
+            A_inv[i * n + j] = col[i];
         }
     }
+
+    free(lu);
+    free(col);
+    free(indx);
+    return 0;
 }
 
-void matrix_inverse_2x2(float *inverse, const float *A) {
-    float a = A[0];
-    float b = A[1];
-    float c = A[2];
-    float d = A[3];
+// --- KalmanFilter 함수 구현 ---
 
-    float determinant = (a * d) - (b * c); // float 곱셈
+// 생성자 (초기화 함수)
+void KalmanFilter_init(KalmanFilter *kf, double dt, double initial_x, double initial_y, double initial_vx, double initial_vy) {
+    kf->dt = dt;
 
-    // 부동 소수점 환경에서는 0.0f와 정확히 같은지 비교하기보다는 작은 오차 범위 내에 있는지 확인합니다.
-    if (fabsf(determinant) < 1e-9f) { // 1e-9f (0.000000001f)보다 작으면 0으로 간주
-        // 에러 처리: 역행렬 없음.
-        // 이 경우 필터가 불안정해질 수 있으므로, 적절한 에러 핸들링이 필요합니다.
-        // 예를 들어, 모든 요소를 0으로 설정하거나, 이전 값을 유지하거나, 큰 값을 넣어 필터가 발산하게 할 수 있습니다.
-        // 여기서는 안전을 위해 0으로 채우고 함수를 종료합니다.
-        for(int i = 0; i < 4; ++i) inverse[i] = 0.0f;
+    // 1. 상태 벡터 (x, y, vx, vy)
+    kf->state[0][0] = initial_x;
+    kf->state[1][0] = initial_y;
+    kf->state[2][0] = initial_vx;
+    kf->state[3][0] = initial_vy;
+
+    // 2. 상태 전이 행렬 (F) - 다음 상태 예측 (등속도 모델)
+    double F_data[4][4] = {
+        {1, 0, dt, 0},
+        {0, 1, 0, dt},
+        {0, 0, 1, 0},
+        {0, 0, 0, 1}
+    };
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            kf->F[i][j] = F_data[i][j];
+        }
+    }
+
+    // 3. 측정 행렬 (H) - (x, y) 위치만 측정한다고 가정
+    double H_data[2][4] = {
+        {1, 0, 0, 0},
+        {0, 1, 0, 0}
+    };
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 4; j++) {
+            kf->H[i][j] = H_data[i][j];
+        }
+    }
+
+    // 4. 프로세스 잡음 공분산 행렬 (Q) - 시스템 모델의 불확실성
+    // np.diag([0.1, 0.1, 0.01, 0.01])
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            kf->Q[i][j] = 0.0;
+        }
+    }
+    kf->Q[0][0] = 0.1;
+    kf->Q[1][1] = 0.1;
+    kf->Q[2][2] = 0.01;
+    kf->Q[3][3] = 0.01;
+
+    // 5. 측정 잡음 공분산 행렬 (R) - 센서 측정의 불확실성
+    // np.diag([100.0, 100.0])
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            kf->R[i][j] = 0.0;
+        }
+    }
+    kf->R[0][0] = 100.0;
+    kf->R[1][1] = 100.0;
+
+    // 6. 오차 공분산 행렬 (P) - 초기 상태 추정치의 불확실성
+    // np.diag([10.0, 10.0, 10.0, 10.0])
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            kf->P[i][j] = 0.0;
+        }
+    }
+    kf->P[0][0] = 10.0;
+    kf->P[1][1] = 10.0;
+    kf->P[2][2] = 10.0;
+    kf->P[3][3] = 10.0;
+
+    // 7. 단위 행렬
+    identity_matrix((double *)kf->I, 4);
+}
+
+// 예측 함수
+void KalmanFilter_predict(KalmanFilter *kf, double *predicted_xy) {
+    // 계산을 위한 임시 행렬
+    double temp_state[4][1];
+    double temp_P[4][4];
+    double F_T[4][4];
+
+    // 예측: x_k = F * x_{k-1}
+    matrix_multiply((double *)kf->F, (double *)kf->state, (double *)temp_state, 4, 4, 4, 1);
+    for (int i = 0; i < 4; i++) {
+        kf->state[i][0] = temp_state[i][0];
+    }
+
+    // 오차 공분산 예측: P_k = F * P_{k-1} * F_T + Q
+    matrix_transpose((double *)kf->F, (double *)F_T, 4, 4);
+    double F_P[4][4];
+    matrix_multiply((double *)kf->F, (double *)kf->P, (double *)F_P, 4, 4, 4, 4);
+    matrix_multiply((double *)F_P, (double *)F_T, (double *)temp_P, 4, 4, 4, 4);
+    matrix_add((double *)temp_P, (double *)kf->Q, (double *)kf->P, 4, 4);
+
+    // 예측된 (x, y) 반환
+    predicted_xy[0] = kf->state[0][0];
+    predicted_xy[1] = kf->state[1][0];
+}
+
+// 업데이트 함수
+void KalmanFilter_update(KalmanFilter *kf, double measurement_x, double measurement_y, double *updated_xy) {
+    // 계산을 위한 임시 행렬
+    double S[2][2];
+    double H_T[4][2];
+    double S_inv[2][2];
+    double K[4][2];
+    double y_residual[2][1];
+    double H_state[2][1];
+    double K_y_residual[4][1];
+    double K_H[4][4];
+    double I_K_H[4][4];
+    double temp_P[4][4];
+
+    // 측정치 벡터 z_k
+    double measurement[2][1] = {{measurement_x}, {measurement_y}};
+
+    // 칼만 이득 계산: K = P_k * H_T * (H * P_k * H_T + R)^-1
+    double H_P[2][4];
+    matrix_multiply((double *)kf->H, (double *)kf->P, (double *)H_P, 2, 4, 4, 4);
+    matrix_transpose((double *)kf->H, (double *)H_T, 2, 4);
+    double H_P_H_T[2][2];
+    matrix_multiply((double *)H_P, (double *)H_T, (double *)H_P_H_T, 2, 4, 4, 2);
+    matrix_add((double *)H_P_H_T, (double *)kf->R, (double *)S, 2, 2);
+
+    if (matrix_inverse((double *)S, (double *)S_inv, 2) != 0) {
+        // 오류 처리, 예를 들어 이전 상태를 반환하거나 실패를 나타냅니다.
+        updated_xy[0] = kf->state[0][0];
+        updated_xy[1] = kf->state[1][0];
         return;
     }
 
-    float inv_det = 1.0f / determinant; // float 나눗셈
+    double P_H_T[4][2];
+    matrix_multiply((double *)kf->P, (double *)H_T, (double *)P_H_T, 4, 4, 4, 2);
+    matrix_multiply((double *)P_H_T, (double *)S_inv, (double *)K, 4, 2, 2, 2);
 
-    inverse[0] = d * inv_det;
-    inverse[1] = -b * inv_det;
-    inverse[2] = -c * inv_det;
-    inverse[3] = a * inv_det;
+    // 상태 업데이트: x_k = x_k + K * (z_k - H * x_k)
+    matrix_multiply((double *)kf->H, (double *)kf->state, (double *)H_state, 2, 4, 4, 1);
+    matrix_subtract((double *)measurement, (double *)H_state, (double *)y_residual, 2, 1);
+    matrix_multiply((double *)K, (double *)y_residual, (double *)K_y_residual, 4, 2, 2, 1);
+    matrix_add((double *)kf->state, (double *)K_y_residual, (double *)kf->state, 4, 1);
+
+    // 오차 공분산 업데이트: P_k = (I - K * H) * P_k
+    matrix_multiply((double *)K, (double *)kf->H, (double *)K_H, 4, 2, 2, 4);
+    matrix_subtract((double *)kf->I, (double *)K_H, (double *)I_K_H, 4, 4);
+    matrix_multiply((double *)I_K_H, (double *)kf->P, (double *)temp_P, 4, 4, 4, 4);
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            kf->P[i][j] = temp_P[i][j];
+        }
+    }
+
+    // 업데이트된 (x, y) 반환
+    updated_xy[0] = kf->state[0][0];
+    updated_xy[1] = kf->state[1][0];
 }
-
-// --- 칼만 필터 초기화 함수 ---
-void KalmanFilter_Init(KalmanFilter_t *kf, float dt,
-                       float initial_x, float initial_y,
-                       float initial_vx, float initial_vy) {
-    kf->dt = dt;
-
-    // 초기 상태 벡터 (float 값 그대로 대입)
-    kf->state[0] = initial_x;
-    kf->state[1] = initial_y;
-    kf->state[2] = initial_vx;
-    kf->state[3] = initial_vy;
-
-    // F 행렬 초기화 (상태 전이 행렬)
-    // float 0.0f로 초기화
-    for(int i=0; i<4; i++) for(int j=0; j<4; j++) kf->F[i][j] = 0.0f;
-    kf->F[0][0] = 1.0f; kf->F[0][2] = dt; // x_new = x_old + vx * dt
-    kf->F[1][1] = 1.0f; kf->F[1][3] = dt; // y_new = y_old + vy * dt
-    kf->F[2][2] = 1.0f;                   // vx_new = vx_old (가속도 없음 가정)
-    kf->F[3][3] = 1.0f;                   // vy_new = vy_old (가속도 없음 가정)
-
-    // H 행렬 초기화 (측정 행렬)
-    // float 0.0f로 초기화
-    for(int i=0; i<2; i++) for(int j=0; j<4; j++) kf->H[i][j] = 0.0f;
-    kf->H[0][0] = 1.0f; // 측정값이 x와 y만 있다고 가정
-    kf->H[1][1] = 1.0f;
-
-    // Q 행렬 초기화 (프로세스 노이즈 공분산)
-    // define 된 float 값 그대로 사용
-    for(int i=0; i<4; i++) for(int j=0; j<4; j++) kf->Q[i][j] = 0.0f;
-    kf->Q[0][0] = Q_POS_NOISE_STD_DEV_FLOAT;
-    kf->Q[1][1] = Q_POS_NOISE_STD_DEV_FLOAT;
-    kf->Q[2][2] = Q_VEL_NOISE_STD_DEV_FLOAT;
-    kf->Q[3][3] = Q_VEL_NOISE_STD_DEV_FLOAT;
-
-    // R 행렬 초기화 (측정 노이즈 공분산)
-    // define 된 float 값 그대로 사용
-    for(int i=0; i<2; i++) for(int j=0; j<2; j++) kf->R[i][j] = 0.0f;
-    kf->R[0][0] = R_MEASUREMENT_NOISE_STD_DEV_FLOAT;
-    kf->R[1][1] = R_MEASUREMENT_NOISE_STD_DEV_FLOAT;
-
-    // P 행렬 초기화 (초기 오차 공분산)
-    // define 된 float 값 그대로 사용
-    for(int i=0; i<4; i++) for(int j=0; j<4; j++) kf->P[i][j] = 0.0f;
-    kf->P[0][0] = P_INITIAL_COVARIANCE_FLOAT;
-    kf->P[1][1] = P_INITIAL_COVARIANCE_FLOAT;
-    kf->P[2][2] = P_INITIAL_COVARIANCE_FLOAT;
-    kf->P[3][3] = P_INITIAL_COVARIANCE_FLOAT;
-}
-
-// --- 칼만 필터 예측 함수 ---
-void KalmanFilter_Predict(KalmanFilter_t *kf, float *predicted_x, float *predicted_y) {
-    // 1. 상태 예측: x_hat = F * x
-    matrix_multiply((float*)kf->temp_vec_4x1, (float*)kf->F, (float*)kf->state, 4, 4, 1);
-    for(int i=0; i<4; i++) kf->state[i] = kf->temp_vec_4x1[i]; // 예측된 상태로 업데이트
-
-    // 2. 오차 공분산 예측: P = F * P * F_T + Q
-    matrix_transpose((float*)kf->temp_mat_4x4_1, (float*)kf->F, 4, 4); // F_T
-    matrix_multiply((float*)kf->temp_mat_4x4_2, (float*)kf->F, (float*)kf->P, 4, 4, 4); // F * P
-    matrix_multiply((float*)kf->P, (float*)kf->temp_mat_4x4_2, (float*)kf->temp_mat_4x4_1, 4, 4, 4); // (F * P) * F_T
-    matrix_add((float*)kf->P, (float*)kf->P, (float*)kf->Q, 4, 4); // (F * P * F_T) + Q
-
-    *predicted_x = kf->state[0]; // 예측된 x 위치 반환
-    *predicted_y = kf->state[1]; // 예측된 y 위치 반환
-}
-
-// --- 칼만 필터 업데이트 함수 ---
-void KalmanFilter_Update(KalmanFilter_t *kf, float measured_x, float measured_y,
-                         float *updated_x, float *updated_y) {
-    float measurement[2]; // 측정값 배열 (float)
-    measurement[0] = measured_x;
-    measurement[1] = measured_y;
-
-    // 1. 잔차(Residual) 계산: y = z - H * x_hat
-    // (H * x_hat) 계산
-    matrix_multiply((float*)kf->temp_vec_2x1, (float*)kf->H, (float*)kf->state, 2, 4, 1);
-    // 잔차 (z - (H * x_hat)) 계산
-    matrix_subtract((float*)kf->temp_vec_2x1, (float*)measurement, (float*)kf->temp_vec_2x1, 2, 1);
-
-    // 2. 공분산 행렬 S 계산: S = H * P * H_T + R
-    matrix_transpose((float*)kf->temp_mat_4x2_H_T, (float*)kf->H, 2, 4); // H_T
-    matrix_multiply((float*)kf->temp_mat_2x4, (float*)kf->H, (float*)kf->P, 2, 4, 4); // H * P
-    matrix_multiply((float*)kf->temp_mat_2x2_S, (float*)kf->temp_mat_2x4, (float*)kf->temp_mat_4x2_H_T, 2, 4, 2); // (H * P) * H_T
-    matrix_add((float*)kf->temp_mat_2x2_S, (float*)kf->temp_mat_2x2_S, (float*)kf->R, 2, 2); // (H * P * H_T) + R
-
-    // 3. 칼만 이득 K 계산: K = P * H_T * S_inv
-    matrix_inverse_2x2((float*)kf->temp_mat_2x2_S_inv, (float*)kf->temp_mat_2x2_S); // S_inv
-    matrix_multiply((float*)kf->temp_mat_4x2_K, (float*)kf->P, (float*)kf->temp_mat_4x2_H_T, 4, 4, 2); // P * H_T
-    matrix_multiply((float*)kf->temp_mat_4x2_K, (float*)kf->temp_mat_4x2_K, (float*)kf->temp_mat_2x2_S_inv, 4, 2, 2); // (P * H_T) * S_inv
-
-    // 4. 상태 업데이트: x_hat = x_hat + K * y
-    matrix_multiply((float*)kf->temp_vec_4x1, (float*)kf->temp_mat_4x2_K, (float*)kf->temp_vec_2x1, 4, 2, 1); // K * residual (y)
-    matrix_add((float*)kf->state, (float*)kf->state, (float*)kf->temp_vec_4x1, 4, 1); // x_hat + (K * y)
-
-    // 5. 오차 공분산 P 업데이트: P = (I - K * H) * P
-    float identity[4][4]; // 항등 행렬 (float)
-    for(int i=0; i<4; i++) for(int j=0; j<4; j++) identity[i][j] = (i==j) ? 1.0f : 0.0f; // float 1.0f
-
-    matrix_multiply((float*)kf->temp_mat_4x4_1, (float*)kf->temp_mat_4x2_K, (float*)kf->H, 4, 2, 4); // K * H
-    matrix_subtract((float*)kf->temp_mat_4x4_2, (float*)identity, (float*)kf->temp_mat_4x4_1, 4, 4); // (I - K * H)
-    matrix_multiply((float*)kf->P, (float*)kf->temp_mat_4x4_2, (float*)kf->P, 4, 4, 4); // (I - K * H) * P
-
-    *updated_x = kf->state[0]; // 업데이트된 x 위치 반환
-    *updated_y = kf->state[1]; // 업데이트된 y 위치 반환
-}
+    

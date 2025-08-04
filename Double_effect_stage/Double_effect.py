@@ -60,7 +60,7 @@ def uart_listener(manager):
             point = [list(map(float, string[1:-1].split())) for string in (list(temp[0].split('='))[:-1])]
             
             new_idx = None
-            print(f"{cmd}, {angle}")
+            print(f"{cmd}, {angle}, {mag}")
             print(*point, sep=', ')
 
             if cmd in ['E']:

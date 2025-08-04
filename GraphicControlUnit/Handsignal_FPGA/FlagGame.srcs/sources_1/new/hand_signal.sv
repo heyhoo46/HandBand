@@ -1,17 +1,21 @@
 `timescale 1ns / 1ps
 
 module top_hand_signal #(
-    parameter IMG_WIDTH = 680,
-    parameter IMG_HEIGHT = 480,
-    parameter NX = 10,
-    parameter NY = 8,
-    parameter IMG_WB = $clog2(IMG_WIDTH),
-    parameter IMG_HB = $clog2(IMG_HEIGHT),
-    parameter DATA_WIDTH = 8,
-    parameter SLAVE_CS = 2,
+    // IMG PARAM
+    parameter IMG_WIDTH        = 680,
+    parameter IMG_HEIGHT       = 480,
+    parameter NX               = 10,
+    parameter NY               = 8,
+    parameter IMG_WB           = $clog2(IMG_WIDTH),
+    parameter IMG_HB           = $clog2(IMG_HEIGHT),
+    // SPI PARAM
+    parameter SYSCLK           = 100_000_000,
+    parameter PACKET_REST_MSEC = 100,
+    parameter DATA_WIDTH       = 8,
+    parameter SLAVE_CS         = 2,
     parameter BYTES_PER_PACKET = 4,
-    parameter PACKET_COUNT = 10,
-    parameter SCLK_DIV = 25
+    parameter PACKET_COUNT     = 10,
+    parameter SCLK_DIV         = 25
 ) (
     input              clk,
     input              reset,
@@ -127,11 +131,13 @@ module top_hand_signal #(
     // red_x8, red_y8, blue_x8, blue_y8
 
     SPI_Master_Top #(
-        .DATA_WIDTH(DATA_WIDTH),
-        .SLAVE_CS(SLAVE_CS),
+        .SYSCLK          (SYSCLK),
+        .PACKET_REST_MSEC(PACKET_REST_MSEC),
+        .DATA_WIDTH      (DATA_WIDTH),
+        .SLAVE_CS        (SLAVE_CS),
         .BYTES_PER_PACKET(BYTES_PER_PACKET),
-        .PACKET_COUNT(PACKET_COUNT),
-        .SCLK_DIV(SCLK_DIV)
+        .PACKET_COUNT    (PACKET_COUNT),
+        .SCLK_DIV        (SCLK_DIV)
     ) u_spi_top (
         .clk        (clk),          // 125MHz system clock
         .reset      (reset),        // Reset signal
@@ -251,8 +257,8 @@ module hand_signal #(
     input      [$clog2(ZONES)-1:0] zone_id,
     input      [             11:0] pixel_COLOR,
     input                          pclk,
-    output reg [              6:0] blue_flag,
-    output reg [              6:0] red_flag
+    output reg [  $clog2(ZONES):0] blue_flag,
+    output reg [  $clog2(ZONES):0] red_flag
 );
 
     // RGB 분리
