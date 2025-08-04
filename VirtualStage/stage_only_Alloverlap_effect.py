@@ -6,18 +6,22 @@ from collections import deque
 # -------------------------------------------------------
 # [1] 해상도·파일 경로·시리얼 포트 설정
 # -------------------------------------------------------
-CAM_ID            = 0
+UART_ID      = input("COM PORT NUM: ")
+CAM_ID       = input("CAM NUM: ")
+
+cam_num           = int(CAM_ID)
+maximum_frame_rate= 30
 WIDTH, HEIGHT     = 1280, 720
-OVERLAY_PATH      = "stage_all_overlap.png"  # 알파 채널 있는 PNG
-uart_port         = "COM7"
+
+uart_port         = "COM" + UART_ID
 uart_baudrate     = 115200
 
 # 이펙트용 리소스 경로
-gif_base_path     = r"C:/Users/kccistc/Desktop/workspace/"
-sound_base_addr   = "C:/Users/kccistc/Desktop/workspace/"
-
-cam_num           = 0
-maximum_frame_rate= 30
+FILE_PATH = os.path.dirname(os.path.abspath(__file__))
+BG_PATH      = os.path.join(FILE_PATH, "img", "stage_background.png")
+OVERLAY_PATH = os.path.join(FILE_PATH, "img", "stage_overlap.png")
+gif_base_path = os.path.join(FILE_PATH, "img")
+sound_base_addr = os.path.join(FILE_PATH, "sounds")
 
 # pygame 초기화 (사운드용)
 pygame.init()

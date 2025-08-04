@@ -21,10 +21,21 @@ effect_request = False # 새로운 이펙트 실행
 overlay_lock = threading.Lock() # Thread를 독립적으로 실행시키기 위함
 spot_state = 0        # spotlight 상태 (0:left, 1:right, 2:all)
 
-CAM_ID       = 0
+UART_ID      = input("COM PORT NUM: ")
+CAM_ID       = input("CAM NUM: ")
+
+uart_port = "COM" + UART_ID
+uart_baudrate = 115200
+
+cam_num = int(CAM_ID)
+maximum_frame_rate = 30
 WIDTH,HEIGHT = 1280, 720
-BG_PATH      = "stage_background.png"
-OVERLAY_PATH   = "stage_overlap.png"
+
+FILE_PATH = os.path.dirname(os.path.abspath(__file__))
+BG_PATH      = os.path.join(FILE_PATH, "img", "stage_background.png")
+OVERLAY_PATH = os.path.join(FILE_PATH, "img", "stage_overlap.png")
+gif_base_path = os.path.join(FILE_PATH, "img")
+sound_base_addr = os.path.join(FILE_PATH, "sounds")
 THRESHOLD    = 0.5
 
 
@@ -49,17 +60,8 @@ else:
 ov_bgr   = cv2.resize(ov_bgr,   (WIDTH, HEIGHT))
 ov_alpha = cv2.resize(ov_alpha, (WIDTH, HEIGHT))
 
-uart_port = "COM7"
-uart_baudrate = 115200
-
-cam_num = 0
-maximum_frame_rate = 30
-
 eft_num = 0
 channel_map = {}
-
-gif_base_path = r"C:/Users/kccistc/Desktop/workspace/"
-sound_base_addr = "C:/Users/kccistc/Desktop/workspace/"
 
 # 캠 프레임
 cam_frame = None #(0, 1)
