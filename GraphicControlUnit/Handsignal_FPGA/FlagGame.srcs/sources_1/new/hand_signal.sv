@@ -1,14 +1,16 @@
 `timescale 1ns / 1ps
 
 module top_hand_signal #(
-    parameter SYSCLK           = 100_000_000,
-    parameter SYSCLK_DIV       = 10,
+    // IMG PARAM
     parameter IMG_WIDTH        = 680,
     parameter IMG_HEIGHT       = 480,
     parameter NX               = 10,
     parameter NY               = 8,
     parameter IMG_WB           = $clog2(IMG_WIDTH),
     parameter IMG_HB           = $clog2(IMG_HEIGHT),
+    // SPI PARAM
+    parameter SYSCLK           = 100_000_000,
+    parameter PACKET_REST_MSEC = 100,
     parameter DATA_WIDTH       = 8,
     parameter SLAVE_CS         = 2,
     parameter BYTES_PER_PACKET = 4,
@@ -84,8 +86,6 @@ module top_hand_signal #(
 
     wire [6:0] blue_flag, red_flag;
     hand_signal #(
-        .SYSCLK    (SYSCLK),
-        .SYSCLK_DIV(SYSCLK_DIV),
         .IMG_WIDTH (IMG_WIDTH),
         .IMG_HEIGHT(IMG_HEIGHT),
         .NX        (NX),
@@ -131,6 +131,8 @@ module top_hand_signal #(
     // red_x8, red_y8, blue_x8, blue_y8
 
     SPI_Master_Top #(
+        .SYSCLK          (SYSCLK),
+        .PACKET_REST_MSEC(PACKET_REST_MSEC),
         .DATA_WIDTH      (DATA_WIDTH),
         .SLAVE_CS        (SLAVE_CS),
         .BYTES_PER_PACKET(BYTES_PER_PACKET),

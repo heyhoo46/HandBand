@@ -2,7 +2,7 @@
 
 module SPI_Master_Top #(
     parameter SYSCLK = 125_000_000,
-    parameter SYSCLK_DIV = 10,
+    parameter PACKET_REST_MSEC = 10,
     parameter DATA_WIDTH = 8,
     parameter SLAVE_CS = 2,
     parameter BYTES_PER_PACKET = 4,  // 한 번에 보낼 바이트 수
@@ -48,7 +48,7 @@ module SPI_Master_Top #(
     // SPI 패킷 컨트롤러
     SPI_Packet_Controller #(
         .SYSCLK          (SYSCLK),
-        .SYSCLK_DIV      (SYSCLK_DIV),
+        .PACKET_REST_MSEC(PACKET_REST_MSEC),
         .BYTES_PER_PACKET(BYTES_PER_PACKET),
         .PACKET_COUNT    (PACKET_COUNT)
     ) U_Packet_Controller (
@@ -88,7 +88,7 @@ endmodule
 
 module SPI_Packet_Controller #(
     parameter SYSCLK = 125_000_000,
-    parameter SYSCLK_DIV = 10,
+    parameter PACKET_REST_MSEC = 100,
     parameter BYTES_PER_PACKET = 4,  // 한 번에 보낼 바이트 수
     parameter PACKET_COUNT = 10  // 총 패킷 수
 ) (
@@ -107,7 +107,7 @@ module SPI_Packet_Controller #(
     input  wire       spi_done      // SPI 완료 신호
 );
 
-    localparam TIMER_100MS = SYSCLK / SYSCLK_DIV;
+    localparam TIMER_100MS = (SYSCLK / 1000) * PACKET_REST_MSEC;
 
     // 상태 머신
     localparam IDLE = 2'b00, 
