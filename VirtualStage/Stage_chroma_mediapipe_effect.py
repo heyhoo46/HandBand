@@ -102,10 +102,22 @@ class sound(threading.Thread):
         #         overlay_on = False
 
 
+# 폭죽 : 0 , fog: 2, Spot:3, Confetti:4, RGB_light:5, Blur:6, Zoom:7, snow:8
+def eft_sel(cmd):
+    dt = {
+        'a': 8,
+        'b': 6,
+        'c': 0,
+        'd': 3,
+        'e': 4,
+        'f': 5,
+        'g': 2,
+        'h': 7
+        }
+    return dt.get(cmd)
+
 # 공용 def
 def uart_listener(manager):
-    global spot_state
-    
     ser = None # 초기 시리얼 객체는 None으로 설정
     
     while True: # 무한 재연결 시도 루프
@@ -139,7 +151,6 @@ def uart_listener(manager):
             angle, mag, cmd = list(temp[1].split())
             point = [list(map(float, string[1:-1].split())) for string in (list(temp[0].split('='))[:-1])]
             
-            new_idx = None
             print(f"{cmd}, {angle}, {mag}")
             print(*point, sep=', ')
 
@@ -147,17 +158,7 @@ def uart_listener(manager):
                 print(f"ERROR Code: {cmd}")
                 continue
 
-            # 이펙트 매핑 로직
-            if cmd == 'e': new_idx = 0
-            elif cmd == '-': new_idx = 1
-            elif cmd == 'd': new_idx = 2
-            elif cmd in ('f', 'g', 'h'):
-                new_idx = 3
-                spot_state = {'f': 0, 'g': 1, 'h': 2}[cmd]
-            elif cmd == 'c': new_idx = 4
-            elif cmd == 'a': new_idx = 5
-            elif cmd == 'b': new_idx = 6
-            elif cmd == 'd': new_idx = 7
+            new_idx = eft_sel(cmd)
 
             if new_idx is None:
                 continue
