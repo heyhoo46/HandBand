@@ -118,13 +118,13 @@ class FrameGrabber(threading.Thread):
     """카메라 스레드: 항상 최신 한 프레임만 큐에 보관"""
     def __init__(self, src, queue, lock):
         super().__init__(daemon=True)
-        cap = cv2.VideoCapture(src, cv2.CAP_MSMF)
-        #cap = cv2.VideoCapture(src, cv2.CAP_DSHOW)
+        # cap = cv2.VideoCapture(src, cv2.CAP_MSMF)
+        cap = cv2.VideoCapture(src, cv2.CAP_DSHOW)
         fourcc = cv2.VideoWriter_fourcc(*'MJPG')
         cap.set(cv2.CAP_PROP_FOURCC,      fourcc)
         cap.set(cv2.CAP_PROP_AUTOFOCUS,   0)
         cap.set(cv2.CAP_PROP_BUFFERSIZE,  0)
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1080)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT,720)
         cap.set(cv2.CAP_PROP_FPS, maximum_frame_rate)
         self.cap = cap
