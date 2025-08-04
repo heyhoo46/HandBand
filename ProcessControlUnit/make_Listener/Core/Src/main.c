@@ -26,6 +26,11 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include "string.h"
+#include "stm32h7xx_hal.h"
+//#include "Button.h"
+#include "vector.h"
+#include "Listener.h"
+//#include "Listener.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,7 +63,6 @@ static void MPU_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
 /* USER CODE END 0 */
 
 /**
@@ -69,10 +73,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
-	uint8_t tx_data[4] = {0xaa, 0x55, 0xaa, 0x55};
-	uint8_t i = 0;
-
+	uint8_t tx_data[1] = {0x01};
+	uint8_t cnt = 0;
   /* USER CODE END 1 */
 
   /* MPU Configuration--------------------------------------------------------*/
@@ -84,7 +86,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  //Listener_Init();
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -106,27 +108,23 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if(i != 4){
-		  HAL_StatusTypeDef result = HAL_SPI_Transmit(&hspi1, &tx_data[i], 1, 1000);
-          if(result == HAL_OK){
-			  char str[50];
-			  sprintf(str,"SuCCEss, rx_buffer[%d] = %d \n", i, tx_data[i]);
-			  HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 1000);
-          }
-
-			  HAL_Delay(100);
-		  i++;
-	  }
-	  else {
-		  i = 0;
-	  }
-//	  HAL_Delay(100);
+      HAL_StatusTypeDef result = HAL_SPI_Transmit(&hspi1, &tx_data[0], 1, 1000);
+      if (result == HAL_OK) {
+          char str[50];
+          sprintf(str, "Success, tx_data[%d] = %d\r\n", 0, tx_data[0]);
+          HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
+          cnt++;
+      }
+      if(cnt == 1){
+    	  return;
+      }
+  }
+}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
+
   /* USER CODE END 3 */
-}
 
 /**
   * @brief System Clock Configuration

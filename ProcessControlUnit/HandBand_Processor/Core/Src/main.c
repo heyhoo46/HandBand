@@ -70,14 +70,86 @@ int __io_putchar(int ch)
    return ch;
 }
 
-
+//SPI Callback
 void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
 {
+
 	if (hspi->Instance == SPI1) {
 		rx_flag = 1;
-		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);  // 수신 완료 시 깜빡임
+
+//		tx_data = rx_data;
+		char str[50];
+		sprintf(str, "In callback: 0x%02X\r\n", rx_data);
+		HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
+
+
+		 HAL_SPI_Receive_DMA(&hspi1, &rx_data, 1);
+		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+
+
 //		HAL_SPI_Receive_DMA(&hspi1, (uint8_t *)&rx_data, 1);
+
+//		HAL_SPI_TransmitReceive_DMA(&hspi1, &tx_data, &rx_data, 1);
+//		if(rx_data == 0xaa){
+//			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
+//		}
+//		else if(rx_data == 0x55){
+//			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, RESET);
+//		}
+
+//		if(rx_data == 0xFF){
+//			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, SET);
+//		}
+//
+//		else if(rx_data == 0x00){
+//			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, SET);
+//		}
+//
+//		else{
+//			HAL_GPIO_WritePin(GPIOI,GPIO_PIN_6, SET);  // 수신 완료 시 깜빡임
+//		}
+//	}
 	}
+}
+
+
+/////test해볼것
+//////////////error 확인할 수 있는 함수
+
+//void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
+//{.
+//	if (hspi->Instance == SPI1) {
+//		 HAL_StatusTypeDef status = HAL_SPI_Receive_DMA(&hspi1, (uint8_t *)&rx_data, 1);
+//		 if (status == HAL_OK) {
+//			rx_flag = 1;
+//
+//			HAL_SPI_Receive_DMA(&hspi1, (uint8_t *)&rx_data, 1);
+//			HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);  // 수신 완료 시 깜빡임
+//		 }
+//	}
+//	else{
+//		rx_flag = 0;
+//		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_8);
+//	}
+//}
+
+
+//UART에도 Delay를 한번 걸어줌
+//void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+//{
+//    if (huart->Instance == USART1) {
+//        uart_tx_busy = 0;  // 전송 완료 표시
+//    }
+//}
+
+//SPI Error 확인위함
+void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
+{
+    if (hspi->Instance == SPI1) {
+        char str[50];
+        int len = sprintf(str, "SPI Error: 0x%lx\n", hspi->ErrorCode);
+        HAL_UART_Transmit_DMA(&huart1, (uint8_t*)str, len);
+    }
 }
 
 /////

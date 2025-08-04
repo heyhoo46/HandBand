@@ -9,9 +9,9 @@
 #define MODEL_INC_LC_MODEL_H_
 
 #include <stdint.h>
-#include <cmsis_os.h>
-#include <vector.h>
-#include <string.h>
+#include "cmsis_os.h"
+#include "vector.h"
+#include "string.h"
 
 #define DATANUM 10
 

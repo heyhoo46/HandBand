@@ -1,0 +1,4 @@
+[project]
+name = "my-project"
+version = "0.1.0"
+requires-python = ">=3.7,<3.9" # Python 3.9 이상 3.12 미만 요구

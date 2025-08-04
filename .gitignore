@@ -10,7 +10,6 @@
 **/Drivers/**
 **/Middlewares/**
 #Exclude CubeIDE Files
-.cproject
 
 #Exclude vivado Trees
 **/**.runs/**
@@ -25,6 +24,12 @@
 **.str
 **backup**
 **.bkp
+#Exclude vitis File
+.analytics
+
+#Exculde .venv
+**/.venv/**
+**/.HandBandVenv/**
 
 #Exept gitignore
 !.gitignore

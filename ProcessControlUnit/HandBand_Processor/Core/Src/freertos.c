@@ -28,6 +28,7 @@
 #include "Listener.h"
 #include "Controller.h"
 #include "Presenter.h"
+#include "LC_Model.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -160,12 +161,11 @@ void Listener(void const * argument)
 {
   /* USER CODE BEGIN Listener */
 	Listener_Init();
-
   /* Infinite loop */
   for(;;)
   {
-	  Listener_Execute();
-    osDelay(1);
+		Listener_Execute();
+		osDelay(1);
   }
   /* USER CODE END Listener */
 }
@@ -180,9 +180,11 @@ void Listener(void const * argument)
 void Controller(void const * argument)
 {
   /* USER CODE BEGIN Controller */
+	controller_init();
   /* Infinite loop */
   for(;;)
   {
+	controller_excute();
     osDelay(1);
   }
   /* USER CODE END Controller */
@@ -198,9 +200,11 @@ void Controller(void const * argument)
 void Presenter(void const * argument)
 {
   /* USER CODE BEGIN Presenter */
+	Presenter_Init();
   /* Infinite loop */
   for(;;)
   {
+	Presenter_Execute();
     osDelay(1);
   }
   /* USER CODE END Presenter */
