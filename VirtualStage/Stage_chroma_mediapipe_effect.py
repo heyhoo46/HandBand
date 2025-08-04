@@ -100,6 +100,11 @@ class sound(threading.Thread):
         #         overlay_on = False
 
 
+'''  '''
+def eft_sel(cmd):
+    dt = {'e': 1}
+    return dt[cmd]
+
 # 공용 def
 def uart_listener(manager):
     global spot_state
@@ -137,7 +142,6 @@ def uart_listener(manager):
             angle, mag, cmd = list(temp[1].split())
             point = [list(map(float, string[1:-1].split())) for string in (list(temp[0].split('='))[:-1])]
             
-            new_idx = None
             print(f"{cmd}, {angle}, {mag}")
             print(*point, sep=', ')
 
@@ -145,17 +149,7 @@ def uart_listener(manager):
                 print(f"ERROR Code: {cmd}")
                 continue
 
-            # 이펙트 매핑 로직
-            if cmd == 'e': new_idx = 0
-            elif cmd == '-': new_idx = 1
-            elif cmd == 'd': new_idx = 2
-            elif cmd in ('f', 'g', 'h'):
-                new_idx = 3
-                spot_state = {'f': 0, 'g': 1, 'h': 2}[cmd]
-            elif cmd == 'c': new_idx = 4
-            elif cmd == 'a': new_idx = 5
-            elif cmd == 'b': new_idx = 6
-            elif cmd == 'd': new_idx = 7
+            new_idx = eft_sel()
 
             if new_idx is None:
                 continue
