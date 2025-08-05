@@ -81,8 +81,10 @@
    1) 이미지를 바이너리 파일로 변환
    1) 바이너리 파일을 Sequence 클래스에서 읽어 DUT 입력으로 사용
 
-<img width="907" height="399" alt="image" src="https://github.com/user-attachments/assets/00e906f9-41c7-4236-8628-ec076f65d96b" />
-<img width="auto" height="399" alt="image" src="https://github.com/user-attachments/assets/b44e046a-4edb-4c81-98bd-e596bf0abe1d" /><br/>
+<img width="907" height="399" alt="image" src="https://github.com/user-attachments/assets/00e906f9-41c7-4236-8628-ec076f65d96b" /><br/>
+<img width="50%" height="auto" alt="image" src="https://github.com/user-attachments/assets/b44e046a-4edb-4c81-98bd-e596bf0abe1d" />
+<img width="40%" height="auto" alt="image" src="https://github.com/user-attachments/assets/33a96ddd-985c-4cb6-8e4e-92349f06521e" />
+<br/>
 
 _ _ _ _ _ _
 
