@@ -21,9 +21,11 @@
       - HandSiagnal     : 마커를 트래킹하는 모듈
       - GRAPIC_Display  : 그래픽 처리장치(GPU), 게임상태에 따라 캠 영상에 게임UI를 오버레이하는 블록
       - SPI_PackitMaster: 데이터패킷통신을 제어하고 SPI를 통해 데이터를 송신하는 블록
+- VectorCalculater(ARM Coretex M)
+   - 좌표의 위치가 아닌 벡터로서 화면상 어느 위치에서든 "동일 동작 --> 동일 제어" 가능
+   - 칼만 예측 적용, 잡음상황에서 신뢰성 있는 궤적 연산 가능
 
 ## Stacks
-
  - 핵심기술: ISP, ROI 기반 컬러 검출 마커 트레이싱, HDMI, VGA, SPI통신, 패킷컨트롤, 칼만예측
  
 ### Environment
@@ -44,7 +46,6 @@
 ![Python](https://img.shields.io/badge/Lang-Python-3776AB?style=for-the-badge)
 
 ### Board
-
 ![Basys3](https://img.shields.io/badge/Board-Basys3-2196f3?style=for-the-badge)</br>
 
 ## Objectdiabram
@@ -52,54 +53,31 @@
 
 ## GraphicCore(HW RTL)
 #### SystenArchitecture
-<img width="auto" height="346" alt="image" src="https://github.com/user-attachments/assets/712ef324-c52e-43f4-a87b-b8c471dd5be0" />  
+- Zybo Z7 Version<br/>
+<img width="auto" height="346" alt="image" src="https://github.com/user-attachments/assets/712ef324-c52e-43f4-a87b-b8c471dd5be0" />
+
+- Basys3 Version<br/>
+<img width="auto" height="346" alt="image"  src="./doc/SystenArchitecture_design.png" width="auto" height="auto"/></br>
 
 #### Cam Block: 캠 입력 처리장치
 ![Cam_design](./doc/CAM/CAM_design.png)</br>
-##### BLOCK Overview
-###### VGA
-   <img src="./doc/CAM/VGA_Timing_Diagram.png" width="550" height="auto"/></br>
-   <img src="./doc/CAM/VGA_Standard.png" width="550" height="auto"/></br>
-   <img src="./doc/CAM/CAM_Buffer_Block_Desgin.png" width="550" height="auto"/></br>  
 
-#### Graphic Block(GPU): 게임UI 그래픽 처리장치(ISP)
-![GRAPHIC_design](./doc/GRAPHIC/SHOW_design.png)</br>
+#### HandSignal(MackerDetectionModule): 마커 좌표추출 모듈(ISP)
 ##### Module Overview
-- text_show<br/>
-<table>
-   <tr>
-      <img src="./doc/GRAPHIC/TEXT_Show_ALG.png" width="550" height="auto"/>
-      <img src="./doc/GRAPHIC/TEXT_Show_romBlock.png" width="550" height="auto"/>
-   </tr>
-</table>
+- Macker Find</br>
+<img width="auto" height="300" alt="image" src="https://github.com/user-attachments/assets/b4844c6f-188f-439b-9355-c929b4097717" /></br>
 
-
-#### Game Block(CPU): 게임 데이터 처리장치(ISP, PRNG)
-![Layout](./doc/GAME/GAME_Design.png)</br>
-##### Module Overview
-- game_state</br>
-![game_state](./doc/GAME/GAME_FSMpng.png)</br>
-- PRNG</br>
-  - xorShift</br>
-   ![xorShift formula](./doc/PRNG/xorShift_formula.png)</br>
-  - seed set</br>
-   ![rnd seed](./doc/PRNG/PRNG_SEED_BlockDesign.png)</br>
-- user color find</br>
-![color_find](./doc/color_find/Color_Detection_Logic.png)</br>
-   - color range</br>
-   ![color_find](./doc/color_find/HSV.png)</br>
-   ![color_find](./doc/color_find/HSV_trans.png)</br>
-
+- Noise Filter<br/>
+<img width="auto" height="300" alt="image" src="https://github.com/user-attachments/assets/d07d8410-fcc0-446d-b41f-1062b9ac639c" /><br/>
 
 ### SIM
-- PRNG: 최대표준편차(약12억)과 최대평균(약21억)에 가까운 값 --> 이상적인 난수수열로 판단</br>
-![PRNG Simulation](./doc/SIM/PRNG_SIM.png)</br>
-![PRNG RND_Histogram](./doc/SIM/RND_Histogram.png)</br>
-![PRNG mean,SD](./doc/SIM/PRNG_평균,표준편차.png)</br>
-- game_state</br>
-![GAME_STATE Simulation](./doc/SIM/game_state_SIM.png)</br>
-- SCCB</br>
-![SCCB Simulation](./doc/SIM/SCCB_CM_SIM.png)</br>
+- MackerDetectionModule Simulation<br/>
+   1) 노이즈가 섞인 랜덤 이미지 생성
+   1) 이미지를 바이너리 파일로 변환
+   1) 바이너리 파일을 Sequence 클래스에서 읽어 DUT 입력으로 사용
+
+<img width="907" height="399" alt="image" src="https://github.com/user-attachments/assets/00e906f9-41c7-4236-8628-ec076f65d96b" />
+<img width="auto" height="399" alt="image" src="https://github.com/user-attachments/assets/b44e046a-4edb-4c81-98bd-e596bf0abe1d" /><br/>
 
 _ _ _ _ _ _
 
@@ -113,32 +91,27 @@ _ _ _ _ _ _
    <tr>
       <td>Basys3</td>
       <td>OV7670</td>
-      <td>MH-HMD</td>
+      <td>STM32-f411</td>
    </tr>
    <tr>
       <td><img src="./doc/HW/Basys3.png" width="auto" height="150"/></td>
       <td><img src="./doc/HW/OV7670.png" width="auto" height="150"/></td>
-      <td><img src="./doc/HW/MH-HMD.png" width="auto" height="150"/></td>
+      <td><img width="auto" height="150" alt="image" src="https://github.com/user-attachments/assets/76ecfd0b-8302-4b53-8a12-daac5c1c52ce" /></td>
+   </tr>
+</table>
+
+<table>
+   <tr>
+      <td>Ztbo</td>
+      <td>PCAM(OV5640)</td>
+      <td>STM32-f411</td>
+   </tr>
+   <tr>
+      <td><img width="auto" height="150" alt="image" src="https://github.com/user-attachments/assets/d938c9b5-5349-45be-b907-b56208477556" /></td>
+      <td><img width="auto" height="150" alt="image" src="https://github.com/user-attachments/assets/7c36fa1f-74b3-4313-92e3-8139e1a23179" /></td>
+      <td><img width="auto" height="150" alt="image" src="https://github.com/user-attachments/assets/76ecfd0b-8302-4b53-8a12-daac5c1c52ce" /></td>
    </tr>
 </table>
 
 ## video  
 click!--></br>
-[![청기백기 동작 영상](http://img.youtube.com/vi/tyY2kQC33uQ/0.jpg)](https://youtu.be/tyY2kQC33uQ)</br>
-
-![수신호 동작 영상](./doc/handSig.gif)</br>
-
-## 디렉토리 구조
-
-```bash
-project
-├── FlagGame : ProjectMain
-├── random_simulation_visualization : PRNG_Simulation
-├── image : test_img
-├── image_code : test_img_code
-├── py : python_files
-|   └── pyojun.py : PRNG 시뮬레이션 시각화 프로그램
-├── SCCB : SCCB_module_demo
-├── Text_display : Text_display_module_demo
-└── Flag_cmd : cmd_gen_demo
-```
