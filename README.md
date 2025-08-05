@@ -6,10 +6,15 @@
 
 ## 개발팀 소개
 
-|박호윤                                          |박지수                                            |임윤재                                         |함영은                                      |                                                                               
-| :--------------------------------------------: | :--------------------------------------------:     | :---------------------------------------:       | :---------------------------------------: |
-|   [@cong2738](https://github.com/cong2738)     |    [@Friday930](https://github.com/Friday930)      | [@immune](https://github.com/immune1029)        | [@heyhoo46](https://github.com/heyhoo46)  |
-|SystenArchitecture Design And GAME LOGIC Circuit Develop           |ISP Develop and SIM,VGA Print module develop And SIM|camera communication develop and Game font design|GAME UI design, Graphic Circuit develop, GameLogic SIM|
+|박호윤                                          |임윤재                                            |임희주                                          |                                                                               
+| :--------------------------------------------: | :--------------------------------------------:     | :---------------------------------------:      |
+|   [@cong2738](https://github.com/cong2738)     |    [@immune](https://github.com/immune)      | [@Heeju99](https://github.com/Heeju99)|
+|SystenArchitecture Design And VectorCalculater Algorithm Develop |ControlSignal Design, Virtual Stage Develop|ArmCortex Communication And System Develop|
+
+|김민서                                          |박지수                                            |함영은                                          |                                                                               
+| :--------------------------------------------: | :--------------------------------------------:     | :---------------------------------------:      |
+|   [@minseo0511](https://github.com/minseo0511)     |    [@Friday930](https://github.com/Friday930)      | [@heyhoo46](https://github.com/heyhoo46)|
+|Cam control module And HDMI QHD Output module Develop|Comunication Packet control module Develop|HandSignal Module improvement and Simulation|
 
 ## Introduce
 
