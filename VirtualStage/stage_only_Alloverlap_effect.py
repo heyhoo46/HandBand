@@ -19,7 +19,7 @@ uart_baudrate     = 115200
 # 이펙트용 리소스 경로
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 BG_PATH      = os.path.join(FILE_PATH, "img", "stage_background.png")
-OVERLAY_PATH = os.path.join(FILE_PATH, "img", "stage_overlap.png")
+OVERLAY_PATH = os.path.join(FILE_PATH, "img", "stage_all_overlap.png")
 gif_base_path = os.path.join(FILE_PATH, "img")
 sound_base_addr = os.path.join(FILE_PATH, "sounds")
 

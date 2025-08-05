@@ -25,7 +25,7 @@ spot_state = 0        # spotlight 상태 (0:left, 1:right, 2:all)
 UART_ID      = input("COM PORT NUM: ")
 CAM_ID       = input("CAM NUM: ")
 
-WIDTH,HEIGHT = 1280, 720
+WIDTH,HEIGHT = 640, 480
 THRESHOLD    = 0.5
 
 uart_port = "COM" + UART_ID
