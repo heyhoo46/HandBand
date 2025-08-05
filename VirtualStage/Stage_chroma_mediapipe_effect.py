@@ -352,7 +352,7 @@ class EffectManager:
             for i,t in enumerate(self.active):
                 if t.idx == idx:
                     obj = self.factories[idx]()
-                    if idx==3: obj.set_state(spot_state)
+                    if idx==3: obj.set_state(0)
                     thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
                     thr.start()
                     self.active[i] = thr
@@ -360,7 +360,7 @@ class EffectManager:
             # 신규 슬록 있으면
             if len(self.active) < self.MAX_CONCURRENT:
                 obj = self.factories[idx]()
-                if idx==3: obj.set_state(spot_state)
+                if idx==3: obj.set_state(0)
                 thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
                 thr.start()
                 self.active.append(thr)
