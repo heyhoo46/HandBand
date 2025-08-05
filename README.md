@@ -1,6 +1,6 @@
 # FlagGame
 
-> **2025년 HARMAN Semicon Academy 1기** <br/> **개발기간: 2025.06.03 ~ 06.12**
+> **2025년 HARMAN Semicon Academy 1기** <br/> **개발기간: 2025.06.03 ~ 06.9**
 
 **프로젝트트래커: https://github.com/users/cong2738/projects/2/views/1**
 
