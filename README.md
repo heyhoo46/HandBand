@@ -109,7 +109,7 @@ _ _ _ _ _ _
 
 <table>
    <tr>
-      <td>Ztbo</td>
+      <td>Zybo</td>
       <td>PCAM(OV5640)</td>
       <td>STM32-f411</td>
    </tr>
