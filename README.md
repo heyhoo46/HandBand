@@ -1,15 +1,20 @@
 # FlagGame
 
-> **2025년 HARMAN Semicon Academy 1기** <br/> **개발기간: 2025.06.03 ~ 06.12**
+> **2025년 HARMAN Semicon Academy 1기** <br/> **개발기간: 2025.06.03 ~ 06.9**
 
 **프로젝트트래커: https://github.com/users/cong2738/projects/2/views/1**
 
 ## 개발팀 소개
 
-|박호윤                                          |박지수                                            |임윤재                                         |함영은                                      |                                                                               
-| :--------------------------------------------: | :--------------------------------------------:     | :---------------------------------------:       | :---------------------------------------: |
-|   [@cong2738](https://github.com/cong2738)     |    [@Friday930](https://github.com/Friday930)      | [@immune](https://github.com/immune1029)        | [@heyhoo46](https://github.com/heyhoo46)  |
-|SystenArchitecture Design And GAME LOGIC Circuit Develop           |ISP Develop and SIM,VGA Print module develop And SIM|camera communication develop and Game font design|GAME UI design, Graphic Circuit develop, GameLogic SIM|
+|박호윤                                          |임윤재                                            |임희주                                          |                                                                               
+| :--------------------------------------------: | :--------------------------------------------:     | :---------------------------------------:      |
+|   [@cong2738](https://github.com/cong2738)     |    [@immune1029](https://github.com/immune1029)      | [@Heeju99](https://github.com/Heeju99)|
+|SystenArchitecture Design And VectorCalculater Algorithm Develop |ControlSignal Design, Virtual Stage Develop|ArmCortex Communication And System Develop|
+
+|김민서                                          |박지수                                            |함영은                                          |                                                                               
+| :--------------------------------------------: | :--------------------------------------------:     | :---------------------------------------:      |
+|   [@minseo0511](https://github.com/minseo0511)     |    [@Friday930](https://github.com/Friday930)      | [@heyhoo46](https://github.com/heyhoo46)|
+|Cam control module And HDMI QHD Output module Develop|Comunication Packet control module Develop|HandSignal Module improvement and Simulation|
 
 ## Introduce
 
@@ -76,8 +81,10 @@
    1) 이미지를 바이너리 파일로 변환
    1) 바이너리 파일을 Sequence 클래스에서 읽어 DUT 입력으로 사용
 
-<img width="907" height="399" alt="image" src="https://github.com/user-attachments/assets/00e906f9-41c7-4236-8628-ec076f65d96b" />
-<img width="auto" height="399" alt="image" src="https://github.com/user-attachments/assets/b44e046a-4edb-4c81-98bd-e596bf0abe1d" /><br/>
+<img width="907" height="399" alt="image" src="https://github.com/user-attachments/assets/00e906f9-41c7-4236-8628-ec076f65d96b" /><br/>
+<img width="50%" height="auto" alt="image" src="https://github.com/user-attachments/assets/b44e046a-4edb-4c81-98bd-e596bf0abe1d" />
+<img width="40%" height="auto" alt="image" src="https://github.com/user-attachments/assets/33a96ddd-985c-4cb6-8e4e-92349f06521e" />
+<br/>
 
 _ _ _ _ _ _
 
@@ -102,7 +109,7 @@ _ _ _ _ _ _
 
 <table>
    <tr>
-      <td>Ztbo</td>
+      <td>Zybo</td>
       <td>PCAM(OV5640)</td>
       <td>STM32-f411</td>
    </tr>
