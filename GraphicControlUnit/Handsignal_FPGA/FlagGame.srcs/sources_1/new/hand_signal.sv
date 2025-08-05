@@ -20,6 +20,7 @@ module top_hand_signal #(
     input              clk,
     input              reset,
     input              game_start,
+    input              grid_en,
     // ov7670 signals
     input              ov7670_start,
     output             ov7670_scl,
@@ -165,6 +166,7 @@ module top_hand_signal #(
         .NX    (NX),
         .NY    (NY)
     ) u_print_grid (
+        .en       (grid_en),
         .R        (ov7670_Red),
         .G        (ov7670_Green),
         .B        (ov7670_Blue),
@@ -185,6 +187,7 @@ module print_grid #(
     parameter NX     = 20,   // 가로 칸 수
     parameter NY     = 16    // 세로 칸 수
 ) (
+    input              en,
     input        [3:0] R,
     input        [3:0] G,
     input        [3:0] B,
@@ -201,18 +204,20 @@ module print_grid #(
     integer i;
     always_comb begin : PRINT_LOGIC
         {o_R, o_G, o_B} = {R, G, B};
-        for (i = 1; i < NX; i = i + 1) begin
-            if (x == X_UNIT * i) begin
-                o_R = 4'hf;
-                o_G = 4'h0;
-                o_B = 4'h0;
+        if (en) begin
+            for (i = 1; i < NX; i = i + 1) begin
+                if (x == X_UNIT * i) begin
+                    o_R = 4'hf;
+                    o_G = 4'h0;
+                    o_B = 4'h0;
+                end
             end
-        end
-        for (i = 1; i < NY; i = i + 1) begin
-            if (y == Y_UNIT * i) begin
-                o_R = 4'hf;
-                o_G = 4'h0;
-                o_B = 4'h0;
+            for (i = 1; i < NY; i = i + 1) begin
+                if (y == Y_UNIT * i) begin
+                    o_R = 4'hf;
+                    o_G = 4'h0;
+                    o_B = 4'h0;
+                end
             end
         end
     end

@@ -28,6 +28,7 @@
 #include <stdio.h>
 
 #include "vector.h"
+#include "NRF24L01.h"
 #include "Listener.h"
 #include "Controller.h"
 #include "Presenter.h"
@@ -51,13 +52,14 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+uint8_t rf_rx_data[NRF24L01P_PAYLOAD_LENGTH] = {};
+uint8_t rf_flag = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -87,7 +89,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  Listener_Init();
+//  Listener_Init();
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -101,14 +103,23 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   MX_USART2_UART_Init();
+  MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
 //  HAL_UART_Transmit(&huart2, "run\n", strlen("run\n"), 100);
+  nrf24l01p_reset();
+    nrf24l01p_rx_init(2500, _1Mbps);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  if(rf_flag == 1){
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, SET); // GPIO ON
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, RESET); // GPIO ON
+		  rf_flag = 0;
+		  rf_rx_data[0] = 0x00;
+	  }
 	  if(!Listener_Execute()) continue;
 	  controller_excute();
 	  Presenter_Execute();
@@ -165,7 +176,16 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	if(GPIO_Pin == NRF24L01P_IRQ_PIN_NUMBER)
+	{
+	    nrf24l01p_rx_receive(rf_rx_data);
+	    if(rf_rx_data[0] == 0x01){
+	    	rf_flag = 1;
+	    }
+	}
+}
 /* USER CODE END 4 */
 
 /**

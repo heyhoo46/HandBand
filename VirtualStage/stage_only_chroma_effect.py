@@ -21,10 +21,21 @@ effect_request = False # 새로운 이펙트 실행
 overlay_lock = threading.Lock() # Thread를 독립적으로 실행시키기 위함
 spot_state = 0        # spotlight 상태 (0:left, 1:right, 2:all)
 
-CAM_ID       = 0
+UART_ID      = input("COM PORT NUM: ")
+CAM_ID       = input("CAM NUM: ")
+
+uart_port = "COM" + UART_ID
+uart_baudrate = 115200
+
+cam_num = int(CAM_ID)
+maximum_frame_rate = 30
 WIDTH,HEIGHT = 1280, 720
-BG_PATH      = "stage_background.png"
-OVERLAY_PATH   = "stage_overlap.png"
+
+FILE_PATH = os.path.dirname(os.path.abspath(__file__))
+BG_PATH      = os.path.join(FILE_PATH, "img", "stage_background.png")
+OVERLAY_PATH = os.path.join(FILE_PATH, "img", "stage_overlap.png")
+gif_base_path = os.path.join(FILE_PATH, "img")
+sound_base_addr = os.path.join(FILE_PATH, "sounds")
 THRESHOLD    = 0.5
 
 
@@ -49,17 +60,8 @@ else:
 ov_bgr   = cv2.resize(ov_bgr,   (WIDTH, HEIGHT))
 ov_alpha = cv2.resize(ov_alpha, (WIDTH, HEIGHT))
 
-uart_port = "COM7"
-uart_baudrate = 115200
-
-cam_num = 0
-maximum_frame_rate = 30
-
 eft_num = 0
 channel_map = {}
-
-gif_base_path = r"C:/Users/kccistc/Desktop/workspace/"
-sound_base_addr = "C:/Users/kccistc/Desktop/workspace/"
 
 # 캠 프레임
 cam_frame = None #(0, 1)
@@ -93,48 +95,83 @@ class sound(threading.Thread):
         #     with overlay_lock:
         #         overlay_on = False
 
+# 폭죽 : 0 , fog: 2, Spot:3, Confetti:4, RGB_light:5, Blur:6, Zoom:7, snow:8
+def eft_sel(cmd):
+    dt = {
+        'a': 8,
+        'b': 6,
+        'c': 0,
+        'd': 3,
+        'e': 4,
+        'f': 5,
+        'g': 2,
+        'h': 7
+        }
+    return dt.get(cmd)
 
 # 공용 def
 def uart_listener(manager):
-    global spot_state  # spotlight 상태를 전역에서 설정하기 위해 필요
+    ser = None # 초기 시리얼 객체는 None으로 설정
+    
+    while True: # 무한 재연결 시도 루프
+        # 1. 시리얼 포트 연결 시도
+        if ser is None or not ser.is_open:
+            print("UART 연결을 시도 중...")
+            try:
+                ser = serial.Serial(uart_port, uart_baudrate, timeout=1)
+                print(f"✅ UART Connected: {uart_port}")
+            except serial.SerialException as e:
+                print(f"⚠️ UART 연결 실패: {e}")
+                print("5초 후 재연결을 시도합니다...")
+                time.sleep(5)
+                continue # 연결 실패 시 다음 루프에서 다시 시도
+        
+        # 2. 연결이 성공적으로 이루어졌다면 데이터 수신 시작
+        try:
+            # timeout=1초로 설정했기 때문에 readline()은 1초 후에도 데이터가 없으면 빈 바이트를 반환
+            input_string = ser.readline().strip()
+            
+            # 읽어온 데이터가 없을 경우
+            if not input_string:
+                continue
 
-    # timeout=None 으로 설정해서 read()가 데이터가 올 때까지 블록됨
-    ser = serial.Serial(uart_port, uart_baudrate, timeout=None)
-    print(f"✅ UART Connected: {uart_port}")
+            data = str(input_string)[2:-1]  # read UART
+            if not data:
+                continue
 
-    while True:
-        data = ser.read(1)  # 1바이트 블록 읽기
-        if not data:
-            continue
+            # 기존 데이터 처리 로직
+            temp = list(data.split(','))
+            angle, mag, cmd = list(temp[1].split())
+            point = [list(map(float, string[1:-1].split())) for string in (list(temp[0].split('='))[:-1])]
+            
+            print(f"{cmd}, {angle}, {mag}")
+            print(*point, sep=', ')
 
-        new_idx = None
+            if cmd in ['E']:
+                print(f"ERROR Code: {cmd}")
+                continue
 
-        # 일반 이펙트 매핑
-        if data == b'\xaa':      # D
-            new_idx = 0        # flame
-        elif data == b'\xbb':    # U
-            new_idx = 4        # purple flame
-        elif data == b'\xcc':    # f
-            new_idx = 8        # fog
-        elif data == b'\xee':    # î
-            new_idx = 7        # confetti
-        elif data == b'\xff':    # ÿ
-            new_idx = 5        # rgb_flash
-        elif data == b'\x11':    # DC1
-            new_idx = 6        # blur
-        elif data == b'\x22':    # "
-            new_idx = 7        # zoom
+            new_idx = eft_sel(cmd)
 
-        # spotlight: 오직 'cc' 두 바이트일 때만
-        elif data == b'\xcc':
-            new_idx = 3        # spotlight 전체 모드
+            if new_idx is None:
+                continue
 
-        # 들어온 바이트가 매핑에 없으면 무시
-        if new_idx is None:
-            continue
+            print(f"act {cmd}, {angle}")
+            manager.enqueue(new_idx)
 
-        print(f"📥 UART Trigger → idx={new_idx}")
-        manager.enqueue(new_idx)
+        except serial.SerialException as e:
+            # 통신 중 예외 발생 시 (포트 끊김, 권한 오류 등)
+            print(f"❌ UART 통신 중 오류 발생: {e}")
+            print("연결이 끊어졌습니다. 재연결을 시도합니다...")
+            if ser.is_open:
+                ser.close() # 기존 포트를 닫고
+            ser = None # 시리얼 객체를 초기화하여 다음 루프에서 재연결 시도
+            time.sleep(2) # 짧은 대기 후 재시도
+        
+        except Exception as e:
+            # 다른 종류의 예상치 못한 예외 처리
+            print(f"🚨 예상치 못한 오류 발생: {e}")
+            time.sleep(1)
 
 def color_key_mask(frame: np.ndarray) -> np.ndarray:
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -285,7 +322,7 @@ class EffectManager:
             for i,t in enumerate(self.active):
                 if t.idx == idx:
                     obj = self.factories[idx]()
-                    if idx==3: obj.set_state(spot_state)
+                    if idx==3: obj.set_state(0)
                     thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
                     thr.start()
                     self.active[i] = thr
@@ -293,7 +330,7 @@ class EffectManager:
             # 신규 슬록 있으면
             if len(self.active) < self.MAX_CONCURRENT:
                 obj = self.factories[idx]()
-                if idx==3: obj.set_state(spot_state)
+                if idx==3: obj.set_state(0)
                 thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
                 thr.start()
                 self.active.append(thr)

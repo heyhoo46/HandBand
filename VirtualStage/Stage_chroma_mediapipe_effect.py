@@ -22,13 +22,23 @@ effect_request = False # 새로운 이펙트 실행
 overlay_lock = threading.Lock() # Thread를 독립적으로 실행시키기 위함
 spot_state = 0        # spotlight 상태 (0:left, 1:right, 2:all)
 
-FILE_PATH = os.path.dirname(os.path.abspath(__file__))
+UART_ID      = input("COM PORT NUM: ")
+CAM_ID       = input("CAM NUM: ")
 
-CAM_ID       = int(input("CAM_NUM: "))
-WIDTH,HEIGHT = 1280, 720
+WIDTH,HEIGHT = 640, 480
+THRESHOLD    = 0.5
+
+uart_port = "COM" + UART_ID
+uart_baudrate = 115200
+
+cam_num = int(CAM_ID)
+maximum_frame_rate = 30
+
+FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 BG_PATH      = os.path.join(FILE_PATH, "img", "stage_background.png")
 OVERLAY_PATH = os.path.join(FILE_PATH, "img", "stage_overlap.png")
-THRESHOLD    = 0.5
+gif_base_path = os.path.join(FILE_PATH, "img")
+sound_base_addr = os.path.join(FILE_PATH, "sounds")
 
 # Mediapipe 세그멘테이션
 mp_seg  = mp.solutions.selfie_segmentation
@@ -55,17 +65,9 @@ else:
 ov_bgr   = cv2.resize(ov_bgr,   (WIDTH, HEIGHT))
 ov_alpha = cv2.resize(ov_alpha, (WIDTH, HEIGHT))
 
-uart_port = "COM" + input("COM PORT NUM: ")
-uart_baudrate = 115200
-
-cam_num = CAM_ID
-maximum_frame_rate = 30
 
 eft_num = 0
 channel_map = {}
-
-gif_base_path = os.path.join(FILE_PATH, "img")
-sound_base_addr = os.path.join(FILE_PATH, "sounds")
 
 # 캠 프레임
 cam_frame = None #(0, 1)
@@ -349,7 +351,7 @@ class EffectManager:
             for i,t in enumerate(self.active):
                 if t.idx == idx:
                     obj = self.factories[idx]()
-                    if idx==3: obj.set_state(spot_state)
+                    if idx==3: obj.set_state(0)
                     thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
                     thr.start()
                     self.active[i] = thr
@@ -357,7 +359,7 @@ class EffectManager:
             # 신규 슬록 있으면
             if len(self.active) < self.MAX_CONCURRENT:
                 obj = self.factories[idx]()
-                if idx==3: obj.set_state(spot_state)
+                if idx==3: obj.set_state(0)
                 thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
                 thr.start()
                 self.active.append(thr)
