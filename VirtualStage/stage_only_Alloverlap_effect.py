@@ -189,7 +189,7 @@ class EffectThread:
         self.frame_idx += 1
         
 class EffectManager:
-    MAX_CONCURRENT = 2
+    MAX_CONCURRENT = 4
     def __init__(self, factories, sounds, durations):
         self.factories = factories
         self.sounds    = sounds
@@ -474,9 +474,9 @@ class spotlight_eft:
 
     # ── 왼쪽·중앙·오른쪽 3개를 모두 한 번에 켜는 단일 상태 정의 ──
     SPOT_ALL = [
-        (0.05, -0.3, 0.35, 1.2),  # 왼쪽
+        (0.05, -0.3, 0.30, 1.2),  # 왼쪽
         (0.50, -0.3, 0.50, 1.2),  # 중앙
-        (0.95, -0.3, 0.65, 1.2),  # 오른쪽
+        (0.95, -0.3, 0.7, 1.2),  # 오른쪽
     ]
     # 오직 이 하나의 상태만 존재
     SPOT_STATES = [
@@ -740,7 +740,7 @@ class zoom_eft:
         self.HOLD_DURATION = 1.0
         self.SHAKE_INTENSITY = 2.0
         self.REGION_RATIOS = [
-            (0.2, 0.3, 0.3, 0.2),  # (x%, y%, width%, height%)
+            (0.05, 0.3, 0.3, 0.2),  # (x%, y%, width%, height%)
             (0.6, 0.3, 0.3, 0.2)
         ]
         self.REGIONS = [
