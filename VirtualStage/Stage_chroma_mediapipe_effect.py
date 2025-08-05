@@ -229,7 +229,6 @@ class FrameGrabber(threading.Thread):
     def __init__(self, src, queue, lock):
         super().__init__(daemon=True)
         cap = cv2.VideoCapture(src, cv2.CAP_MSMF)
-        #cap = cv2.VideoCapture(src, cv2.CAP_DSHOW)
         fourcc = cv2.VideoWriter_fourcc(*'MJPG')
         cap.set(cv2.CAP_PROP_FOURCC,      fourcc)
         cap.set(cv2.CAP_PROP_AUTOFOCUS,   0)
@@ -237,7 +236,7 @@ class FrameGrabber(threading.Thread):
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT,1080)
         cap.set(cv2.CAP_PROP_FPS,         maximum_frame_rate)
-        self.cap = cv2.VideoCapture(src)
+        self.cap = cap
         self.lock = lock
         self.queue = queue
 
