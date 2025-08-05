@@ -3,7 +3,7 @@ from PIL import Image, ImageSequence, ImageOps
 import numpy as np
 from collections import deque
 
-GREEN_LOWER    = np.array([40, 100, 35])
+GREEN_LOWER    = np.array([35, 90, 60])
 GREEN_UPPER    = np.array([80, 255, 255])
 
 OPEN_K         = 3
