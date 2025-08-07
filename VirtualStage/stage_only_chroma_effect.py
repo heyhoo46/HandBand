@@ -29,7 +29,7 @@ uart_baudrate = 115200
 
 cam_num = int(CAM_ID)
 maximum_frame_rate = 30
-WIDTH,HEIGHT = 640, 480
+WIDTH,HEIGHT = 1280, 720
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 BG_PATH      = os.path.join(FILE_PATH, "img", "stage_background.png")
@@ -97,6 +97,7 @@ class sound(threading.Thread):
 
 # 폭죽 : 0 , fog: 2, Spot:3, Confetti:4, RGB_light:5, Blur:6, Zoom:7, snow:8
 def eft_sel(cmd):
+    # 필요에 따라 하나 이상의 idx를 튜플로 반환할 수 있습니다.
     dt = {
         'a': 8,
         'b': 6,
@@ -105,72 +106,81 @@ def eft_sel(cmd):
         'e': 4,
         'f': 5,
         'g': 2,
-        'h': 7
-        }
+        'h': 7,
+        # 예시: 'x' 명령 들어오면 3개의 이펙트를 동시에
+        'x': (1, 2, 3),
+        # 'z' 명령 들어오면 전부 중단 (stop 신호)
+        'E': 'STOP',
+    }
     return dt.get(cmd)
-
 # 공용 def
 def uart_listener(manager):
-    ser = None # 초기 시리얼 객체는 None으로 설정
-    
-    while True: # 무한 재연결 시도 루프
-        # 1. 시리얼 포트 연결 시도
-        if ser is None or not ser.is_open:
-            print("UART 연결을 시도 중...")
+    ser = None  # 시리얼 객체
+    while True:
+        # ── (1) 시리얼 연결 관리 ──
+        if ser is None or not getattr(ser, 'is_open', False):
+            print("UART 연결 시도 중...")
             try:
                 ser = serial.Serial(uart_port, uart_baudrate, timeout=1)
                 print(f"✅ UART Connected: {uart_port}")
             except serial.SerialException as e:
-                print(f"⚠️ UART 연결 실패: {e}")
-                print("5초 후 재연결을 시도합니다...")
+                print(f"⚠️ UART 연결 실패: {e}. 5초 후 재시도...")
                 time.sleep(5)
-                continue # 연결 실패 시 다음 루프에서 다시 시도
-        
-        # 2. 연결이 성공적으로 이루어졌다면 데이터 수신 시작
+                continue
+
+        # ── (2) 데이터 수신 & 파싱 ──
         try:
-            # timeout=1초로 설정했기 때문에 readline()은 1초 후에도 데이터가 없으면 빈 바이트를 반환
-            input_string = ser.readline().strip()
-            
-            # 읽어온 데이터가 없을 경우
-            if not input_string:
+            line = ser.readline().strip()        # 최대 1초 대기
+            if not line:
                 continue
 
-            data = str(input_string)[2:-1]  # read UART
-            if not data:
+            raw = line.decode('utf-8', errors='ignore')
+            # 예: "(x1 y1),(x2 y2) CMD MAG"
+            parts = raw.split(',')
+            # 포맷에 맞춰 파싱 (원본과 동일)
+            angle, mag, cmd = parts[1].split()
+            cmd = cmd.upper()
+
+            print(f"수신 → cmd={cmd}, angle={angle}, mag={mag}")
+
+            # 오류 코드 무시
+            if cmd == 'E':
+                print("ERROR 코드, 무시")
                 continue
 
-            # 기존 데이터 처리 로직
-            temp = list(data.split(','))
-            angle, mag, cmd = list(temp[1].split())
-            point = [list(map(float, string[1:-1].split())) for string in (list(temp[0].split('='))[:-1])]
-            
-            print(f"{cmd}, {angle}, {mag}")
-            print(*point, sep=', ')
-
-            if cmd in ['E']:
-                print(f"ERROR Code: {cmd}")
+            sel = eft_sel(cmd)
+            if sel is None:
+                # 매핑에 없으면 무시
                 continue
 
-            new_idx = eft_sel(cmd)
-
-            if new_idx is None:
+            # ── (3) STOP 신호 처리 ──
+            if sel == 'STOP':
+                print("📴 STOP 신호 수신 → 모든 이펙트 중단")
+                manager.stop_all_effects()
                 continue
 
-            print(f"act {cmd}, {angle}")
-            manager.enqueue(new_idx)
+            # ── (4) Enqueue: 단일 또는 복수 지원 ──
+            if isinstance(sel, (tuple, list)):
+                for idx in sel:
+                    print(f"📥 Enqueue idx={idx}")
+                    manager.enqueue(idx)
+            else:
+                print(f"📥 Enqueue idx={sel}")
+                manager.enqueue(sel)
 
         except serial.SerialException as e:
-            # 통신 중 예외 발생 시 (포트 끊김, 권한 오류 등)
-            print(f"❌ UART 통신 중 오류 발생: {e}")
-            print("연결이 끊어졌습니다. 재연결을 시도합니다...")
-            if ser.is_open:
-                ser.close() # 기존 포트를 닫고
-            ser = None # 시리얼 객체를 초기화하여 다음 루프에서 재연결 시도
-            time.sleep(2) # 짧은 대기 후 재시도
-        
+            # 통신 중 끊김
+            print(f"❌ UART 통신 중 오류: {e}. 재연결 시도...")
+            try:
+                ser.close()
+            except:
+                pass
+            ser = None
+            time.sleep(2)
+
         except Exception as e:
-            # 다른 종류의 예상치 못한 예외 처리
-            print(f"🚨 예상치 못한 오류 발생: {e}")
+            # 기타 예외
+            print(f"🚨 예외 발생 in UART listener: {e}")
             time.sleep(1)
 
 def color_key_mask(frame: np.ndarray) -> np.ndarray:
@@ -309,7 +319,7 @@ class EffectThread:
         self.frame_idx += 1
         
 class EffectManager:
-    MAX_CONCURRENT = 4
+    MAX_CONCURRENT = 2
     def __init__(self, factories, sounds, durations):
         self.factories = factories
         self.sounds    = sounds
@@ -342,7 +352,21 @@ class EffectManager:
                 else:
                     self.active.remove(t)
         return frame
-    
+    def stop_all_effects(self):
+        """활성화된 모든 이펙트를 즉시 중단하고 사운드를 멈춥니다."""
+        with self.lock:
+            # 각 EffectThread 의 내부 이펙트가 가진 .running 플래그가 있다면 꺼주기
+            for t in self.active:
+                eff = t.effect
+                if hasattr(eff, 'running'):
+                    eff.running = False
+                # 필요하다면 추가적인 cleanup() 메서드 호출 가능
+            # 액티브 리스트 초기화
+            self.active.clear()
+
+        # 재생 중인 모든 사운드를 정지
+        pygame.mixer.stop()
+
 class FlameEffect:
     def __init__(self, pil_frames, height_range=(0.7, 1.0), rise_duration=1.0, offset_range=(0.0, 1.5), frame_delay_per_flame=10, y_offset= 1):
         # 1) 원본 RGBA→(BGR, alpha) 튜플 리스트로 변환
@@ -594,9 +618,9 @@ class spotlight_eft:
 
     # ── 왼쪽·중앙·오른쪽 3개를 모두 한 번에 켜는 단일 상태 정의 ──
     SPOT_ALL = [
-        (0.05, -0.3, 0.30, 1.2),  # 왼쪽
+        (0.05, -0.3, 0.35, 1.2),  # 왼쪽
         (0.50, -0.3, 0.50, 1.2),  # 중앙
-        (0.95, -0.3, 0.70, 1.2),  # 오른쪽
+        (0.95, -0.3, 0.65, 1.2),  # 오른쪽
     ]
     # 오직 이 하나의 상태만 존재
     SPOT_STATES = [
@@ -679,11 +703,11 @@ class spotlight_eft:
 # 꽃가루 효과
 class confetti_eft:
     # 기준 해상도 (이 해상도를 기준으로 스케일을 계산)
-    BASE_WIDTH  = 1920  
-    BASE_HEIGHT = 1080
+    BASE_WIDTH  = 640
+    BASE_HEIGHT = 360
 
     # ▶ 크기 조절용 외부 파라미터 (기본값 1.0)
-    CONFETTI_SIZE_SCALE = 0.6
+    CONFETTI_SIZE_SCALE = 0.7
 
     def __init__(self, width, height):
         self.WIDTH  = width
@@ -693,7 +717,7 @@ class confetti_eft:
         self.scale = self.WIDTH / self.BASE_WIDTH
 
         self.confettis = []
-        self.MAX_CONFETTI       = 1000
+        self.MAX_CONFETTI       = 900
         self.CONFETTI_PER_FRAME = 40
         self.CONFETTI_LIFETIME  = 4.0
 
@@ -860,7 +884,7 @@ class zoom_eft:
         self.HOLD_DURATION = 1.0
         self.SHAKE_INTENSITY = 2.0
         self.REGION_RATIOS = [
-            (0.05, 0.3, 0.3, 0.2),  # (x%, y%, width%, height%)
+            (0.2, 0.3, 0.3, 0.2),  # (x%, y%, width%, height%)
             (0.6, 0.3, 0.3, 0.2)
         ]
         self.REGIONS = [
