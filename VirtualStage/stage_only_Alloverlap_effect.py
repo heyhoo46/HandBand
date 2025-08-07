@@ -563,7 +563,7 @@ class confetti_eft:
     BASE_HEIGHT = 360
 
     # ▶ 크기 조절용 외부 파라미터 (기본값 1.0)
-    CONFETTI_SIZE_SCALE = 0.7
+    CONFETTI_SIZE_SCALE = 0.6
 
     def __init__(self, width, height):
         self.WIDTH  = width
@@ -573,7 +573,7 @@ class confetti_eft:
         self.scale = self.WIDTH / self.BASE_WIDTH
 
         self.confettis = []
-        self.MAX_CONFETTI       = 900
+        self.MAX_CONFETTI       = 1000
         self.CONFETTI_PER_FRAME = 40
         self.CONFETTI_LIFETIME  = 4.0
 
