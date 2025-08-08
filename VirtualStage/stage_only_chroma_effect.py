@@ -136,11 +136,13 @@ def uart_listener(manager):
 
             raw = line.decode('utf-8', errors='ignore')
             # 예: "(x1 y1),(x2 y2) CMD MAG"
-            parts = raw.split(',')
+            raw, data = raw.split(',')
+            point = [list(map(float, s[1:-1].split())) for s in (list(raw.split('='))[:-1])]
             # 포맷에 맞춰 파싱 (원본과 동일)
-            angle, mag, cmd = parts[1].split()
+            angle, mag, cmd = data.split()
             cmd = cmd.upper()
 
+            print(*point, sep=' ')
             print(f"수신 → cmd={cmd}, angle={angle}, mag={mag}")
 
             # 오류 코드 무시
