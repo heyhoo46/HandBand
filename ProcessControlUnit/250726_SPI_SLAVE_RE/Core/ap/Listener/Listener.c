@@ -37,8 +37,7 @@ int Listener_CheckButton()
 	if(cnt > 0) {
 		if(HAL_GetTick() - prevTime > 200) {
 			cnt = 0;
-			sprintf(str, "E");
-//			HAL_UART_Transmit(&huart2, (uint8_t *)str, strlen(str), 100);
+			printf("[-1.0 -1.0]=[-1.0 -1.0]=[-1.0 -1.0]=[-1.0 -1.0]=[-1.0 -1.0]=[-1.0 -1.0]=[-1.0 -1.0]=[-1.0 -1.0]=[-1.0 -1.0]=[-1.0 -1.0]=,-1.0 -1.0 SPI_ERROR\n");
 			return 0;
 		}
 	}
