@@ -3,8 +3,8 @@ from PIL import Image, ImageSequence, ImageOps
 import numpy as np
 from collections import deque
 
-GREEN_LOWER    = np.array([35, 90, 60])
-GREEN_UPPER    = np.array([80, 255, 255])
+GREEN_LOWER    = np.array([45, 70, 90])
+GREEN_UPPER    = np.array([90, 255, 255])
 
 OPEN_K         = 3
 CLOSE_K        = 3
@@ -29,7 +29,7 @@ uart_baudrate = 115200
 
 cam_num = int(CAM_ID)
 maximum_frame_rate = 30
-WIDTH,HEIGHT = 1280, 720
+WIDTH,HEIGHT = 960, 540
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 BG_PATH      = os.path.join(FILE_PATH, "img", "stage_background.png")
@@ -140,7 +140,6 @@ def uart_listener(manager):
             point = [list(map(float, s[1:-1].split())) for s in (list(raw.split('='))[:-1])]
             # 포맷에 맞춰 파싱 (원본과 동일)
             angle, mag, cmd = data.split()
-            cmd = cmd.upper()
 
             print(*point, sep=' ')
             print(f"수신 → cmd={cmd}, angle={angle}, mag={mag}")

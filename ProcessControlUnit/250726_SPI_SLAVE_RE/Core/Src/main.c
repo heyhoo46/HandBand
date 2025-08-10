@@ -114,18 +114,19 @@ int main(void)
 	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
-			if(rf_flag == 1){
-				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, SET); // GPIO ON
-				rf_flag = 0;
-				rf_rx_data[0] = 0x00;
-			}
+		if(rf_flag == 1){
+			rf_flag = 0;
+			if(rf_rx_data[0] != 0x01) continue;
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, SET); // GPIO ON
+			rf_rx_data[0] = 0x00;
+		}
 
 		if(!Listener_Execute()) {
 			continue;
 		}
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, RESET); // GPIO ON
 		controller_excute();
 		Presenter_Execute();
-		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, RESET); // GPIO ON
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
