@@ -53,7 +53,7 @@
 ### Board
 ![Basys3](https://img.shields.io/badge/Board-Basys3-2196f3?style=for-the-badge)</br>
 
-## Objectdiabram
+## Objectdiagram
 <img width="917" height="346" alt="image" src="https://github.com/user-attachments/assets/62fa31c4-de5a-4f4c-8e02-9d6fd7e6dad6" />
 
 ## GraphicCore(HW RTL)
