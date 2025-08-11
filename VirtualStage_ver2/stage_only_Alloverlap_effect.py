@@ -10,7 +10,7 @@ UART_ID      = input("COM PORT NUM: ")
 CAM_ID       = input("CAM NUM: ")
 
 cam_num           = int(CAM_ID)
-maximum_frame_rate= 30
+maximum_frame_rate= 60
 WIDTH, HEIGHT     = 1280, 720
 
 uart_port         = "COM" + UART_ID
