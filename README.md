@@ -55,6 +55,8 @@
 ## ObjectDiagram
 <img width="917" height="346" alt="image" src="https://github.com/user-attachments/assets/62fa31c4-de5a-4f4c-8e02-9d6fd7e6dad6" />
 
+_ _ _ _ _ _
+
 ## GraphicCore(HW RTL)
 #### SystemArchitecture
 - Zybo Z7 Version<br/>
@@ -90,6 +92,11 @@ _ _ _ _ _ _
 ## DataCore(CPU)
 <img width="901" height="394" alt="image" src="https://github.com/user-attachments/assets/b1860e8e-99d6-4989-be82-191c4e4ce657" />
 
+### Data Verification
+<img width="1708" height="846" alt="image" src="https://github.com/user-attachments/assets/f423462d-36c5-4fa3-8c60-cb83ef9a20d8" />
+
+
+_ _ _ _ _ _
 
 ## asset
 
@@ -121,3 +128,5 @@ _ _ _ _ _ _
 
 ## video  
 click!--></br>
+[<img src="https://github.com/user-attachments/assets/12109970-37f0-48eb-9aed-38a885886e8a" alt="Example Image">](https://youtu.be/UrpJJN5XzBg)</br>
+
