@@ -55,6 +55,8 @@
 ## ObjectDiagram
 <img width="917" height="346" alt="image" src="https://github.com/user-attachments/assets/62fa31c4-de5a-4f4c-8e02-9d6fd7e6dad6" />
 
+_ _ _ _ _ _
+
 ## GraphicCore(HW RTL)
 #### SystemArchitecture
 - Zybo Z7 Version<br/>
@@ -90,6 +92,7 @@ _ _ _ _ _ _
 ## DataCore(CPU)
 <img width="901" height="394" alt="image" src="https://github.com/user-attachments/assets/b1860e8e-99d6-4989-be82-191c4e4ce657" />
 
+_ _ _ _ _ _
 
 ## asset
 
