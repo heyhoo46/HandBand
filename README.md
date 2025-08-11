@@ -123,5 +123,5 @@ _ _ _ _ _ _
 click!--></br>
 <img width="488" height="275" alt="image" src="https://github.com/user-attachments/assets/12109970-37f0-48eb-9aed-38a885886e8a" />
 
-[<img src="[https://example.com/image.png](https://github.com/user-attachments/assets/12109970-37f0-48eb-9aed-38a885886e8a)" alt="시연영상 이미지 하이퍼링크">]([https://example.com](https://youtu.be/UrpJJN5XzBg))
+[<img src="[https://example.com/image.png](https://github.com/user-attachments/assets/12109970-37f0-48eb-9aed-38a885886e8a)" alt="시연영상 이미지 하이퍼링크">](https://youtu.be/UrpJJN5XzBg)
 
