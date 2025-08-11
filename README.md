@@ -93,7 +93,7 @@ _ _ _ _ _ _
 <img width="901" height="394" alt="image" src="https://github.com/user-attachments/assets/b1860e8e-99d6-4989-be82-191c4e4ce657" />
 
 ### Data Verification
-<img width="80%" height="auto" alt="image" src="https://github.com/user-attachments/assets/f423462d-36c5-4fa3-8c60-cb83ef9a20d8" />
+<img width="901" height="auto" alt="image" src="https://github.com/user-attachments/assets/f423462d-36c5-4fa3-8c60-cb83ef9a20d8" />
 
 
 _ _ _ _ _ _
