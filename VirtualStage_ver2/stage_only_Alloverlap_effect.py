@@ -56,7 +56,8 @@ def eft_sel(cmd):
         'e': 4,
         'f': 5,
         'g': 2,
-        'h': 7
+        'h': 7,
+        'E': 8
         }
     return dt.get(cmd)
 
@@ -98,9 +99,6 @@ def uart_listener(manager):
             print(f"{cmd}, {angle}, {mag}")
             print(*point, sep=', ')
 
-            if cmd in ['E']:
-                print(f"ERROR Code: {cmd}")
-                continue
 
             new_idx = eft_sel(cmd)
 
@@ -108,7 +106,10 @@ def uart_listener(manager):
                 continue
 
             print(f"act {cmd}, {angle}")
-            manager.enqueue(new_idx)
+            if cmd == 'E':
+                manager.stop_all_effects()
+            else: 
+                manager.enqueue(new_idx)
 
         except serial.SerialException as e:
             # 통신 중 예외 발생 시 (포트 끊김, 권한 오류 등)
@@ -222,6 +223,20 @@ class EffectManager:
                 else:
                     self.active.remove(t)
         return frame
+    def stop_all_effects(self):
+        """활성화된 모든 이펙트를 즉시 중단하고 사운드를 멈춥니다."""
+        with self.lock:
+            # 각 EffectThread 의 내부 이펙트가 가진 .running 플래그가 있다면 꺼주기
+            for t in self.active:
+                eff = t.effect
+                if hasattr(eff, 'running'):
+                    eff.running = False
+                # 필요하다면 추가적인 cleanup() 메서드 호출 가능
+            # 액티브 리스트 초기화
+            self.active.clear()
+
+        # 재생 중인 모든 사운드를 정지
+        pygame.mixer.stop()
     
 class FlameEffect:
     def __init__(self, pil_frames, height_range=(0.7, 1.0), rise_duration=1.0, offset_range=(0.0, 1.5), frame_delay_per_flame=10, y_offset= 1):
