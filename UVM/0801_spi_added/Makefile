@@ -1,16 +1,16 @@
 RTL_DIR    := ./rtl
 TB_DIR     := ./tb
 BUILD_DIR  := ./build
-MEM_DIR    := ./images_mem_output_grid_0725
+MEM_DIR    := ./memfile_with_noise_0803
 
 IMG_ID     ?= 004
-MEM_FILE   := $(MEM_DIR)/grid_dot_$(IMG_ID).mem
+MEM_FILE   := $(MEM_DIR)/img_noise_$(IMG_ID).mem
 
-DUT        := $(RTL_DIR)/handsignal.sv
-TEST_BENCH := $(TB_DIR)/tb_handsignal.sv
+DUT        := $(RTL_DIR)/spi_handsignal.sv
+TEST_BENCH := $(TB_DIR)/tb_spi_handsignal.sv
 
 FSDB_FILE  := $(BUILD_DIR)/wave.fsdb
-TESTNAME   := pixel_test
+TESTNAME   := test
 
 COMP_OPT  = -full64 -sverilog -ntb_opts uvm-1.2 -uvm \
             +incdir+$(TB_DIR)                         \
@@ -23,6 +23,7 @@ COMP_OPT  = -full64 -sverilog -ntb_opts uvm-1.2 -uvm \
 SIMV       := $(BUILD_DIR)/simv
 SIMV_OPT   = +UVM_TESTNAME=$(TESTNAME)                 \
              +MEM_FILE=$(MEM_FILE)                     \
+			 +IMG_ID=$(IMG_ID)                         \
              -l $(BUILD_DIR)/simv.log                  \
              +fsdbfile+$(FSDB_FILE)
 
@@ -51,15 +52,20 @@ clean:
 	rm -rf $(BUILD_DIR) csrc *.log *.key *.rc *.conf 
 
 run_all:
-	@echo "=== Running all images 000–099 ==="
-	@for id in $(shell seq -w 000 319); do \
+	@echo "=== Running all images 000–009 ==="
+	@for id in $(shell seq -w 000 001); do \
 	  echo ">>> IMAGE $$id <<<"; \
 	  $(MAKE) run-$$id; \
 	done
 	@$(MAKE) summary
 
+# summary:
+# 	@echo "=== [Generating Summary from simv logs] ==="
+# 	@grep "SUMMARY IMG=" $(BUILD_DIR)/sim.log > $(BUILD_DIR)/summary.log
+# 	@echo "=== [Done] result saved to $(BUILD_DIR)/summary.log ==="
+
 summary:
-	@echo "=== [Generating Summary from simv logs] ==="
-	@grep "SUMMARY IMG=" $(BUILD_DIR)/sim.log > $(BUILD_DIR)/summary.log
-	@python3 gen_csv.py $(BUILD_DIR)/summary.log $(BUILD_DIR)/result_summary.csv
-	@echo "=== [Done] result saved to $(BUILD_DIR)/result_summary.csv ==="
+	@echo "=== [Generating Summary from simv logs] ===" > $(BUILD_DIR)/summary.log
+	@grep "SUMMARY IMG=" $(BUILD_DIR)/simv.log >> $(BUILD_DIR)/summary.log \
+	  || echo "Warning: No SUMMARY lines found in simv.log" >> $(BUILD_DIR)/summary.log
+	@echo "=== [Done] result saved to $(BUILD_DIR)/summary.log ==="

@@ -108,7 +108,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
+//	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); // GPIO ON
+//
 	  HAL_UART_Transmit(&huart2, rx_data, NRF24L01P_PAYLOAD_LENGTH, 10);
 
 	  if(rf_flag == 1){
