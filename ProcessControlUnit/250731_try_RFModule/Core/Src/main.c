@@ -115,7 +115,7 @@ int main(void)
 //			  tx_data[i]++;
 		  // transmit
 		  nrf24l01p_tx_transmit(tx_data);
-		  HAL_Delay(100);
+//		  HAL_Delay(100);
 
 		  HAL_UART_Transmit(&huart2, tx_data, NRF24L01P_PAYLOAD_LENGTH, 10);
 	  }
