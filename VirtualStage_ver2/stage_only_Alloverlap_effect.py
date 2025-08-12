@@ -26,6 +26,7 @@ sound_base_addr = os.path.join(FILE_PATH, "sounds")
 # pygame 초기화 (사운드용)
 pygame.init()
 pygame.mixer.init()
+pygame.mixer.set_num_channels(16)
 
 class sound(threading.Thread):
     def __init__(self, path):
@@ -106,9 +107,9 @@ def uart_listener(manager):
                 continue
 
             print(f"act {cmd}, {angle}")
-            if cmd == 'E':
+            if cmd in ['E']:
                 manager.stop_all_effects()
-            else: 
+            else:
                 manager.enqueue(new_idx)
 
         except serial.SerialException as e:
@@ -175,14 +176,14 @@ class EffectThread:
     def start(self):
         self.start_time = time.time()
         if hasattr(self.effect, "start") and callable(self.effect.start):
-           self.effect.start()
+            self.effect.start()
         else:
-           self.effect.reset()
-        # 사운드 독립 재생
-        ch = pygame.mixer.find_channel()
-        if ch:
-            snd = pygame.mixer.Sound(os.path.join(sound_base_addr, self.sound_file))
-            ch.play(snd)
+            self.effect.reset()
+        path = os.path.join(sound_base_addr, self.sound_file)
+        ch = pygame.mixer.Channel(self.idx)
+        ch.stop()
+        snd = pygame.mixer.Sound(path)
+        ch.play(snd)
     def is_alive(self):
         return (time.time() - self.start_time) < self.duration
     def apply(self, frame):
@@ -199,19 +200,18 @@ class EffectManager:
         self.lock = threading.Lock()
     def enqueue(self, idx):
         with self.lock:
-            # 이미 같은 idx 실행 중? → 재시작
-            for i,t in enumerate(self.active):
+            for i, t in enumerate(self.active):
                 if t.idx == idx:
+                    pygame.mixer.Channel(idx).stop()
                     obj = self.factories[idx]()
-                    if idx==3: obj.set_state(0)
+                    if idx == 3: obj.set_state(0)
                     thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
                     thr.start()
                     self.active[i] = thr
                     return
-            # 신규 슬록 있으면
             if len(self.active) < self.MAX_CONCURRENT:
                 obj = self.factories[idx]()
-                if idx==3: obj.set_state(0)
+                if idx == 3: obj.set_state(0)
                 thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
                 thr.start()
                 self.active.append(thr)
@@ -237,7 +237,6 @@ class EffectManager:
 
         # 재생 중인 모든 사운드를 정지
         pygame.mixer.stop()
-    
 class FlameEffect:
     def __init__(self, pil_frames, height_range=(0.7, 1.0), rise_duration=1.0, offset_range=(0.0, 1.5), frame_delay_per_flame=10, y_offset= 1):
         # 1) 원본 RGBA→(BGR, alpha) 튜플 리스트로 변환
