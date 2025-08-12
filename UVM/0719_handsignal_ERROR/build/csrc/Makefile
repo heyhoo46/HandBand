@@ -2,7 +2,7 @@
 # This file may be modified; VCS will not overwrite it unless -Mupdate is used
 
 # define default verilog source directory 
-VSRC=/home/hedu53/HandBand/UVM/0719_handsignal
+VSRC=/home/hedu53/HandBand/UVM/0719_handsignal_ERROR
 
 # Override TARGET_ARCH
 TARGET_ARCH=
