@@ -58,6 +58,7 @@ ENTITY system_AXI4_HandSignal_0_0 IS
     aclk : IN STD_LOGIC;
     pclk : IN STD_LOGIC;
     aresetn : IN STD_LOGIC;
+    sw : IN STD_LOGIC;
     s_axis_tdata : IN STD_LOGIC_VECTOR(23 DOWNTO 0);
     s_axis_tvalid : IN STD_LOGIC;
     s_axis_tready : OUT STD_LOGIC;
@@ -86,6 +87,7 @@ ARCHITECTURE system_AXI4_HandSignal_0_0_arch OF system_AXI4_HandSignal_0_0 IS
       aclk : IN STD_LOGIC;
       pclk : IN STD_LOGIC;
       aresetn : IN STD_LOGIC;
+      sw : IN STD_LOGIC;
       s_axis_tdata : IN STD_LOGIC_VECTOR(23 DOWNTO 0);
       s_axis_tvalid : IN STD_LOGIC;
       s_axis_tready : OUT STD_LOGIC;
@@ -131,6 +133,7 @@ BEGIN
       aclk => aclk,
       pclk => pclk,
       aresetn => aresetn,
+      sw => sw,
       s_axis_tdata => s_axis_tdata,
       s_axis_tvalid => s_axis_tvalid,
       s_axis_tready => s_axis_tready,

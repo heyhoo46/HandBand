@@ -267,8 +267,8 @@ vlog -work xil_defaultlib  "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_
 vcom -work xil_defaultlib  -93 \
 "../../../bd/system/ip/system_AXI4_HandSignal_0_0/sim/system_AXI4_HandSignal_0_0.vhd" \
 "../../../bd/system/ip/system_SPI_Master_Top_0_0/sim/system_SPI_Master_Top_0_0.vhd" \
-"../../../bd/system/ipshared/dfeb/LineBuffer.vhd" \
-"../../../bd/system/ipshared/dfeb/system_AXI_BayerToRGB_v2.vhd" \
+"../../../bd/system/ipshared/bcd1/LineBuffer.vhd" \
+"../../../bd/system/ipshared/bcd1/system_AXI_BayerToRGB_v2.vhd" \
 "../../../bd/system/ip/system_system_AXI_BayerToRG_0_0/sim/system_system_AXI_BayerToRG_0_0.vhd" \
 
 vlog -work axi_protocol_converter_v2_1_22  "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_MIPI_CSI_2_RX_0_0/hdl/line_buffer/hdl" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ipshared/7860/hdl" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ipshared/d0f7" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ipshared/ec67/hdl" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ipshared/34f8/hdl" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_MIPI_CSI_2_RX_0_0/hdl/ila_vidclk/hdl/verilog" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_MIPI_CSI_2_RX_0_0/hdl/ila_rxclk_lane/hdl/verilog" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_MIPI_CSI_2_RX_0_0/hdl/ila_rxclk/hdl/verilog" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_MIPI_D_PHY_RX_0_0/hdl/ila_scnn_refclk/hdl/verilog" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_MIPI_D_PHY_RX_0_0/hdl/ila_sfen_refclk/hdl/verilog" "+incdir+../../../../Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_MIPI_D_PHY_RX_0_0/hdl/ila_sfen_rxclk/hdl/verilog" "+incdir+C:/Xilinx/Vivado/2020.2/data/xilinx_vip/include" \

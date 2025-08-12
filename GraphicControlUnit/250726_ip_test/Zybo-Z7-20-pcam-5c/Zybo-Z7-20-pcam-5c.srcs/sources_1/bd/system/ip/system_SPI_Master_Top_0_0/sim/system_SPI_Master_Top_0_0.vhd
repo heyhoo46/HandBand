@@ -71,10 +71,13 @@ ARCHITECTURE system_SPI_Master_Top_0_0_arch OF system_SPI_Master_Top_0_0 IS
   ATTRIBUTE DowngradeIPIdentifiedWarnings OF system_SPI_Master_Top_0_0_arch: ARCHITECTURE IS "yes";
   COMPONENT SPI_Master_Top IS
     GENERIC (
+      SYSCLK : INTEGER;
+      PACKET_REST_MSEC : INTEGER;
       DATA_WIDTH : INTEGER;
       SLAVE_CS : INTEGER;
       BYTES_PER_PACKET : INTEGER;
-      PACKET_COUNT : INTEGER
+      PACKET_COUNT : INTEGER;
+      SCLK_DIV : INTEGER
     );
     PORT (
       clk : IN STD_LOGIC;
@@ -98,10 +101,13 @@ ARCHITECTURE system_SPI_Master_Top_0_0_arch OF system_SPI_Master_Top_0_0 IS
 BEGIN
   U0 : SPI_Master_Top
     GENERIC MAP (
+      SYSCLK => 150000000,
+      PACKET_REST_MSEC => 100,
       DATA_WIDTH => 8,
       SLAVE_CS => 1,
       BYTES_PER_PACKET => 4,
-      PACKET_COUNT => 10
+      PACKET_COUNT => 10,
+      SCLK_DIV => 150
     )
     PORT MAP (
       clk => clk,

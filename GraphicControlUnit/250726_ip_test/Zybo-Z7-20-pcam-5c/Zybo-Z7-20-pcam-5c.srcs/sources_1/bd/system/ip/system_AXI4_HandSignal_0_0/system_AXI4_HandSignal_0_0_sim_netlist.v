@@ -1,7 +1,7 @@
 // Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
-// Date        : Fri Aug  1 16:40:53 2025
+// Date        : Thu Aug  7 10:25:38 2025
 // Host        : DESKTOP-7CFQ9ND running 64-bit major release  (build 9200)
 // Command     : write_verilog -force -mode funcsim
 //               c:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_AXI4_HandSignal_0_0/system_AXI4_HandSignal_0_0_sim_netlist.v
@@ -19,6 +19,7 @@ module system_AXI4_HandSignal_0_0
    (aclk,
     pclk,
     aresetn,
+    sw,
     s_axis_tdata,
     s_axis_tvalid,
     s_axis_tready,
@@ -33,6 +34,7 @@ module system_AXI4_HandSignal_0_0
   (* x_interface_info = "xilinx.com:signal:clock:1.0 aclk CLK" *) (* x_interface_parameter = "XIL_INTERFACENAME aclk, ASSOCIATED_BUSIF m_axis:s_axis, ASSOCIATED_RESET aresetn, FREQ_HZ 150000000, FREQ_TOLERANCE_HZ 0, PHASE 0.0, CLK_DOMAIN system_clk_wiz_0_0_clk_out1, INSERT_VIP 0" *) input aclk;
   input pclk;
   (* x_interface_info = "xilinx.com:signal:reset:1.0 aresetn RST" *) (* x_interface_parameter = "XIL_INTERFACENAME aresetn, POLARITY ACTIVE_LOW, INSERT_VIP 0" *) input aresetn;
+  input sw;
   (* x_interface_info = "xilinx.com:interface:axis:1.0 s_axis TDATA" *) (* x_interface_parameter = "XIL_INTERFACENAME s_axis, TDATA_NUM_BYTES 3, TDEST_WIDTH 0, TID_WIDTH 0, TUSER_WIDTH 1, HAS_TREADY 1, HAS_TSTRB 0, HAS_TKEEP 0, HAS_TLAST 1, FREQ_HZ 150000000, PHASE 0.0, CLK_DOMAIN system_clk_wiz_0_0_clk_out1, LAYERED_METADATA undef, INSERT_VIP 0" *) input [23:0]s_axis_tdata;
   (* x_interface_info = "xilinx.com:interface:axis:1.0 s_axis TVALID" *) input s_axis_tvalid;
   (* x_interface_info = "xilinx.com:interface:axis:1.0 s_axis TREADY" *) output s_axis_tready;
@@ -50,32 +52,72 @@ module system_AXI4_HandSignal_0_0
   wire \U_hand_signal/u_color_detect/raw_red_rel00_in ;
   wire aclk;
   wire aresetn;
-  wire \hist_blue[0]_i_10_n_0 ;
   wire \hist_blue[0]_i_11_n_0 ;
   wire \hist_blue[0]_i_12_n_0 ;
   wire \hist_blue[0]_i_13_n_0 ;
   wire \hist_blue[0]_i_14_n_0 ;
   wire \hist_blue[0]_i_15_n_0 ;
   wire \hist_blue[0]_i_16_n_0 ;
+  wire \hist_blue[0]_i_17_n_0 ;
+  wire \hist_blue[0]_i_18_n_0 ;
+  wire \hist_blue[0]_i_19_n_0 ;
+  wire \hist_blue[0]_i_20_n_0 ;
+  wire \hist_blue[0]_i_21_n_0 ;
+  wire \hist_blue[0]_i_22_n_0 ;
+  wire \hist_blue[0]_i_23_n_0 ;
+  wire \hist_blue[0]_i_24_n_0 ;
+  wire \hist_blue[0]_i_25_n_0 ;
+  wire \hist_blue[0]_i_26_n_0 ;
+  wire \hist_blue[0]_i_27_n_0 ;
   wire \hist_blue[0]_i_6_n_0 ;
+  wire \hist_blue[0]_i_7_n_0 ;
   wire \hist_blue[0]_i_9_n_0 ;
+  wire \hist_blue_reg[0]_i_10_n_0 ;
+  wire \hist_blue_reg[0]_i_10_n_1 ;
+  wire \hist_blue_reg[0]_i_10_n_2 ;
+  wire \hist_blue_reg[0]_i_10_n_3 ;
+  wire \hist_blue_reg[0]_i_3_n_3 ;
   wire \hist_blue_reg[0]_i_5_n_0 ;
   wire \hist_blue_reg[0]_i_5_n_1 ;
   wire \hist_blue_reg[0]_i_5_n_2 ;
   wire \hist_blue_reg[0]_i_5_n_3 ;
-  wire \hist_red[0]_i_10_n_0 ;
+  wire \hist_blue_reg[0]_i_8_n_0 ;
+  wire \hist_blue_reg[0]_i_8_n_1 ;
+  wire \hist_blue_reg[0]_i_8_n_2 ;
+  wire \hist_blue_reg[0]_i_8_n_3 ;
   wire \hist_red[0]_i_11_n_0 ;
   wire \hist_red[0]_i_12_n_0 ;
   wire \hist_red[0]_i_13_n_0 ;
   wire \hist_red[0]_i_14_n_0 ;
   wire \hist_red[0]_i_15_n_0 ;
   wire \hist_red[0]_i_16_n_0 ;
+  wire \hist_red[0]_i_17_n_0 ;
+  wire \hist_red[0]_i_18_n_0 ;
+  wire \hist_red[0]_i_19_n_0 ;
+  wire \hist_red[0]_i_20_n_0 ;
+  wire \hist_red[0]_i_21_n_0 ;
+  wire \hist_red[0]_i_22_n_0 ;
+  wire \hist_red[0]_i_23_n_0 ;
+  wire \hist_red[0]_i_24_n_0 ;
+  wire \hist_red[0]_i_25_n_0 ;
+  wire \hist_red[0]_i_26_n_0 ;
+  wire \hist_red[0]_i_27_n_0 ;
   wire \hist_red[0]_i_6_n_0 ;
+  wire \hist_red[0]_i_7_n_0 ;
   wire \hist_red[0]_i_9_n_0 ;
+  wire \hist_red_reg[0]_i_10_n_0 ;
+  wire \hist_red_reg[0]_i_10_n_1 ;
+  wire \hist_red_reg[0]_i_10_n_2 ;
+  wire \hist_red_reg[0]_i_10_n_3 ;
+  wire \hist_red_reg[0]_i_2_n_3 ;
   wire \hist_red_reg[0]_i_5_n_0 ;
   wire \hist_red_reg[0]_i_5_n_1 ;
   wire \hist_red_reg[0]_i_5_n_2 ;
   wire \hist_red_reg[0]_i_5_n_3 ;
+  wire \hist_red_reg[0]_i_8_n_0 ;
+  wire \hist_red_reg[0]_i_8_n_1 ;
+  wire \hist_red_reg[0]_i_8_n_2 ;
+  wire \hist_red_reg[0]_i_8_n_3 ;
   wire [23:0]m_axis_tdata;
   wire m_axis_tlast;
   wire m_axis_tready;
@@ -88,12 +130,21 @@ module system_AXI4_HandSignal_0_0
   wire s_axis_tready;
   wire s_axis_tuser;
   wire s_axis_tvalid;
-  wire [3:1]\NLW_hist_blue_reg[0]_i_2_CO_UNCONNECTED ;
-  wire [3:0]\NLW_hist_blue_reg[0]_i_2_O_UNCONNECTED ;
+  wire sw;
+  wire [3:0]\NLW_hist_blue_reg[0]_i_10_O_UNCONNECTED ;
+  wire [3:1]\NLW_hist_blue_reg[0]_i_3_CO_UNCONNECTED ;
+  wire [3:0]\NLW_hist_blue_reg[0]_i_3_O_UNCONNECTED ;
+  wire [3:1]\NLW_hist_blue_reg[0]_i_4_CO_UNCONNECTED ;
+  wire [3:0]\NLW_hist_blue_reg[0]_i_4_O_UNCONNECTED ;
   wire [3:0]\NLW_hist_blue_reg[0]_i_5_O_UNCONNECTED ;
+  wire [3:0]\NLW_hist_blue_reg[0]_i_8_O_UNCONNECTED ;
+  wire [3:0]\NLW_hist_red_reg[0]_i_10_O_UNCONNECTED ;
   wire [3:1]\NLW_hist_red_reg[0]_i_2_CO_UNCONNECTED ;
   wire [3:0]\NLW_hist_red_reg[0]_i_2_O_UNCONNECTED ;
+  wire [3:1]\NLW_hist_red_reg[0]_i_4_CO_UNCONNECTED ;
+  wire [3:0]\NLW_hist_red_reg[0]_i_4_O_UNCONNECTED ;
   wire [3:0]\NLW_hist_red_reg[0]_i_5_O_UNCONNECTED ;
+  wire [3:0]\NLW_hist_red_reg[0]_i_8_O_UNCONNECTED ;
 
   assign o_color_spi_data[31] = \<const0> ;
   assign o_color_spi_data[30] = \<const0> ;
@@ -118,10 +169,12 @@ module system_AXI4_HandSignal_0_0
   GND GND
        (.G(\<const0> ));
   system_AXI4_HandSignal_0_0_AXI4_HandSignal U0
-       (.CO(\U_hand_signal/u_color_detect/raw_red_rel00_in ),
+       (.CO(\hist_blue_reg[0]_i_3_n_3 ),
         .aclk(aclk),
         .aresetn(aresetn),
         .\hist_blue_reg[0] (\U_hand_signal/u_color_detect/raw_blue_rel0 ),
+        .\hist_red_reg[0] (\hist_red_reg[0]_i_2_n_3 ),
+        .\hist_red_reg[0]_0 (\U_hand_signal/u_color_detect/raw_red_rel00_in ),
         .m_axis_tdata(m_axis_tdata),
         .m_axis_tlast(m_axis_tlast),
         .m_axis_tready(m_axis_tready),
@@ -133,185 +186,355 @@ module system_AXI4_HandSignal_0_0
         .s_axis_tlast(s_axis_tlast),
         .s_axis_tready(s_axis_tready),
         .s_axis_tuser(s_axis_tuser),
-        .s_axis_tvalid(s_axis_tvalid));
-  LUT4 #(
-    .INIT(16'hF220)) 
-    \hist_blue[0]_i_10 
-       (.I0(s_axis_tdata[12]),
-        .I1(s_axis_tdata[4]),
-        .I2(s_axis_tdata[13]),
-        .I3(s_axis_tdata[5]),
-        .O(\hist_blue[0]_i_10_n_0 ));
-  LUT4 #(
-    .INIT(16'h2F02)) 
+        .s_axis_tvalid(s_axis_tvalid),
+        .sw(sw));
+  LUT1 #(
+    .INIT(2'h1)) 
     \hist_blue[0]_i_11 
-       (.I0(s_axis_tdata[10]),
-        .I1(s_axis_tdata[2]),
-        .I2(s_axis_tdata[3]),
-        .I3(s_axis_tdata[11]),
+       (.I0(s_axis_tdata[14]),
         .O(\hist_blue[0]_i_11_n_0 ));
-  LUT4 #(
-    .INIT(16'h2F02)) 
+  LUT3 #(
+    .INIT(8'h96)) 
     \hist_blue[0]_i_12 
-       (.I0(s_axis_tdata[8]),
-        .I1(s_axis_tdata[0]),
-        .I2(s_axis_tdata[1]),
-        .I3(s_axis_tdata[9]),
+       (.I0(s_axis_tdata[14]),
+        .I1(s_axis_tdata[23]),
+        .I2(s_axis_tdata[15]),
         .O(\hist_blue[0]_i_12_n_0 ));
-  LUT5 #(
-    .INIT(32'h18844221)) 
+  LUT2 #(
+    .INIT(4'h6)) 
     \hist_blue[0]_i_13 
        (.I0(s_axis_tdata[14]),
-        .I1(s_axis_tdata[15]),
-        .I2(s_axis_tdata[5]),
-        .I3(s_axis_tdata[6]),
-        .I4(s_axis_tdata[7]),
+        .I1(s_axis_tdata[22]),
         .O(\hist_blue[0]_i_13_n_0 ));
-  LUT4 #(
-    .INIT(16'h0990)) 
+  LUT2 #(
+    .INIT(4'h9)) 
     \hist_blue[0]_i_14 
-       (.I0(s_axis_tdata[12]),
-        .I1(s_axis_tdata[4]),
-        .I2(s_axis_tdata[13]),
-        .I3(s_axis_tdata[5]),
+       (.I0(s_axis_tdata[21]),
+        .I1(s_axis_tdata[13]),
         .O(\hist_blue[0]_i_14_n_0 ));
-  LUT4 #(
-    .INIT(16'h9009)) 
+  LUT2 #(
+    .INIT(4'h9)) 
     \hist_blue[0]_i_15 
-       (.I0(s_axis_tdata[10]),
-        .I1(s_axis_tdata[2]),
-        .I2(s_axis_tdata[11]),
-        .I3(s_axis_tdata[3]),
+       (.I0(s_axis_tdata[20]),
+        .I1(s_axis_tdata[12]),
         .O(\hist_blue[0]_i_15_n_0 ));
   LUT4 #(
-    .INIT(16'h9009)) 
+    .INIT(16'hE282)) 
     \hist_blue[0]_i_16 
-       (.I0(s_axis_tdata[8]),
-        .I1(s_axis_tdata[0]),
-        .I2(s_axis_tdata[9]),
-        .I3(s_axis_tdata[1]),
-        .O(\hist_blue[0]_i_16_n_0 ));
-  LUT3 #(
-    .INIT(8'h7F)) 
-    \hist_blue[0]_i_6 
-       (.I0(s_axis_tdata[7]),
-        .I1(s_axis_tdata[5]),
+       (.I0(s_axis_tdata[15]),
+        .I1(s_axis_tdata[7]),
         .I2(s_axis_tdata[6]),
-        .O(\hist_blue[0]_i_6_n_0 ));
-  LUT5 #(
-    .INIT(32'hC2BF8002)) 
-    \hist_blue[0]_i_9 
-       (.I0(s_axis_tdata[14]),
-        .I1(s_axis_tdata[5]),
+        .I3(s_axis_tdata[14]),
+        .O(\hist_blue[0]_i_16_n_0 ));
+  LUT4 #(
+    .INIT(16'h40F4)) 
+    \hist_blue[0]_i_17 
+       (.I0(s_axis_tdata[4]),
+        .I1(s_axis_tdata[12]),
+        .I2(s_axis_tdata[13]),
+        .I3(s_axis_tdata[5]),
+        .O(\hist_blue[0]_i_17_n_0 ));
+  LUT4 #(
+    .INIT(16'h20BA)) 
+    \hist_blue[0]_i_18 
+       (.I0(s_axis_tdata[11]),
+        .I1(s_axis_tdata[2]),
+        .I2(s_axis_tdata[10]),
+        .I3(s_axis_tdata[3]),
+        .O(\hist_blue[0]_i_18_n_0 ));
+  LUT4 #(
+    .INIT(16'h20BA)) 
+    \hist_blue[0]_i_19 
+       (.I0(s_axis_tdata[9]),
+        .I1(s_axis_tdata[0]),
+        .I2(s_axis_tdata[8]),
+        .I3(s_axis_tdata[1]),
+        .O(\hist_blue[0]_i_19_n_0 ));
+  LUT4 #(
+    .INIT(16'h1824)) 
+    \hist_blue[0]_i_20 
+       (.I0(s_axis_tdata[15]),
+        .I1(s_axis_tdata[14]),
         .I2(s_axis_tdata[6]),
         .I3(s_axis_tdata[7]),
-        .I4(s_axis_tdata[15]),
+        .O(\hist_blue[0]_i_20_n_0 ));
+  LUT4 #(
+    .INIT(16'h8241)) 
+    \hist_blue[0]_i_21 
+       (.I0(s_axis_tdata[4]),
+        .I1(s_axis_tdata[5]),
+        .I2(s_axis_tdata[13]),
+        .I3(s_axis_tdata[12]),
+        .O(\hist_blue[0]_i_21_n_0 ));
+  LUT4 #(
+    .INIT(16'h8241)) 
+    \hist_blue[0]_i_22 
+       (.I0(s_axis_tdata[11]),
+        .I1(s_axis_tdata[10]),
+        .I2(s_axis_tdata[2]),
+        .I3(s_axis_tdata[3]),
+        .O(\hist_blue[0]_i_22_n_0 ));
+  LUT4 #(
+    .INIT(16'h8241)) 
+    \hist_blue[0]_i_23 
+       (.I0(s_axis_tdata[9]),
+        .I1(s_axis_tdata[0]),
+        .I2(s_axis_tdata[8]),
+        .I3(s_axis_tdata[1]),
+        .O(\hist_blue[0]_i_23_n_0 ));
+  LUT2 #(
+    .INIT(4'h9)) 
+    \hist_blue[0]_i_24 
+       (.I0(s_axis_tdata[19]),
+        .I1(s_axis_tdata[11]),
+        .O(\hist_blue[0]_i_24_n_0 ));
+  LUT2 #(
+    .INIT(4'h9)) 
+    \hist_blue[0]_i_25 
+       (.I0(s_axis_tdata[18]),
+        .I1(s_axis_tdata[10]),
+        .O(\hist_blue[0]_i_25_n_0 ));
+  LUT2 #(
+    .INIT(4'h9)) 
+    \hist_blue[0]_i_26 
+       (.I0(s_axis_tdata[17]),
+        .I1(s_axis_tdata[9]),
+        .O(\hist_blue[0]_i_26_n_0 ));
+  LUT2 #(
+    .INIT(4'h9)) 
+    \hist_blue[0]_i_27 
+       (.I0(s_axis_tdata[16]),
+        .I1(s_axis_tdata[8]),
+        .O(\hist_blue[0]_i_27_n_0 ));
+  LUT2 #(
+    .INIT(4'h2)) 
+    \hist_blue[0]_i_6 
+       (.I0(s_axis_tdata[23]),
+        .I1(s_axis_tdata[15]),
+        .O(\hist_blue[0]_i_6_n_0 ));
+  LUT2 #(
+    .INIT(4'hB)) 
+    \hist_blue[0]_i_7 
+       (.I0(s_axis_tdata[15]),
+        .I1(s_axis_tdata[23]),
+        .O(\hist_blue[0]_i_7_n_0 ));
+  LUT2 #(
+    .INIT(4'h7)) 
+    \hist_blue[0]_i_9 
+       (.I0(s_axis_tdata[7]),
+        .I1(s_axis_tdata[6]),
         .O(\hist_blue[0]_i_9_n_0 ));
-  (* COMPARATOR_THRESHOLD = "11" *) 
-  CARRY4 \hist_blue_reg[0]_i_2 
+  CARRY4 \hist_blue_reg[0]_i_10 
+       (.CI(1'b0),
+        .CO({\hist_blue_reg[0]_i_10_n_0 ,\hist_blue_reg[0]_i_10_n_1 ,\hist_blue_reg[0]_i_10_n_2 ,\hist_blue_reg[0]_i_10_n_3 }),
+        .CYINIT(1'b1),
+        .DI(s_axis_tdata[19:16]),
+        .O(\NLW_hist_blue_reg[0]_i_10_O_UNCONNECTED [3:0]),
+        .S({\hist_blue[0]_i_24_n_0 ,\hist_blue[0]_i_25_n_0 ,\hist_blue[0]_i_26_n_0 ,\hist_blue[0]_i_27_n_0 }));
+  CARRY4 \hist_blue_reg[0]_i_3 
        (.CI(\hist_blue_reg[0]_i_5_n_0 ),
-        .CO({\NLW_hist_blue_reg[0]_i_2_CO_UNCONNECTED [3:1],\U_hand_signal/u_color_detect/raw_blue_rel0 }),
+        .CO({\NLW_hist_blue_reg[0]_i_3_CO_UNCONNECTED [3:1],\hist_blue_reg[0]_i_3_n_3 }),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,\hist_blue[0]_i_6_n_0 }),
+        .O(\NLW_hist_blue_reg[0]_i_3_O_UNCONNECTED [3:0]),
+        .S({1'b0,1'b0,1'b0,\hist_blue[0]_i_7_n_0 }));
+  (* COMPARATOR_THRESHOLD = "11" *) 
+  CARRY4 \hist_blue_reg[0]_i_4 
+       (.CI(\hist_blue_reg[0]_i_8_n_0 ),
+        .CO({\NLW_hist_blue_reg[0]_i_4_CO_UNCONNECTED [3:1],\U_hand_signal/u_color_detect/raw_blue_rel0 }),
         .CYINIT(1'b0),
         .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O(\NLW_hist_blue_reg[0]_i_2_O_UNCONNECTED [3:0]),
-        .S({1'b0,1'b0,1'b0,\hist_blue[0]_i_6_n_0 }));
-  (* COMPARATOR_THRESHOLD = "11" *) 
+        .O(\NLW_hist_blue_reg[0]_i_4_O_UNCONNECTED [3:0]),
+        .S({1'b0,1'b0,1'b0,\hist_blue[0]_i_9_n_0 }));
   CARRY4 \hist_blue_reg[0]_i_5 
-       (.CI(1'b0),
+       (.CI(\hist_blue_reg[0]_i_10_n_0 ),
         .CO({\hist_blue_reg[0]_i_5_n_0 ,\hist_blue_reg[0]_i_5_n_1 ,\hist_blue_reg[0]_i_5_n_2 ,\hist_blue_reg[0]_i_5_n_3 }),
         .CYINIT(1'b0),
-        .DI({\hist_blue[0]_i_9_n_0 ,\hist_blue[0]_i_10_n_0 ,\hist_blue[0]_i_11_n_0 ,\hist_blue[0]_i_12_n_0 }),
+        .DI({\hist_blue[0]_i_11_n_0 ,s_axis_tdata[14],s_axis_tdata[21:20]}),
         .O(\NLW_hist_blue_reg[0]_i_5_O_UNCONNECTED [3:0]),
-        .S({\hist_blue[0]_i_13_n_0 ,\hist_blue[0]_i_14_n_0 ,\hist_blue[0]_i_15_n_0 ,\hist_blue[0]_i_16_n_0 }));
-  LUT4 #(
-    .INIT(16'hF220)) 
-    \hist_red[0]_i_10 
-       (.I0(s_axis_tdata[20]),
-        .I1(s_axis_tdata[4]),
-        .I2(s_axis_tdata[21]),
-        .I3(s_axis_tdata[5]),
-        .O(\hist_red[0]_i_10_n_0 ));
-  LUT4 #(
-    .INIT(16'h2F02)) 
+        .S({\hist_blue[0]_i_12_n_0 ,\hist_blue[0]_i_13_n_0 ,\hist_blue[0]_i_14_n_0 ,\hist_blue[0]_i_15_n_0 }));
+  (* COMPARATOR_THRESHOLD = "11" *) 
+  CARRY4 \hist_blue_reg[0]_i_8 
+       (.CI(1'b0),
+        .CO({\hist_blue_reg[0]_i_8_n_0 ,\hist_blue_reg[0]_i_8_n_1 ,\hist_blue_reg[0]_i_8_n_2 ,\hist_blue_reg[0]_i_8_n_3 }),
+        .CYINIT(1'b0),
+        .DI({\hist_blue[0]_i_16_n_0 ,\hist_blue[0]_i_17_n_0 ,\hist_blue[0]_i_18_n_0 ,\hist_blue[0]_i_19_n_0 }),
+        .O(\NLW_hist_blue_reg[0]_i_8_O_UNCONNECTED [3:0]),
+        .S({\hist_blue[0]_i_20_n_0 ,\hist_blue[0]_i_21_n_0 ,\hist_blue[0]_i_22_n_0 ,\hist_blue[0]_i_23_n_0 }));
+  LUT2 #(
+    .INIT(4'h9)) 
     \hist_red[0]_i_11 
-       (.I0(s_axis_tdata[18]),
-        .I1(s_axis_tdata[2]),
-        .I2(s_axis_tdata[3]),
-        .I3(s_axis_tdata[19]),
+       (.I0(s_axis_tdata[15]),
+        .I1(s_axis_tdata[23]),
         .O(\hist_red[0]_i_11_n_0 ));
-  LUT4 #(
-    .INIT(16'h2F02)) 
+  LUT3 #(
+    .INIT(8'h96)) 
     \hist_red[0]_i_12 
-       (.I0(s_axis_tdata[16]),
-        .I1(s_axis_tdata[0]),
-        .I2(s_axis_tdata[1]),
-        .I3(s_axis_tdata[17]),
-        .O(\hist_red[0]_i_12_n_0 ));
-  LUT5 #(
-    .INIT(32'h18844221)) 
-    \hist_red[0]_i_13 
        (.I0(s_axis_tdata[22]),
         .I1(s_axis_tdata[23]),
-        .I2(s_axis_tdata[5]),
-        .I3(s_axis_tdata[6]),
-        .I4(s_axis_tdata[7]),
+        .I2(s_axis_tdata[15]),
+        .O(\hist_red[0]_i_12_n_0 ));
+  LUT2 #(
+    .INIT(4'h6)) 
+    \hist_red[0]_i_13 
+       (.I0(s_axis_tdata[22]),
+        .I1(s_axis_tdata[14]),
         .O(\hist_red[0]_i_13_n_0 ));
-  LUT4 #(
-    .INIT(16'h0990)) 
+  LUT2 #(
+    .INIT(4'h9)) 
     \hist_red[0]_i_14 
-       (.I0(s_axis_tdata[20]),
-        .I1(s_axis_tdata[4]),
-        .I2(s_axis_tdata[21]),
-        .I3(s_axis_tdata[5]),
+       (.I0(s_axis_tdata[13]),
+        .I1(s_axis_tdata[21]),
         .O(\hist_red[0]_i_14_n_0 ));
-  LUT4 #(
-    .INIT(16'h9009)) 
+  LUT2 #(
+    .INIT(4'h9)) 
     \hist_red[0]_i_15 
-       (.I0(s_axis_tdata[18]),
-        .I1(s_axis_tdata[2]),
-        .I2(s_axis_tdata[19]),
-        .I3(s_axis_tdata[3]),
+       (.I0(s_axis_tdata[12]),
+        .I1(s_axis_tdata[20]),
         .O(\hist_red[0]_i_15_n_0 ));
   LUT4 #(
-    .INIT(16'h9009)) 
+    .INIT(16'hE282)) 
     \hist_red[0]_i_16 
-       (.I0(s_axis_tdata[16]),
-        .I1(s_axis_tdata[0]),
-        .I2(s_axis_tdata[17]),
-        .I3(s_axis_tdata[1]),
-        .O(\hist_red[0]_i_16_n_0 ));
-  LUT3 #(
-    .INIT(8'h7F)) 
-    \hist_red[0]_i_6 
-       (.I0(s_axis_tdata[7]),
-        .I1(s_axis_tdata[5]),
+       (.I0(s_axis_tdata[23]),
+        .I1(s_axis_tdata[7]),
         .I2(s_axis_tdata[6]),
-        .O(\hist_red[0]_i_6_n_0 ));
-  LUT5 #(
-    .INIT(32'hC2BF8002)) 
-    \hist_red[0]_i_9 
-       (.I0(s_axis_tdata[22]),
-        .I1(s_axis_tdata[5]),
+        .I3(s_axis_tdata[22]),
+        .O(\hist_red[0]_i_16_n_0 ));
+  LUT4 #(
+    .INIT(16'h40F4)) 
+    \hist_red[0]_i_17 
+       (.I0(s_axis_tdata[4]),
+        .I1(s_axis_tdata[20]),
+        .I2(s_axis_tdata[21]),
+        .I3(s_axis_tdata[5]),
+        .O(\hist_red[0]_i_17_n_0 ));
+  LUT4 #(
+    .INIT(16'h7510)) 
+    \hist_red[0]_i_18 
+       (.I0(s_axis_tdata[3]),
+        .I1(s_axis_tdata[2]),
+        .I2(s_axis_tdata[18]),
+        .I3(s_axis_tdata[19]),
+        .O(\hist_red[0]_i_18_n_0 ));
+  LUT4 #(
+    .INIT(16'h7510)) 
+    \hist_red[0]_i_19 
+       (.I0(s_axis_tdata[1]),
+        .I1(s_axis_tdata[0]),
+        .I2(s_axis_tdata[16]),
+        .I3(s_axis_tdata[17]),
+        .O(\hist_red[0]_i_19_n_0 ));
+  LUT4 #(
+    .INIT(16'h1824)) 
+    \hist_red[0]_i_20 
+       (.I0(s_axis_tdata[23]),
+        .I1(s_axis_tdata[22]),
         .I2(s_axis_tdata[6]),
         .I3(s_axis_tdata[7]),
-        .I4(s_axis_tdata[23]),
+        .O(\hist_red[0]_i_20_n_0 ));
+  LUT4 #(
+    .INIT(16'h8241)) 
+    \hist_red[0]_i_21 
+       (.I0(s_axis_tdata[4]),
+        .I1(s_axis_tdata[5]),
+        .I2(s_axis_tdata[21]),
+        .I3(s_axis_tdata[20]),
+        .O(\hist_red[0]_i_21_n_0 ));
+  LUT4 #(
+    .INIT(16'h8421)) 
+    \hist_red[0]_i_22 
+       (.I0(s_axis_tdata[3]),
+        .I1(s_axis_tdata[2]),
+        .I2(s_axis_tdata[19]),
+        .I3(s_axis_tdata[18]),
+        .O(\hist_red[0]_i_22_n_0 ));
+  LUT4 #(
+    .INIT(16'h8241)) 
+    \hist_red[0]_i_23 
+       (.I0(s_axis_tdata[1]),
+        .I1(s_axis_tdata[0]),
+        .I2(s_axis_tdata[16]),
+        .I3(s_axis_tdata[17]),
+        .O(\hist_red[0]_i_23_n_0 ));
+  LUT2 #(
+    .INIT(4'h9)) 
+    \hist_red[0]_i_24 
+       (.I0(s_axis_tdata[11]),
+        .I1(s_axis_tdata[19]),
+        .O(\hist_red[0]_i_24_n_0 ));
+  LUT2 #(
+    .INIT(4'h9)) 
+    \hist_red[0]_i_25 
+       (.I0(s_axis_tdata[10]),
+        .I1(s_axis_tdata[18]),
+        .O(\hist_red[0]_i_25_n_0 ));
+  LUT2 #(
+    .INIT(4'h9)) 
+    \hist_red[0]_i_26 
+       (.I0(s_axis_tdata[9]),
+        .I1(s_axis_tdata[17]),
+        .O(\hist_red[0]_i_26_n_0 ));
+  LUT2 #(
+    .INIT(4'h9)) 
+    \hist_red[0]_i_27 
+       (.I0(s_axis_tdata[8]),
+        .I1(s_axis_tdata[16]),
+        .O(\hist_red[0]_i_27_n_0 ));
+  LUT2 #(
+    .INIT(4'h2)) 
+    \hist_red[0]_i_6 
+       (.I0(s_axis_tdata[15]),
+        .I1(s_axis_tdata[23]),
+        .O(\hist_red[0]_i_6_n_0 ));
+  LUT2 #(
+    .INIT(4'hB)) 
+    \hist_red[0]_i_7 
+       (.I0(s_axis_tdata[23]),
+        .I1(s_axis_tdata[15]),
+        .O(\hist_red[0]_i_7_n_0 ));
+  LUT2 #(
+    .INIT(4'h7)) 
+    \hist_red[0]_i_9 
+       (.I0(s_axis_tdata[7]),
+        .I1(s_axis_tdata[6]),
         .O(\hist_red[0]_i_9_n_0 ));
-  (* COMPARATOR_THRESHOLD = "11" *) 
+  CARRY4 \hist_red_reg[0]_i_10 
+       (.CI(1'b0),
+        .CO({\hist_red_reg[0]_i_10_n_0 ,\hist_red_reg[0]_i_10_n_1 ,\hist_red_reg[0]_i_10_n_2 ,\hist_red_reg[0]_i_10_n_3 }),
+        .CYINIT(1'b1),
+        .DI(s_axis_tdata[11:8]),
+        .O(\NLW_hist_red_reg[0]_i_10_O_UNCONNECTED [3:0]),
+        .S({\hist_red[0]_i_24_n_0 ,\hist_red[0]_i_25_n_0 ,\hist_red[0]_i_26_n_0 ,\hist_red[0]_i_27_n_0 }));
   CARRY4 \hist_red_reg[0]_i_2 
        (.CI(\hist_red_reg[0]_i_5_n_0 ),
-        .CO({\NLW_hist_red_reg[0]_i_2_CO_UNCONNECTED [3:1],\U_hand_signal/u_color_detect/raw_red_rel00_in }),
+        .CO({\NLW_hist_red_reg[0]_i_2_CO_UNCONNECTED [3:1],\hist_red_reg[0]_i_2_n_3 }),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,\hist_red[0]_i_6_n_0 }),
+        .O(\NLW_hist_red_reg[0]_i_2_O_UNCONNECTED [3:0]),
+        .S({1'b0,1'b0,1'b0,\hist_red[0]_i_7_n_0 }));
+  (* COMPARATOR_THRESHOLD = "11" *) 
+  CARRY4 \hist_red_reg[0]_i_4 
+       (.CI(\hist_red_reg[0]_i_8_n_0 ),
+        .CO({\NLW_hist_red_reg[0]_i_4_CO_UNCONNECTED [3:1],\U_hand_signal/u_color_detect/raw_red_rel00_in }),
         .CYINIT(1'b0),
         .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O(\NLW_hist_red_reg[0]_i_2_O_UNCONNECTED [3:0]),
-        .S({1'b0,1'b0,1'b0,\hist_red[0]_i_6_n_0 }));
-  (* COMPARATOR_THRESHOLD = "11" *) 
+        .O(\NLW_hist_red_reg[0]_i_4_O_UNCONNECTED [3:0]),
+        .S({1'b0,1'b0,1'b0,\hist_red[0]_i_9_n_0 }));
   CARRY4 \hist_red_reg[0]_i_5 
-       (.CI(1'b0),
+       (.CI(\hist_red_reg[0]_i_10_n_0 ),
         .CO({\hist_red_reg[0]_i_5_n_0 ,\hist_red_reg[0]_i_5_n_1 ,\hist_red_reg[0]_i_5_n_2 ,\hist_red_reg[0]_i_5_n_3 }),
         .CYINIT(1'b0),
-        .DI({\hist_red[0]_i_9_n_0 ,\hist_red[0]_i_10_n_0 ,\hist_red[0]_i_11_n_0 ,\hist_red[0]_i_12_n_0 }),
+        .DI({\hist_red[0]_i_11_n_0 ,s_axis_tdata[22],s_axis_tdata[13:12]}),
         .O(\NLW_hist_red_reg[0]_i_5_O_UNCONNECTED [3:0]),
-        .S({\hist_red[0]_i_13_n_0 ,\hist_red[0]_i_14_n_0 ,\hist_red[0]_i_15_n_0 ,\hist_red[0]_i_16_n_0 }));
+        .S({\hist_red[0]_i_12_n_0 ,\hist_red[0]_i_13_n_0 ,\hist_red[0]_i_14_n_0 ,\hist_red[0]_i_15_n_0 }));
+  (* COMPARATOR_THRESHOLD = "11" *) 
+  CARRY4 \hist_red_reg[0]_i_8 
+       (.CI(1'b0),
+        .CO({\hist_red_reg[0]_i_8_n_0 ,\hist_red_reg[0]_i_8_n_1 ,\hist_red_reg[0]_i_8_n_2 ,\hist_red_reg[0]_i_8_n_3 }),
+        .CYINIT(1'b0),
+        .DI({\hist_red[0]_i_16_n_0 ,\hist_red[0]_i_17_n_0 ,\hist_red[0]_i_18_n_0 ,\hist_red[0]_i_19_n_0 }),
+        .O(\NLW_hist_red_reg[0]_i_8_O_UNCONNECTED [3:0]),
+        .S({\hist_red[0]_i_20_n_0 ,\hist_red[0]_i_21_n_0 ,\hist_red[0]_i_22_n_0 ,\hist_red[0]_i_23_n_0 }));
 endmodule
 
 (* ORIG_REF_NAME = "AXI4_HandSignal" *) 
@@ -328,8 +551,11 @@ module system_AXI4_HandSignal_0_0_AXI4_HandSignal
     s_axis_tuser,
     s_axis_tdata,
     CO,
-    s_axis_tvalid,
     \hist_blue_reg[0] ,
+    \hist_red_reg[0] ,
+    \hist_red_reg[0]_0 ,
+    s_axis_tvalid,
+    sw,
     aresetn,
     m_axis_tready);
   output m_axis_tlast;
@@ -344,8 +570,11 @@ module system_AXI4_HandSignal_0_0_AXI4_HandSignal
   input s_axis_tuser;
   input [23:0]s_axis_tdata;
   input [0:0]CO;
-  input s_axis_tvalid;
   input [0:0]\hist_blue_reg[0] ;
+  input [0:0]\hist_red_reg[0] ;
+  input [0:0]\hist_red_reg[0]_0 ;
+  input s_axis_tvalid;
+  input sw;
   input aresetn;
   input m_axis_tready;
 
@@ -454,7 +683,7 @@ module system_AXI4_HandSignal_0_0_AXI4_HandSignal
   wire U_AreaSel_n_191;
   wire U_AreaSel_n_192;
   wire U_AreaSel_n_193;
-  wire U_AreaSel_n_194;
+  wire U_AreaSel_n_195;
   wire U_AreaSel_n_196;
   wire U_AreaSel_n_197;
   wire U_AreaSel_n_198;
@@ -468,14 +697,6 @@ module system_AXI4_HandSignal_0_0_AXI4_HandSignal
   wire U_AreaSel_n_206;
   wire U_AreaSel_n_207;
   wire U_AreaSel_n_208;
-  wire U_AreaSel_n_209;
-  wire U_AreaSel_n_210;
-  wire U_AreaSel_n_211;
-  wire U_AreaSel_n_212;
-  wire U_AreaSel_n_213;
-  wire U_AreaSel_n_214;
-  wire U_AreaSel_n_215;
-  wire U_AreaSel_n_216;
   wire U_AreaSel_n_26;
   wire U_AreaSel_n_27;
   wire U_AreaSel_n_28;
@@ -556,15 +777,6 @@ module system_AXI4_HandSignal_0_0_AXI4_HandSignal
   wire U_hand_signal_n_3;
   wire U_print_grid_n_0;
   wire U_print_grid_n_1;
-  wire U_print_grid_n_10;
-  wire U_print_grid_n_11;
-  wire U_print_grid_n_12;
-  wire U_print_grid_n_13;
-  wire U_print_grid_n_14;
-  wire U_print_grid_n_15;
-  wire U_print_grid_n_16;
-  wire U_print_grid_n_17;
-  wire U_print_grid_n_18;
   wire U_print_grid_n_2;
   wire U_print_grid_n_3;
   wire U_print_grid_n_4;
@@ -575,8 +787,11 @@ module system_AXI4_HandSignal_0_0_AXI4_HandSignal
   wire U_print_grid_n_9;
   wire aclk;
   wire aresetn;
+  wire [7:0]din;
   wire [23:0]dout;
   wire [0:0]\hist_blue_reg[0] ;
+  wire [0:0]\hist_red_reg[0] ;
+  wire [0:0]\hist_red_reg[0]_0 ;
   wire is_color1;
   wire is_color2;
   wire [23:0]m_axis_tdata;
@@ -587,7 +802,6 @@ module system_AXI4_HandSignal_0_0_AXI4_HandSignal
   wire m_axis_tvalid;
   wire m_axis_tvalid_i_1_n_0;
   wire [15:0]o_color_spi_data;
-  wire p_0_in;
   wire p_1_in;
   wire pclk;
   wire [23:0]s_axis_tdata;
@@ -595,6 +809,7 @@ module system_AXI4_HandSignal_0_0_AXI4_HandSignal
   wire s_axis_tready;
   wire s_axis_tuser;
   wire s_axis_tvalid;
+  wire sw;
   wire [8:0]y_cnt;
   wire [6:1]zone_id;
 
@@ -611,17 +826,8 @@ module system_AXI4_HandSignal_0_0_AXI4_HandSignal
         .o_R2__17_carry__0({U_print_grid_n_2,U_print_grid_n_3}),
         .o_R2__29_carry__0({U_print_grid_n_4,U_print_grid_n_5,U_print_grid_n_6,U_print_grid_n_7}),
         .o_R2__29_carry__0_0(U_print_grid_n_8),
-        .p_0_in(p_0_in),
+        .p_1_in(p_1_in),
         .pclk(pclk),
-        .s_axis_tdata(s_axis_tdata[23:16]),
-        .\s_axis_tdata[16] (U_AreaSel_n_194),
-        .\s_axis_tdata[17] (U_AreaSel_n_196),
-        .\s_axis_tdata[18] (U_AreaSel_n_197),
-        .\s_axis_tdata[19] (U_AreaSel_n_198),
-        .\s_axis_tdata[20] (U_AreaSel_n_199),
-        .\s_axis_tdata[21] (U_AreaSel_n_200),
-        .\s_axis_tdata[22] (U_AreaSel_n_201),
-        .\s_axis_tdata[23] (U_AreaSel_n_202),
         .s_axis_tlast(s_axis_tlast),
         .s_axis_tuser(s_axis_tuser),
         .s_axis_tvalid(s_axis_tvalid),
@@ -787,14 +993,14 @@ module system_AXI4_HandSignal_0_0_AXI4_HandSignal
         .\y_cnt_reg[0]_0 (U_hand_signal_n_3),
         .\y_cnt_reg[0]_1 (U_hand_signal_n_2),
         .\y_cnt_reg[3]_0 ({U_AreaSel_n_26,U_AreaSel_n_27,U_AreaSel_n_28,U_AreaSel_n_29}),
-        .\y_cnt_reg[3]_1 (U_AreaSel_n_208),
-        .\y_cnt_reg[4]_0 ({U_AreaSel_n_213,U_AreaSel_n_214,U_AreaSel_n_215,U_AreaSel_n_216}),
+        .\y_cnt_reg[3]_1 (U_AreaSel_n_200),
+        .\y_cnt_reg[4]_0 ({U_AreaSel_n_205,U_AreaSel_n_206,U_AreaSel_n_207,U_AreaSel_n_208}),
         .\y_cnt_reg[6]_0 ({U_AreaSel_n_12,U_AreaSel_n_13,U_AreaSel_n_14,U_AreaSel_n_15}),
         .\y_cnt_reg[7]_0 ({U_AreaSel_n_30,U_AreaSel_n_31,U_AreaSel_n_32,U_AreaSel_n_33}),
-        .\y_cnt_reg[8]_0 ({U_AreaSel_n_203,U_AreaSel_n_204}),
-        .\y_cnt_reg[8]_1 (U_AreaSel_n_205),
-        .\y_cnt_reg[8]_2 ({U_AreaSel_n_209,U_AreaSel_n_210,U_AreaSel_n_211,U_AreaSel_n_212}),
-        .\y_cnt_reg[9]_0 ({U_AreaSel_n_206,U_AreaSel_n_207}),
+        .\y_cnt_reg[8]_0 ({U_AreaSel_n_195,U_AreaSel_n_196}),
+        .\y_cnt_reg[8]_1 (U_AreaSel_n_197),
+        .\y_cnt_reg[8]_2 ({U_AreaSel_n_201,U_AreaSel_n_202,U_AreaSel_n_203,U_AreaSel_n_204}),
+        .\y_cnt_reg[9]_0 ({U_AreaSel_n_198,U_AreaSel_n_199}),
         .zone_id(zone_id));
   system_AXI4_HandSignal_0_0_hand_signal U_hand_signal
        (.C(C),
@@ -802,6 +1008,8 @@ module system_AXI4_HandSignal_0_0_AXI4_HandSignal
         .E(U_hand_signal_n_2),
         .aresetn(aresetn),
         .\hist_blue_reg[0] (\hist_blue_reg[0] ),
+        .\hist_red_reg[0] (\hist_red_reg[0] ),
+        .\hist_red_reg[0]_0 (\hist_red_reg[0]_0 ),
         .is_color1(is_color1),
         .is_color2(is_color2),
         .o_color_spi_data(o_color_spi_data),
@@ -973,34 +1181,26 @@ module system_AXI4_HandSignal_0_0_AXI4_HandSignal
         .\zone_count_color2_reg[9][31]_0 (U_AreaSel_n_102),
         .zone_id(zone_id));
   system_AXI4_HandSignal_0_0_print_grid U_print_grid
-       (.DI({U_AreaSel_n_208,y_cnt[0]}),
+       (.DI({U_AreaSel_n_200,y_cnt[0]}),
         .O({U_print_grid_n_0,U_print_grid_n_1}),
         .Q({y_cnt[8],y_cnt[6:1]}),
         .S({U_AreaSel_n_16,U_AreaSel_n_17,U_AreaSel_n_18}),
+        .din(din),
         .o_R2__17_carry__0_i_1(U_print_grid_n_8),
-        .o_R2__17_carry__0_i_1_0({U_AreaSel_n_206,U_AreaSel_n_207}),
+        .o_R2__17_carry__0_i_1_0({U_AreaSel_n_198,U_AreaSel_n_199}),
         .o_R2__17_carry_i_7_0({U_print_grid_n_4,U_print_grid_n_5,U_print_grid_n_6,U_print_grid_n_7}),
-        .o_R2__29_carry__0_i_1(U_AreaSel_n_205),
-        .o_R2__29_carry_i_1({U_AreaSel_n_203,U_AreaSel_n_204}),
+        .o_R2__29_carry__0_i_1(U_AreaSel_n_197),
+        .o_R2__29_carry_i_1({U_AreaSel_n_195,U_AreaSel_n_196}),
         .o_R2__29_carry_i_3({U_AreaSel_n_12,U_AreaSel_n_13,U_AreaSel_n_14,U_AreaSel_n_15}),
-        .o_R2__29_carry_i_3_0({U_AreaSel_n_209,U_AreaSel_n_210,U_AreaSel_n_211,U_AreaSel_n_212}),
+        .o_R2__29_carry_i_3_0({U_AreaSel_n_201,U_AreaSel_n_202,U_AreaSel_n_203,U_AreaSel_n_204}),
         .o_R2_carry__1_0({U_AreaSel_n_8,U_AreaSel_n_9,U_AreaSel_n_10,U_AreaSel_n_11}),
-        .o_R2_carry__1_1({U_AreaSel_n_213,U_AreaSel_n_214,U_AreaSel_n_215,U_AreaSel_n_216}),
-        .p_0_in(p_0_in),
+        .o_R2_carry__1_1({U_AreaSel_n_205,U_AreaSel_n_206,U_AreaSel_n_207,U_AreaSel_n_208}),
         .p_1_in(p_1_in),
         .s_axis_tdata(s_axis_tdata[7:0]),
-        .s_axis_tdata_0_sp_1(U_print_grid_n_16),
-        .s_axis_tdata_1_sp_1(U_print_grid_n_15),
-        .s_axis_tdata_2_sp_1(U_print_grid_n_14),
-        .s_axis_tdata_3_sp_1(U_print_grid_n_13),
-        .s_axis_tdata_4_sp_1(U_print_grid_n_12),
-        .s_axis_tdata_5_sp_1(U_print_grid_n_11),
-        .s_axis_tdata_6_sp_1(U_print_grid_n_10),
-        .s_axis_tdata_7_sp_1(U_print_grid_n_9),
-        .\sync_reg1[15]_i_3_0 ({U_AreaSel_n_30,U_AreaSel_n_31,U_AreaSel_n_32,U_AreaSel_n_33}),
-        .\sync_reg1_reg[8] ({U_AreaSel_n_26,U_AreaSel_n_27,U_AreaSel_n_28,U_AreaSel_n_29}),
-        .\y_cnt_reg[3] (U_print_grid_n_17),
-        .\y_cnt_reg[3]_0 (U_print_grid_n_18),
+        .sw(sw),
+        .sw_0(U_print_grid_n_9),
+        .\sync_reg1[23]_i_2_0 ({U_AreaSel_n_26,U_AreaSel_n_27,U_AreaSel_n_28,U_AreaSel_n_29}),
+        .\sync_reg1[23]_i_5_0 ({U_AreaSel_n_30,U_AreaSel_n_31,U_AreaSel_n_32,U_AreaSel_n_33}),
         .\y_cnt_reg[8] ({U_print_grid_n_2,U_print_grid_n_3}));
   LUT3 #(
     .INIT(8'h80)) 
@@ -1188,28 +1388,11 @@ module system_AXI4_HandSignal_0_0_AXI4_HandSignal
         .I1(m_axis_tvalid),
         .O(s_axis_tready));
   system_AXI4_HandSignal_0_0_cdc_2ff_sync u_cdc_pixel
-       (.Q(dout),
+       (.D(dout),
         .aclk(aclk),
-        .p_1_in(p_1_in),
-        .s_axis_tdata(s_axis_tdata[15:8]),
-        .\sync_reg1_reg[0]_0 (U_print_grid_n_16),
-        .\sync_reg1_reg[16]_0 (U_AreaSel_n_194),
-        .\sync_reg1_reg[17]_0 (U_AreaSel_n_196),
-        .\sync_reg1_reg[18]_0 (U_AreaSel_n_197),
-        .\sync_reg1_reg[19]_0 (U_AreaSel_n_198),
-        .\sync_reg1_reg[1]_0 (U_print_grid_n_15),
-        .\sync_reg1_reg[20]_0 (U_AreaSel_n_199),
-        .\sync_reg1_reg[21]_0 (U_AreaSel_n_200),
-        .\sync_reg1_reg[22]_0 (U_AreaSel_n_201),
-        .\sync_reg1_reg[23]_0 (U_AreaSel_n_202),
-        .\sync_reg1_reg[2]_0 (U_print_grid_n_14),
-        .\sync_reg1_reg[3]_0 (U_print_grid_n_13),
-        .\sync_reg1_reg[4]_0 (U_print_grid_n_12),
-        .\sync_reg1_reg[5]_0 (U_print_grid_n_11),
-        .\sync_reg1_reg[6]_0 (U_print_grid_n_10),
-        .\sync_reg1_reg[7]_0 (U_print_grid_n_17),
-        .\sync_reg1_reg[7]_1 (U_print_grid_n_9),
-        .\sync_reg1_reg[8]_0 (U_print_grid_n_18));
+        .din(din),
+        .s_axis_tdata(s_axis_tdata[23:8]),
+        .\sync_reg1_reg[8]_0 (U_print_grid_n_9));
 endmodule
 
 (* ORIG_REF_NAME = "AreaSel" *) 
@@ -1382,15 +1565,7 @@ module system_AXI4_HandSignal_0_0_AreaSel
     s_axis_tvalid_156,
     s_axis_tvalid_157,
     s_axis_tvalid_158,
-    \s_axis_tdata[16] ,
-    p_0_in,
-    \s_axis_tdata[17] ,
-    \s_axis_tdata[18] ,
-    \s_axis_tdata[19] ,
-    \s_axis_tdata[20] ,
-    \s_axis_tdata[21] ,
-    \s_axis_tdata[22] ,
-    \s_axis_tdata[23] ,
+    p_1_in,
     \y_cnt_reg[8]_0 ,
     \y_cnt_reg[8]_1 ,
     \y_cnt_reg[9]_0 ,
@@ -1405,7 +1580,6 @@ module system_AXI4_HandSignal_0_0_AreaSel
     s_axis_tlast,
     is_color2,
     is_color1,
-    s_axis_tdata,
     o_R2__17_carry__0,
     o_R2__29_carry__0_0,
     \y_cnt_reg[0]_0 ,
@@ -1579,15 +1753,7 @@ module system_AXI4_HandSignal_0_0_AreaSel
   output [0:0]s_axis_tvalid_156;
   output [0:0]s_axis_tvalid_157;
   output [0:0]s_axis_tvalid_158;
-  output \s_axis_tdata[16] ;
-  output p_0_in;
-  output \s_axis_tdata[17] ;
-  output \s_axis_tdata[18] ;
-  output \s_axis_tdata[19] ;
-  output \s_axis_tdata[20] ;
-  output \s_axis_tdata[21] ;
-  output \s_axis_tdata[22] ;
-  output \s_axis_tdata[23] ;
+  output p_1_in;
   output [1:0]\y_cnt_reg[8]_0 ;
   output [0:0]\y_cnt_reg[8]_1 ;
   output [1:0]\y_cnt_reg[9]_0 ;
@@ -1602,7 +1768,6 @@ module system_AXI4_HandSignal_0_0_AreaSel
   input s_axis_tlast;
   input is_color2;
   input is_color1;
-  input [7:0]s_axis_tdata;
   input [1:0]o_R2__17_carry__0;
   input [0:0]o_R2__29_carry__0_0;
   input \y_cnt_reg[0]_0 ;
@@ -1647,18 +1812,9 @@ module system_AXI4_HandSignal_0_0_AreaSel
   wire [1:0]o_R2__17_carry__0;
   wire [3:0]o_R2__29_carry__0;
   wire [0:0]o_R2__29_carry__0_0;
-  wire p_0_in;
-  wire [10:0]p_0_in__0;
+  wire [10:0]p_0_in;
+  wire p_1_in;
   wire pclk;
-  wire [7:0]s_axis_tdata;
-  wire \s_axis_tdata[16] ;
-  wire \s_axis_tdata[17] ;
-  wire \s_axis_tdata[18] ;
-  wire \s_axis_tdata[19] ;
-  wire \s_axis_tdata[20] ;
-  wire \s_axis_tdata[21] ;
-  wire \s_axis_tdata[22] ;
-  wire \s_axis_tdata[23] ;
   wire s_axis_tlast;
   wire s_axis_tuser;
   wire s_axis_tvalid;
@@ -2358,76 +2514,20 @@ module system_AXI4_HandSignal_0_0_AreaSel
         .O(S[0]));
   LUT6 #(
     .INIT(64'h0000000000000001)) 
-    \sync_reg1[15]_i_5 
+    \sync_reg1[23]_i_3 
        (.I0(\x_cnt[6]_i_2_n_0 ),
         .I1(x_cnt_reg[5]),
         .I2(x_cnt_reg[6]),
         .I3(x_cnt_reg[2]),
         .I4(x_cnt_reg[3]),
         .I5(x_cnt_reg[4]),
-        .O(p_0_in));
+        .O(p_1_in));
   (* SOFT_HLUTNM = "soft_lutpair57" *) 
-  LUT2 #(
-    .INIT(4'h2)) 
-    \sync_reg1[16]_i_1 
-       (.I0(s_axis_tdata[0]),
-        .I1(p_0_in),
-        .O(\s_axis_tdata[16] ));
-  (* SOFT_HLUTNM = "soft_lutpair57" *) 
-  LUT2 #(
-    .INIT(4'h2)) 
-    \sync_reg1[17]_i_1 
-       (.I0(s_axis_tdata[1]),
-        .I1(p_0_in),
-        .O(\s_axis_tdata[17] ));
-  (* SOFT_HLUTNM = "soft_lutpair58" *) 
-  LUT2 #(
-    .INIT(4'h2)) 
-    \sync_reg1[18]_i_1 
-       (.I0(s_axis_tdata[2]),
-        .I1(p_0_in),
-        .O(\s_axis_tdata[18] ));
-  (* SOFT_HLUTNM = "soft_lutpair58" *) 
-  LUT2 #(
-    .INIT(4'h2)) 
-    \sync_reg1[19]_i_1 
-       (.I0(s_axis_tdata[3]),
-        .I1(p_0_in),
-        .O(\s_axis_tdata[19] ));
-  (* SOFT_HLUTNM = "soft_lutpair59" *) 
-  LUT2 #(
-    .INIT(4'h2)) 
-    \sync_reg1[20]_i_1 
-       (.I0(s_axis_tdata[4]),
-        .I1(p_0_in),
-        .O(\s_axis_tdata[20] ));
-  (* SOFT_HLUTNM = "soft_lutpair59" *) 
-  LUT2 #(
-    .INIT(4'h2)) 
-    \sync_reg1[21]_i_1 
-       (.I0(s_axis_tdata[5]),
-        .I1(p_0_in),
-        .O(\s_axis_tdata[21] ));
-  (* SOFT_HLUTNM = "soft_lutpair60" *) 
-  LUT2 #(
-    .INIT(4'h2)) 
-    \sync_reg1[22]_i_1 
-       (.I0(s_axis_tdata[6]),
-        .I1(p_0_in),
-        .O(\s_axis_tdata[22] ));
-  (* SOFT_HLUTNM = "soft_lutpair60" *) 
-  LUT2 #(
-    .INIT(4'h2)) 
-    \sync_reg1[23]_i_2 
-       (.I0(s_axis_tdata[7]),
-        .I1(p_0_in),
-        .O(\s_axis_tdata[23] ));
-  (* SOFT_HLUTNM = "soft_lutpair61" *) 
   LUT1 #(
     .INIT(2'h1)) 
     \x_cnt[0]_i_1 
        (.I0(x_cnt_reg[0]),
-        .O(p_0_in__0[0]));
+        .O(p_0_in[0]));
   LUT4 #(
     .INIT(16'hCF8F)) 
     \x_cnt[10]_i_1 
@@ -2445,7 +2545,7 @@ module system_AXI4_HandSignal_0_0_AreaSel
         .I3(x_cnt_reg[7]),
         .I4(x_cnt_reg[9]),
         .I5(x_cnt_reg[10]),
-        .O(p_0_in__0[10]));
+        .O(p_0_in[10]));
   LUT6 #(
     .INIT(64'h8000000000000000)) 
     \x_cnt[10]_i_3 
@@ -2456,13 +2556,13 @@ module system_AXI4_HandSignal_0_0_AreaSel
         .I4(x_cnt_reg[2]),
         .I5(x_cnt_reg[4]),
         .O(\x_cnt[10]_i_3_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair61" *) 
+  (* SOFT_HLUTNM = "soft_lutpair57" *) 
   LUT2 #(
     .INIT(4'h6)) 
     \x_cnt[1]_i_1 
        (.I0(x_cnt_reg[0]),
         .I1(x_cnt_reg[1]),
-        .O(p_0_in__0[1]));
+        .O(p_0_in[1]));
   (* SOFT_HLUTNM = "soft_lutpair43" *) 
   LUT3 #(
     .INIT(8'h78)) 
@@ -2470,7 +2570,7 @@ module system_AXI4_HandSignal_0_0_AreaSel
        (.I0(x_cnt_reg[0]),
         .I1(x_cnt_reg[1]),
         .I2(x_cnt_reg[2]),
-        .O(p_0_in__0[2]));
+        .O(p_0_in[2]));
   (* SOFT_HLUTNM = "soft_lutpair0" *) 
   LUT4 #(
     .INIT(16'h7F80)) 
@@ -2479,7 +2579,7 @@ module system_AXI4_HandSignal_0_0_AreaSel
         .I1(x_cnt_reg[0]),
         .I2(x_cnt_reg[2]),
         .I3(x_cnt_reg[3]),
-        .O(p_0_in__0[3]));
+        .O(p_0_in[3]));
   (* SOFT_HLUTNM = "soft_lutpair0" *) 
   LUT5 #(
     .INIT(32'h7FFF8000)) 
@@ -2489,7 +2589,7 @@ module system_AXI4_HandSignal_0_0_AreaSel
         .I2(x_cnt_reg[1]),
         .I3(x_cnt_reg[3]),
         .I4(x_cnt_reg[4]),
-        .O(p_0_in__0[4]));
+        .O(p_0_in[4]));
   LUT6 #(
     .INIT(64'h7FFFFFFF80000000)) 
     \x_cnt[5]_i_1 
@@ -2499,7 +2599,7 @@ module system_AXI4_HandSignal_0_0_AreaSel
         .I3(x_cnt_reg[2]),
         .I4(x_cnt_reg[4]),
         .I5(x_cnt_reg[5]),
-        .O(p_0_in__0[5]));
+        .O(p_0_in[5]));
   LUT6 #(
     .INIT(64'h7FFFFFFF80000000)) 
     \x_cnt[6]_i_1 
@@ -2509,7 +2609,7 @@ module system_AXI4_HandSignal_0_0_AreaSel
         .I3(x_cnt_reg[3]),
         .I4(x_cnt_reg[5]),
         .I5(x_cnt_reg[6]),
-        .O(p_0_in__0[6]));
+        .O(p_0_in[6]));
   (* SOFT_HLUTNM = "soft_lutpair43" *) 
   LUT2 #(
     .INIT(4'h8)) 
@@ -2523,7 +2623,7 @@ module system_AXI4_HandSignal_0_0_AreaSel
        (.I0(\x_cnt[10]_i_3_n_0 ),
         .I1(x_cnt_reg[6]),
         .I2(x_cnt_reg[7]),
-        .O(p_0_in__0[7]));
+        .O(p_0_in[7]));
   (* SOFT_HLUTNM = "soft_lutpair1" *) 
   LUT4 #(
     .INIT(16'h7F80)) 
@@ -2532,7 +2632,7 @@ module system_AXI4_HandSignal_0_0_AreaSel
         .I1(\x_cnt[10]_i_3_n_0 ),
         .I2(x_cnt_reg[7]),
         .I3(x_cnt_reg[8]),
-        .O(p_0_in__0[8]));
+        .O(p_0_in[8]));
   (* SOFT_HLUTNM = "soft_lutpair1" *) 
   LUT5 #(
     .INIT(32'h7FFF8000)) 
@@ -2542,71 +2642,71 @@ module system_AXI4_HandSignal_0_0_AreaSel
         .I2(x_cnt_reg[6]),
         .I3(x_cnt_reg[8]),
         .I4(x_cnt_reg[9]),
-        .O(p_0_in__0[9]));
+        .O(p_0_in[9]));
   FDRE \x_cnt_reg[0] 
        (.C(pclk),
         .CE(s_axis_tvalid),
-        .D(p_0_in__0[0]),
+        .D(p_0_in[0]),
         .Q(x_cnt_reg[0]),
         .R(\x_cnt[10]_i_1_n_0 ));
   FDRE \x_cnt_reg[10] 
        (.C(pclk),
         .CE(s_axis_tvalid),
-        .D(p_0_in__0[10]),
+        .D(p_0_in[10]),
         .Q(x_cnt_reg[10]),
         .R(\x_cnt[10]_i_1_n_0 ));
   FDRE \x_cnt_reg[1] 
        (.C(pclk),
         .CE(s_axis_tvalid),
-        .D(p_0_in__0[1]),
+        .D(p_0_in[1]),
         .Q(x_cnt_reg[1]),
         .R(\x_cnt[10]_i_1_n_0 ));
   FDRE \x_cnt_reg[2] 
        (.C(pclk),
         .CE(s_axis_tvalid),
-        .D(p_0_in__0[2]),
+        .D(p_0_in[2]),
         .Q(x_cnt_reg[2]),
         .R(\x_cnt[10]_i_1_n_0 ));
   FDRE \x_cnt_reg[3] 
        (.C(pclk),
         .CE(s_axis_tvalid),
-        .D(p_0_in__0[3]),
+        .D(p_0_in[3]),
         .Q(x_cnt_reg[3]),
         .R(\x_cnt[10]_i_1_n_0 ));
   FDRE \x_cnt_reg[4] 
        (.C(pclk),
         .CE(s_axis_tvalid),
-        .D(p_0_in__0[4]),
+        .D(p_0_in[4]),
         .Q(x_cnt_reg[4]),
         .R(\x_cnt[10]_i_1_n_0 ));
   FDRE \x_cnt_reg[5] 
        (.C(pclk),
         .CE(s_axis_tvalid),
-        .D(p_0_in__0[5]),
+        .D(p_0_in[5]),
         .Q(x_cnt_reg[5]),
         .R(\x_cnt[10]_i_1_n_0 ));
   FDRE \x_cnt_reg[6] 
        (.C(pclk),
         .CE(s_axis_tvalid),
-        .D(p_0_in__0[6]),
+        .D(p_0_in[6]),
         .Q(x_cnt_reg[6]),
         .R(\x_cnt[10]_i_1_n_0 ));
   FDRE \x_cnt_reg[7] 
        (.C(pclk),
         .CE(s_axis_tvalid),
-        .D(p_0_in__0[7]),
+        .D(p_0_in[7]),
         .Q(x_cnt_reg[7]),
         .R(\x_cnt[10]_i_1_n_0 ));
   FDRE \x_cnt_reg[8] 
        (.C(pclk),
         .CE(s_axis_tvalid),
-        .D(p_0_in__0[8]),
+        .D(p_0_in[8]),
         .Q(x_cnt_reg[8]),
         .R(\x_cnt[10]_i_1_n_0 ));
   FDRE \x_cnt_reg[9] 
        (.C(pclk),
         .CE(s_axis_tvalid),
-        .D(p_0_in__0[9]),
+        .D(p_0_in[9]),
         .Q(x_cnt_reg[9]),
         .R(\x_cnt[10]_i_1_n_0 ));
   LUT6 #(
@@ -5472,226 +5572,209 @@ endmodule
 
 (* ORIG_REF_NAME = "cdc_2ff_sync" *) 
 module system_AXI4_HandSignal_0_0_cdc_2ff_sync
-   (Q,
-    \sync_reg1_reg[8]_0 ,
-    s_axis_tdata,
+   (D,
+    din,
     aclk,
-    p_1_in,
-    \sync_reg1_reg[23]_0 ,
-    \sync_reg1_reg[22]_0 ,
-    \sync_reg1_reg[21]_0 ,
-    \sync_reg1_reg[20]_0 ,
-    \sync_reg1_reg[19]_0 ,
-    \sync_reg1_reg[18]_0 ,
-    \sync_reg1_reg[17]_0 ,
-    \sync_reg1_reg[16]_0 ,
-    \sync_reg1_reg[7]_0 ,
-    \sync_reg1_reg[7]_1 ,
-    \sync_reg1_reg[6]_0 ,
-    \sync_reg1_reg[5]_0 ,
-    \sync_reg1_reg[4]_0 ,
-    \sync_reg1_reg[3]_0 ,
-    \sync_reg1_reg[2]_0 ,
-    \sync_reg1_reg[1]_0 ,
-    \sync_reg1_reg[0]_0 );
-  output [23:0]Q;
-  input \sync_reg1_reg[8]_0 ;
-  input [7:0]s_axis_tdata;
+    \sync_reg1_reg[8]_0 ,
+    s_axis_tdata);
+  output [23:0]D;
+  input [7:0]din;
   input aclk;
-  input p_1_in;
-  input \sync_reg1_reg[23]_0 ;
-  input \sync_reg1_reg[22]_0 ;
-  input \sync_reg1_reg[21]_0 ;
-  input \sync_reg1_reg[20]_0 ;
-  input \sync_reg1_reg[19]_0 ;
-  input \sync_reg1_reg[18]_0 ;
-  input \sync_reg1_reg[17]_0 ;
-  input \sync_reg1_reg[16]_0 ;
-  input \sync_reg1_reg[7]_0 ;
-  input \sync_reg1_reg[7]_1 ;
-  input \sync_reg1_reg[6]_0 ;
-  input \sync_reg1_reg[5]_0 ;
-  input \sync_reg1_reg[4]_0 ;
-  input \sync_reg1_reg[3]_0 ;
-  input \sync_reg1_reg[2]_0 ;
-  input \sync_reg1_reg[1]_0 ;
-  input \sync_reg1_reg[0]_0 ;
+  input \sync_reg1_reg[8]_0 ;
+  input [15:0]s_axis_tdata;
 
-  wire [23:0]Q;
+  wire [23:0]D;
   wire aclk;
-  wire p_1_in;
-  wire [7:0]s_axis_tdata;
-  wire [23:0]sync_reg1;
-  wire \sync_reg1_reg[0]_0 ;
-  wire \sync_reg1_reg[16]_0 ;
-  wire \sync_reg1_reg[17]_0 ;
-  wire \sync_reg1_reg[18]_0 ;
-  wire \sync_reg1_reg[19]_0 ;
-  wire \sync_reg1_reg[1]_0 ;
-  wire \sync_reg1_reg[20]_0 ;
-  wire \sync_reg1_reg[21]_0 ;
-  wire \sync_reg1_reg[22]_0 ;
-  wire \sync_reg1_reg[23]_0 ;
-  wire \sync_reg1_reg[2]_0 ;
-  wire \sync_reg1_reg[3]_0 ;
-  wire \sync_reg1_reg[4]_0 ;
-  wire \sync_reg1_reg[5]_0 ;
-  wire \sync_reg1_reg[6]_0 ;
-  wire \sync_reg1_reg[7]_0 ;
-  wire \sync_reg1_reg[7]_1 ;
+  wire [7:0]din;
+  wire [15:0]s_axis_tdata;
+  wire [23:8]sync_reg1;
   wire \sync_reg1_reg[8]_0 ;
-  wire [23:0]sync_reg2;
+  wire [23:8]sync_reg2;
 
-  FDRE \dout_reg[0] 
-       (.C(aclk),
+  (* srl_bus_name = "\U0/u_cdc_pixel/dout_reg " *) 
+  (* srl_name = "\U0/u_cdc_pixel/dout_reg[0]_srl3 " *) 
+  SRL16E \dout_reg[0]_srl3 
+       (.A0(1'b0),
+        .A1(1'b1),
+        .A2(1'b0),
+        .A3(1'b0),
         .CE(1'b1),
-        .D(sync_reg2[0]),
-        .Q(Q[0]),
-        .R(1'b0));
+        .CLK(aclk),
+        .D(din[0]),
+        .Q(D[0]));
   FDRE \dout_reg[10] 
        (.C(aclk),
         .CE(1'b1),
         .D(sync_reg2[10]),
-        .Q(Q[10]),
+        .Q(D[10]),
         .R(1'b0));
   FDRE \dout_reg[11] 
        (.C(aclk),
         .CE(1'b1),
         .D(sync_reg2[11]),
-        .Q(Q[11]),
+        .Q(D[11]),
         .R(1'b0));
   FDRE \dout_reg[12] 
        (.C(aclk),
         .CE(1'b1),
         .D(sync_reg2[12]),
-        .Q(Q[12]),
+        .Q(D[12]),
         .R(1'b0));
   FDRE \dout_reg[13] 
        (.C(aclk),
         .CE(1'b1),
         .D(sync_reg2[13]),
-        .Q(Q[13]),
+        .Q(D[13]),
         .R(1'b0));
   FDRE \dout_reg[14] 
        (.C(aclk),
         .CE(1'b1),
         .D(sync_reg2[14]),
-        .Q(Q[14]),
+        .Q(D[14]),
         .R(1'b0));
   FDRE \dout_reg[15] 
        (.C(aclk),
         .CE(1'b1),
         .D(sync_reg2[15]),
-        .Q(Q[15]),
+        .Q(D[15]),
         .R(1'b0));
   FDRE \dout_reg[16] 
        (.C(aclk),
         .CE(1'b1),
         .D(sync_reg2[16]),
-        .Q(Q[16]),
+        .Q(D[16]),
         .R(1'b0));
   FDRE \dout_reg[17] 
        (.C(aclk),
         .CE(1'b1),
         .D(sync_reg2[17]),
-        .Q(Q[17]),
+        .Q(D[17]),
         .R(1'b0));
   FDRE \dout_reg[18] 
        (.C(aclk),
         .CE(1'b1),
         .D(sync_reg2[18]),
-        .Q(Q[18]),
+        .Q(D[18]),
         .R(1'b0));
   FDRE \dout_reg[19] 
        (.C(aclk),
         .CE(1'b1),
         .D(sync_reg2[19]),
-        .Q(Q[19]),
+        .Q(D[19]),
         .R(1'b0));
-  FDRE \dout_reg[1] 
-       (.C(aclk),
+  (* srl_bus_name = "\U0/u_cdc_pixel/dout_reg " *) 
+  (* srl_name = "\U0/u_cdc_pixel/dout_reg[1]_srl3 " *) 
+  SRL16E \dout_reg[1]_srl3 
+       (.A0(1'b0),
+        .A1(1'b1),
+        .A2(1'b0),
+        .A3(1'b0),
         .CE(1'b1),
-        .D(sync_reg2[1]),
-        .Q(Q[1]),
-        .R(1'b0));
+        .CLK(aclk),
+        .D(din[1]),
+        .Q(D[1]));
   FDRE \dout_reg[20] 
        (.C(aclk),
         .CE(1'b1),
         .D(sync_reg2[20]),
-        .Q(Q[20]),
+        .Q(D[20]),
         .R(1'b0));
   FDRE \dout_reg[21] 
        (.C(aclk),
         .CE(1'b1),
         .D(sync_reg2[21]),
-        .Q(Q[21]),
+        .Q(D[21]),
         .R(1'b0));
   FDRE \dout_reg[22] 
        (.C(aclk),
         .CE(1'b1),
         .D(sync_reg2[22]),
-        .Q(Q[22]),
+        .Q(D[22]),
         .R(1'b0));
   FDRE \dout_reg[23] 
        (.C(aclk),
         .CE(1'b1),
         .D(sync_reg2[23]),
-        .Q(Q[23]),
+        .Q(D[23]),
         .R(1'b0));
-  FDRE \dout_reg[2] 
-       (.C(aclk),
+  (* srl_bus_name = "\U0/u_cdc_pixel/dout_reg " *) 
+  (* srl_name = "\U0/u_cdc_pixel/dout_reg[2]_srl3 " *) 
+  SRL16E \dout_reg[2]_srl3 
+       (.A0(1'b0),
+        .A1(1'b1),
+        .A2(1'b0),
+        .A3(1'b0),
         .CE(1'b1),
-        .D(sync_reg2[2]),
-        .Q(Q[2]),
-        .R(1'b0));
-  FDRE \dout_reg[3] 
-       (.C(aclk),
+        .CLK(aclk),
+        .D(din[2]),
+        .Q(D[2]));
+  (* srl_bus_name = "\U0/u_cdc_pixel/dout_reg " *) 
+  (* srl_name = "\U0/u_cdc_pixel/dout_reg[3]_srl3 " *) 
+  SRL16E \dout_reg[3]_srl3 
+       (.A0(1'b0),
+        .A1(1'b1),
+        .A2(1'b0),
+        .A3(1'b0),
         .CE(1'b1),
-        .D(sync_reg2[3]),
-        .Q(Q[3]),
-        .R(1'b0));
-  FDRE \dout_reg[4] 
-       (.C(aclk),
+        .CLK(aclk),
+        .D(din[3]),
+        .Q(D[3]));
+  (* srl_bus_name = "\U0/u_cdc_pixel/dout_reg " *) 
+  (* srl_name = "\U0/u_cdc_pixel/dout_reg[4]_srl3 " *) 
+  SRL16E \dout_reg[4]_srl3 
+       (.A0(1'b0),
+        .A1(1'b1),
+        .A2(1'b0),
+        .A3(1'b0),
         .CE(1'b1),
-        .D(sync_reg2[4]),
-        .Q(Q[4]),
-        .R(1'b0));
-  FDRE \dout_reg[5] 
-       (.C(aclk),
+        .CLK(aclk),
+        .D(din[4]),
+        .Q(D[4]));
+  (* srl_bus_name = "\U0/u_cdc_pixel/dout_reg " *) 
+  (* srl_name = "\U0/u_cdc_pixel/dout_reg[5]_srl3 " *) 
+  SRL16E \dout_reg[5]_srl3 
+       (.A0(1'b0),
+        .A1(1'b1),
+        .A2(1'b0),
+        .A3(1'b0),
         .CE(1'b1),
-        .D(sync_reg2[5]),
-        .Q(Q[5]),
-        .R(1'b0));
-  FDRE \dout_reg[6] 
-       (.C(aclk),
+        .CLK(aclk),
+        .D(din[5]),
+        .Q(D[5]));
+  (* srl_bus_name = "\U0/u_cdc_pixel/dout_reg " *) 
+  (* srl_name = "\U0/u_cdc_pixel/dout_reg[6]_srl3 " *) 
+  SRL16E \dout_reg[6]_srl3 
+       (.A0(1'b0),
+        .A1(1'b1),
+        .A2(1'b0),
+        .A3(1'b0),
         .CE(1'b1),
-        .D(sync_reg2[6]),
-        .Q(Q[6]),
-        .R(1'b0));
-  FDRE \dout_reg[7] 
-       (.C(aclk),
+        .CLK(aclk),
+        .D(din[6]),
+        .Q(D[6]));
+  (* srl_bus_name = "\U0/u_cdc_pixel/dout_reg " *) 
+  (* srl_name = "\U0/u_cdc_pixel/dout_reg[7]_srl3 " *) 
+  SRL16E \dout_reg[7]_srl3 
+       (.A0(1'b0),
+        .A1(1'b1),
+        .A2(1'b0),
+        .A3(1'b0),
         .CE(1'b1),
-        .D(sync_reg2[7]),
-        .Q(Q[7]),
-        .R(1'b0));
+        .CLK(aclk),
+        .D(din[7]),
+        .Q(D[7]));
   FDRE \dout_reg[8] 
        (.C(aclk),
         .CE(1'b1),
         .D(sync_reg2[8]),
-        .Q(Q[8]),
+        .Q(D[8]),
         .R(1'b0));
   FDRE \dout_reg[9] 
        (.C(aclk),
         .CE(1'b1),
         .D(sync_reg2[9]),
-        .Q(Q[9]),
+        .Q(D[9]),
         .R(1'b0));
-  FDSE \sync_reg1_reg[0] 
-       (.C(aclk),
-        .CE(1'b1),
-        .D(\sync_reg1_reg[0]_0 ),
-        .Q(sync_reg1[0]),
-        .S(\sync_reg1_reg[7]_0 ));
   FDRE \sync_reg1_reg[10] 
        (.C(aclk),
         .CE(1'b1),
@@ -5728,96 +5811,54 @@ module system_AXI4_HandSignal_0_0_cdc_2ff_sync
         .D(s_axis_tdata[7]),
         .Q(sync_reg1[15]),
         .R(\sync_reg1_reg[8]_0 ));
-  FDSE \sync_reg1_reg[16] 
+  FDRE \sync_reg1_reg[16] 
        (.C(aclk),
         .CE(1'b1),
-        .D(\sync_reg1_reg[16]_0 ),
+        .D(s_axis_tdata[8]),
         .Q(sync_reg1[16]),
-        .S(p_1_in));
-  FDSE \sync_reg1_reg[17] 
+        .R(\sync_reg1_reg[8]_0 ));
+  FDRE \sync_reg1_reg[17] 
        (.C(aclk),
         .CE(1'b1),
-        .D(\sync_reg1_reg[17]_0 ),
+        .D(s_axis_tdata[9]),
         .Q(sync_reg1[17]),
-        .S(p_1_in));
-  FDSE \sync_reg1_reg[18] 
+        .R(\sync_reg1_reg[8]_0 ));
+  FDRE \sync_reg1_reg[18] 
        (.C(aclk),
         .CE(1'b1),
-        .D(\sync_reg1_reg[18]_0 ),
+        .D(s_axis_tdata[10]),
         .Q(sync_reg1[18]),
-        .S(p_1_in));
-  FDSE \sync_reg1_reg[19] 
+        .R(\sync_reg1_reg[8]_0 ));
+  FDRE \sync_reg1_reg[19] 
        (.C(aclk),
         .CE(1'b1),
-        .D(\sync_reg1_reg[19]_0 ),
+        .D(s_axis_tdata[11]),
         .Q(sync_reg1[19]),
-        .S(p_1_in));
-  FDSE \sync_reg1_reg[1] 
+        .R(\sync_reg1_reg[8]_0 ));
+  FDRE \sync_reg1_reg[20] 
        (.C(aclk),
         .CE(1'b1),
-        .D(\sync_reg1_reg[1]_0 ),
-        .Q(sync_reg1[1]),
-        .S(\sync_reg1_reg[7]_0 ));
-  FDSE \sync_reg1_reg[20] 
-       (.C(aclk),
-        .CE(1'b1),
-        .D(\sync_reg1_reg[20]_0 ),
+        .D(s_axis_tdata[12]),
         .Q(sync_reg1[20]),
-        .S(p_1_in));
-  FDSE \sync_reg1_reg[21] 
+        .R(\sync_reg1_reg[8]_0 ));
+  FDRE \sync_reg1_reg[21] 
        (.C(aclk),
         .CE(1'b1),
-        .D(\sync_reg1_reg[21]_0 ),
+        .D(s_axis_tdata[13]),
         .Q(sync_reg1[21]),
-        .S(p_1_in));
-  FDSE \sync_reg1_reg[22] 
+        .R(\sync_reg1_reg[8]_0 ));
+  FDRE \sync_reg1_reg[22] 
        (.C(aclk),
         .CE(1'b1),
-        .D(\sync_reg1_reg[22]_0 ),
+        .D(s_axis_tdata[14]),
         .Q(sync_reg1[22]),
-        .S(p_1_in));
-  FDSE \sync_reg1_reg[23] 
+        .R(\sync_reg1_reg[8]_0 ));
+  FDRE \sync_reg1_reg[23] 
        (.C(aclk),
         .CE(1'b1),
-        .D(\sync_reg1_reg[23]_0 ),
+        .D(s_axis_tdata[15]),
         .Q(sync_reg1[23]),
-        .S(p_1_in));
-  FDSE \sync_reg1_reg[2] 
-       (.C(aclk),
-        .CE(1'b1),
-        .D(\sync_reg1_reg[2]_0 ),
-        .Q(sync_reg1[2]),
-        .S(\sync_reg1_reg[7]_0 ));
-  FDSE \sync_reg1_reg[3] 
-       (.C(aclk),
-        .CE(1'b1),
-        .D(\sync_reg1_reg[3]_0 ),
-        .Q(sync_reg1[3]),
-        .S(\sync_reg1_reg[7]_0 ));
-  FDSE \sync_reg1_reg[4] 
-       (.C(aclk),
-        .CE(1'b1),
-        .D(\sync_reg1_reg[4]_0 ),
-        .Q(sync_reg1[4]),
-        .S(\sync_reg1_reg[7]_0 ));
-  FDSE \sync_reg1_reg[5] 
-       (.C(aclk),
-        .CE(1'b1),
-        .D(\sync_reg1_reg[5]_0 ),
-        .Q(sync_reg1[5]),
-        .S(\sync_reg1_reg[7]_0 ));
-  FDSE \sync_reg1_reg[6] 
-       (.C(aclk),
-        .CE(1'b1),
-        .D(\sync_reg1_reg[6]_0 ),
-        .Q(sync_reg1[6]),
-        .S(\sync_reg1_reg[7]_0 ));
-  FDSE \sync_reg1_reg[7] 
-       (.C(aclk),
-        .CE(1'b1),
-        .D(\sync_reg1_reg[7]_1 ),
-        .Q(sync_reg1[7]),
-        .S(\sync_reg1_reg[7]_0 ));
+        .R(\sync_reg1_reg[8]_0 ));
   FDRE \sync_reg1_reg[8] 
        (.C(aclk),
         .CE(1'b1),
@@ -5830,12 +5871,6 @@ module system_AXI4_HandSignal_0_0_cdc_2ff_sync
         .D(s_axis_tdata[1]),
         .Q(sync_reg1[9]),
         .R(\sync_reg1_reg[8]_0 ));
-  FDRE \sync_reg2_reg[0] 
-       (.C(aclk),
-        .CE(1'b1),
-        .D(sync_reg1[0]),
-        .Q(sync_reg2[0]),
-        .R(1'b0));
   FDRE \sync_reg2_reg[10] 
        (.C(aclk),
         .CE(1'b1),
@@ -5896,12 +5931,6 @@ module system_AXI4_HandSignal_0_0_cdc_2ff_sync
         .D(sync_reg1[19]),
         .Q(sync_reg2[19]),
         .R(1'b0));
-  FDRE \sync_reg2_reg[1] 
-       (.C(aclk),
-        .CE(1'b1),
-        .D(sync_reg1[1]),
-        .Q(sync_reg2[1]),
-        .R(1'b0));
   FDRE \sync_reg2_reg[20] 
        (.C(aclk),
         .CE(1'b1),
@@ -5925,42 +5954,6 @@ module system_AXI4_HandSignal_0_0_cdc_2ff_sync
         .CE(1'b1),
         .D(sync_reg1[23]),
         .Q(sync_reg2[23]),
-        .R(1'b0));
-  FDRE \sync_reg2_reg[2] 
-       (.C(aclk),
-        .CE(1'b1),
-        .D(sync_reg1[2]),
-        .Q(sync_reg2[2]),
-        .R(1'b0));
-  FDRE \sync_reg2_reg[3] 
-       (.C(aclk),
-        .CE(1'b1),
-        .D(sync_reg1[3]),
-        .Q(sync_reg2[3]),
-        .R(1'b0));
-  FDRE \sync_reg2_reg[4] 
-       (.C(aclk),
-        .CE(1'b1),
-        .D(sync_reg1[4]),
-        .Q(sync_reg2[4]),
-        .R(1'b0));
-  FDRE \sync_reg2_reg[5] 
-       (.C(aclk),
-        .CE(1'b1),
-        .D(sync_reg1[5]),
-        .Q(sync_reg2[5]),
-        .R(1'b0));
-  FDRE \sync_reg2_reg[6] 
-       (.C(aclk),
-        .CE(1'b1),
-        .D(sync_reg1[6]),
-        .Q(sync_reg2[6]),
-        .R(1'b0));
-  FDRE \sync_reg2_reg[7] 
-       (.C(aclk),
-        .CE(1'b1),
-        .D(sync_reg1[7]),
-        .Q(sync_reg2[7]),
         .R(1'b0));
   FDRE \sync_reg2_reg[8] 
        (.C(aclk),
@@ -5986,9 +5979,11 @@ module system_AXI4_HandSignal_0_0_hand_signal
     pclk,
     s_axis_tdata,
     CO,
+    \hist_blue_reg[0] ,
+    \hist_red_reg[0] ,
+    \hist_red_reg[0]_0 ,
     s_axis_tvalid,
     s_axis_tlast,
-    \hist_blue_reg[0] ,
     s_axis_tuser,
     aresetn,
     zone_id,
@@ -6161,9 +6156,11 @@ module system_AXI4_HandSignal_0_0_hand_signal
   input pclk;
   input [15:0]s_axis_tdata;
   input [0:0]CO;
+  input [0:0]\hist_blue_reg[0] ;
+  input [0:0]\hist_red_reg[0] ;
+  input [0:0]\hist_red_reg[0]_0 ;
   input s_axis_tvalid;
   input s_axis_tlast;
-  input [0:0]\hist_blue_reg[0] ;
   input s_axis_tuser;
   input aresetn;
   input [5:0]zone_id;
@@ -6334,7 +6331,13 @@ module system_AXI4_HandSignal_0_0_hand_signal
   wire [0:0]E;
   wire aresetn;
   wire [6:1]blue_flag;
+  wire \blue_flag[0]_i_2_n_0 ;
+  wire \blue_flag[0]_i_3_n_0 ;
+  wire \blue_flag[0]_i_4_n_0 ;
+  wire \blue_flag[0]_i_5_n_0 ;
   wire [0:0]\hist_blue_reg[0] ;
+  wire [0:0]\hist_red_reg[0] ;
+  wire [0:0]\hist_red_reg[0]_0 ;
   wire is_color1;
   wire is_color2;
   wire max_zone_color1;
@@ -8779,10 +8782,6 @@ module system_AXI4_HandSignal_0_0_hand_signal
   wire [10:0]p_0_in;
   wire pclk;
   wire [6:1]red_flag;
-  wire \red_flag[0]_i_2_n_0 ;
-  wire \red_flag[0]_i_3_n_0 ;
-  wire \red_flag[0]_i_4_n_0 ;
-  wire \red_flag[0]_i_5_n_0 ;
   wire [15:0]s_axis_tdata;
   wire s_axis_tlast;
   wire s_axis_tuser;
@@ -13781,45 +13780,80 @@ module system_AXI4_HandSignal_0_0_hand_signal
   wire [3:2]\NLW_zone_count_color2_reg[1][31]_i_2_CO_UNCONNECTED ;
   wire [3:3]\NLW_zone_count_color2_reg[1][31]_i_2_O_UNCONNECTED ;
 
+  LUT6 #(
+    .INIT(64'h0000000000000020)) 
+    \blue_flag[0]_i_2 
+       (.I0(s_axis_tvalid),
+        .I1(s_axis_tuser),
+        .I2(s_axis_tlast),
+        .I3(\blue_flag[0]_i_3_n_0 ),
+        .I4(\blue_flag[0]_i_4_n_0 ),
+        .I5(\blue_flag[0]_i_5_n_0 ),
+        .O(\blue_flag[0]_i_2_n_0 ));
+  LUT3 #(
+    .INIT(8'hFE)) 
+    \blue_flag[0]_i_3 
+       (.I0(v_cnt_reg[5]),
+        .I1(v_cnt_reg[8]),
+        .I2(v_cnt_reg[10]),
+        .O(\blue_flag[0]_i_3_n_0 ));
+  (* SOFT_HLUTNM = "soft_lutpair63" *) 
+  LUT4 #(
+    .INIT(16'h7FFF)) 
+    \blue_flag[0]_i_4 
+       (.I0(v_cnt_reg[2]),
+        .I1(v_cnt_reg[3]),
+        .I2(v_cnt_reg[0]),
+        .I3(v_cnt_reg[1]),
+        .O(\blue_flag[0]_i_4_n_0 ));
+  (* SOFT_HLUTNM = "soft_lutpair64" *) 
+  LUT4 #(
+    .INIT(16'hDFFF)) 
+    \blue_flag[0]_i_5 
+       (.I0(v_cnt_reg[9]),
+        .I1(v_cnt_reg[4]),
+        .I2(v_cnt_reg[7]),
+        .I3(v_cnt_reg[6]),
+        .O(\blue_flag[0]_i_5_n_0 ));
   FDRE \blue_flag_reg[0] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color1_reg_n_0_[0] ),
-        .Q(o_color_spi_data[4]),
+        .Q(o_color_spi_data[8]),
         .R(u_color_detect_n_1));
   FDRE \blue_flag_reg[1] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color1_reg_n_0_[1] ),
         .Q(blue_flag[1]),
         .R(u_color_detect_n_1));
   FDRE \blue_flag_reg[2] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color1_reg_n_0_[2] ),
         .Q(blue_flag[2]),
         .R(u_color_detect_n_1));
   FDRE \blue_flag_reg[3] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color1_reg_n_0_[3] ),
         .Q(blue_flag[3]),
         .R(u_color_detect_n_1));
   FDRE \blue_flag_reg[4] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color1_reg_n_0_[4] ),
         .Q(blue_flag[4]),
         .R(u_color_detect_n_1));
   FDRE \blue_flag_reg[5] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color1_reg_n_0_[5] ),
         .Q(blue_flag[5]),
         .R(u_color_detect_n_1));
   FDRE \blue_flag_reg[6] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color1_reg_n_0_[6] ),
         .Q(blue_flag[6]),
         .R(u_color_detect_n_1));
@@ -33129,212 +33163,177 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(\max_zone_color2[6]_i_242_n_0 ),
         .O(\max_zone_color2_reg[6]_i_99_n_0 ),
         .S(\max_zone_color2_reg[2]_rep_n_0 ));
-  LUT6 #(
-    .INIT(64'h400AFDD4AFFD400A)) 
-    \o_color_spi_data[0]_INST_0 
+  (* SOFT_HLUTNM = "soft_lutpair61" *) 
+  LUT4 #(
+    .INIT(16'hB244)) 
+    \o_color_spi_data[10]_INST_0 
        (.I0(red_flag[4]),
-        .I1(red_flag[1]),
-        .I2(red_flag[2]),
-        .I3(red_flag[6]),
-        .I4(red_flag[5]),
-        .I5(red_flag[3]),
-        .O(o_color_spi_data[0]));
+        .I1(red_flag[6]),
+        .I2(red_flag[3]),
+        .I3(red_flag[5]),
+        .O(o_color_spi_data[6]));
+  LUT3 #(
+    .INIT(8'hE0)) 
+    \o_color_spi_data[11]_INST_0 
+       (.I0(red_flag[4]),
+        .I1(red_flag[5]),
+        .I2(red_flag[6]),
+        .O(o_color_spi_data[7]));
+  LUT6 #(
+    .INIT(64'h8CC6311863318CC6)) 
+    \o_color_spi_data[17]_INST_0 
+       (.I0(blue_flag[4]),
+        .I1(blue_flag[1]),
+        .I2(blue_flag[2]),
+        .I3(blue_flag[6]),
+        .I4(blue_flag[5]),
+        .I5(blue_flag[3]),
+        .O(o_color_spi_data[9]));
   LUT6 #(
     .INIT(64'hA52994A552944A52)) 
-    \o_color_spi_data[10]_INST_0 
+    \o_color_spi_data[18]_INST_0 
        (.I0(blue_flag[4]),
         .I1(blue_flag[1]),
         .I2(blue_flag[2]),
         .I3(blue_flag[3]),
         .I4(blue_flag[5]),
         .I5(blue_flag[6]),
-        .O(o_color_spi_data[6]));
+        .O(o_color_spi_data[10]));
   LUT6 #(
     .INIT(64'h1042841008214208)) 
-    \o_color_spi_data[11]_INST_0 
+    \o_color_spi_data[19]_INST_0 
        (.I0(blue_flag[4]),
         .I1(blue_flag[1]),
         .I2(blue_flag[2]),
         .I3(blue_flag[5]),
         .I4(blue_flag[3]),
         .I5(blue_flag[6]),
-        .O(o_color_spi_data[7]));
-  LUT6 #(
-    .INIT(64'h400AFDD4AFFD400A)) 
-    \o_color_spi_data[16]_INST_0 
-       (.I0(blue_flag[4]),
-        .I1(blue_flag[1]),
-        .I2(blue_flag[2]),
-        .I3(blue_flag[6]),
-        .I4(blue_flag[5]),
-        .I5(blue_flag[3]),
-        .O(o_color_spi_data[8]));
-  (* SOFT_HLUTNM = "soft_lutpair66" *) 
-  LUT5 #(
-    .INIT(32'h58E55A58)) 
-    \o_color_spi_data[17]_INST_0 
-       (.I0(blue_flag[4]),
-        .I1(blue_flag[2]),
-        .I2(blue_flag[6]),
-        .I3(blue_flag[3]),
-        .I4(blue_flag[5]),
-        .O(o_color_spi_data[9]));
-  (* SOFT_HLUTNM = "soft_lutpair66" *) 
-  LUT4 #(
-    .INIT(16'hB244)) 
-    \o_color_spi_data[18]_INST_0 
-       (.I0(blue_flag[4]),
-        .I1(blue_flag[6]),
-        .I2(blue_flag[3]),
-        .I3(blue_flag[5]),
-        .O(o_color_spi_data[10]));
-  LUT3 #(
-    .INIT(8'hE0)) 
-    \o_color_spi_data[19]_INST_0 
-       (.I0(blue_flag[4]),
-        .I1(blue_flag[5]),
-        .I2(blue_flag[6]),
         .O(o_color_spi_data[11]));
-  (* SOFT_HLUTNM = "soft_lutpair65" *) 
-  LUT5 #(
-    .INIT(32'h58E55A58)) 
-    \o_color_spi_data[1]_INST_0 
-       (.I0(red_flag[4]),
-        .I1(red_flag[2]),
-        .I2(red_flag[6]),
-        .I3(red_flag[3]),
-        .I4(red_flag[5]),
-        .O(o_color_spi_data[1]));
   LUT6 #(
     .INIT(64'h8CC6311863318CC6)) 
-    \o_color_spi_data[25]_INST_0 
+    \o_color_spi_data[1]_INST_0 
        (.I0(red_flag[4]),
         .I1(red_flag[1]),
         .I2(red_flag[2]),
         .I3(red_flag[6]),
         .I4(red_flag[5]),
         .I5(red_flag[3]),
-        .O(o_color_spi_data[13]));
+        .O(o_color_spi_data[1]));
   LUT6 #(
-    .INIT(64'hA52994A552944A52)) 
-    \o_color_spi_data[26]_INST_0 
-       (.I0(red_flag[4]),
-        .I1(red_flag[1]),
-        .I2(red_flag[2]),
-        .I3(red_flag[3]),
-        .I4(red_flag[5]),
-        .I5(red_flag[6]),
-        .O(o_color_spi_data[14]));
-  LUT6 #(
-    .INIT(64'h1042841008214208)) 
-    \o_color_spi_data[27]_INST_0 
-       (.I0(red_flag[4]),
-        .I1(red_flag[1]),
-        .I2(red_flag[2]),
-        .I3(red_flag[5]),
-        .I4(red_flag[3]),
-        .I5(red_flag[6]),
-        .O(o_color_spi_data[15]));
-  (* SOFT_HLUTNM = "soft_lutpair65" *) 
-  LUT4 #(
-    .INIT(16'hB244)) 
-    \o_color_spi_data[2]_INST_0 
-       (.I0(red_flag[4]),
-        .I1(red_flag[6]),
-        .I2(red_flag[3]),
-        .I3(red_flag[5]),
-        .O(o_color_spi_data[2]));
-  LUT3 #(
-    .INIT(8'hE0)) 
-    \o_color_spi_data[3]_INST_0 
-       (.I0(red_flag[4]),
-        .I1(red_flag[5]),
-        .I2(red_flag[6]),
-        .O(o_color_spi_data[3]));
-  LUT6 #(
-    .INIT(64'h8CC6311863318CC6)) 
-    \o_color_spi_data[9]_INST_0 
+    .INIT(64'h400AFDD4AFFD400A)) 
+    \o_color_spi_data[24]_INST_0 
        (.I0(blue_flag[4]),
         .I1(blue_flag[1]),
         .I2(blue_flag[2]),
         .I3(blue_flag[6]),
         .I4(blue_flag[5]),
         .I5(blue_flag[3]),
-        .O(o_color_spi_data[5]));
-  LUT6 #(
-    .INIT(64'h0000000000000020)) 
-    \red_flag[0]_i_2 
-       (.I0(s_axis_tvalid),
-        .I1(s_axis_tuser),
-        .I2(s_axis_tlast),
-        .I3(\red_flag[0]_i_3_n_0 ),
-        .I4(\red_flag[0]_i_4_n_0 ),
-        .I5(\red_flag[0]_i_5_n_0 ),
-        .O(\red_flag[0]_i_2_n_0 ));
+        .O(o_color_spi_data[12]));
+  (* SOFT_HLUTNM = "soft_lutpair62" *) 
+  LUT5 #(
+    .INIT(32'h58E55A58)) 
+    \o_color_spi_data[25]_INST_0 
+       (.I0(blue_flag[4]),
+        .I1(blue_flag[2]),
+        .I2(blue_flag[6]),
+        .I3(blue_flag[3]),
+        .I4(blue_flag[5]),
+        .O(o_color_spi_data[13]));
+  (* SOFT_HLUTNM = "soft_lutpair62" *) 
+  LUT4 #(
+    .INIT(16'hB244)) 
+    \o_color_spi_data[26]_INST_0 
+       (.I0(blue_flag[4]),
+        .I1(blue_flag[6]),
+        .I2(blue_flag[3]),
+        .I3(blue_flag[5]),
+        .O(o_color_spi_data[14]));
   LUT3 #(
-    .INIT(8'hFE)) 
-    \red_flag[0]_i_3 
-       (.I0(v_cnt_reg[5]),
-        .I1(v_cnt_reg[8]),
-        .I2(v_cnt_reg[10]),
-        .O(\red_flag[0]_i_3_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair67" *) 
-  LUT4 #(
-    .INIT(16'h7FFF)) 
-    \red_flag[0]_i_4 
-       (.I0(v_cnt_reg[2]),
-        .I1(v_cnt_reg[3]),
-        .I2(v_cnt_reg[0]),
-        .I3(v_cnt_reg[1]),
-        .O(\red_flag[0]_i_4_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair68" *) 
-  LUT4 #(
-    .INIT(16'hDFFF)) 
-    \red_flag[0]_i_5 
-       (.I0(v_cnt_reg[9]),
-        .I1(v_cnt_reg[4]),
-        .I2(v_cnt_reg[7]),
-        .I3(v_cnt_reg[6]),
-        .O(\red_flag[0]_i_5_n_0 ));
+    .INIT(8'hE0)) 
+    \o_color_spi_data[27]_INST_0 
+       (.I0(blue_flag[4]),
+        .I1(blue_flag[5]),
+        .I2(blue_flag[6]),
+        .O(o_color_spi_data[15]));
+  LUT6 #(
+    .INIT(64'hA52994A552944A52)) 
+    \o_color_spi_data[2]_INST_0 
+       (.I0(red_flag[4]),
+        .I1(red_flag[1]),
+        .I2(red_flag[2]),
+        .I3(red_flag[3]),
+        .I4(red_flag[5]),
+        .I5(red_flag[6]),
+        .O(o_color_spi_data[2]));
+  LUT6 #(
+    .INIT(64'h1042841008214208)) 
+    \o_color_spi_data[3]_INST_0 
+       (.I0(red_flag[4]),
+        .I1(red_flag[1]),
+        .I2(red_flag[2]),
+        .I3(red_flag[5]),
+        .I4(red_flag[3]),
+        .I5(red_flag[6]),
+        .O(o_color_spi_data[3]));
+  LUT6 #(
+    .INIT(64'h400AFDD4AFFD400A)) 
+    \o_color_spi_data[8]_INST_0 
+       (.I0(red_flag[4]),
+        .I1(red_flag[1]),
+        .I2(red_flag[2]),
+        .I3(red_flag[6]),
+        .I4(red_flag[5]),
+        .I5(red_flag[3]),
+        .O(o_color_spi_data[4]));
+  (* SOFT_HLUTNM = "soft_lutpair61" *) 
+  LUT5 #(
+    .INIT(32'h58E55A58)) 
+    \o_color_spi_data[9]_INST_0 
+       (.I0(red_flag[4]),
+        .I1(red_flag[2]),
+        .I2(red_flag[6]),
+        .I3(red_flag[3]),
+        .I4(red_flag[5]),
+        .O(o_color_spi_data[5]));
   FDRE \red_flag_reg[0] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color2_reg_n_0_[0] ),
-        .Q(o_color_spi_data[12]),
+        .Q(o_color_spi_data[0]),
         .R(u_color_detect_n_1));
   FDRE \red_flag_reg[1] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color2_reg_n_0_[1] ),
         .Q(red_flag[1]),
         .R(u_color_detect_n_1));
   FDRE \red_flag_reg[2] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color2_reg_n_0_[2] ),
         .Q(red_flag[2]),
         .R(u_color_detect_n_1));
   FDRE \red_flag_reg[3] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color2_reg_n_0_[3] ),
         .Q(red_flag[3]),
         .R(u_color_detect_n_1));
   FDRE \red_flag_reg[4] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color2_reg_n_0_[4] ),
         .Q(red_flag[4]),
         .R(u_color_detect_n_1));
   FDRE \red_flag_reg[5] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color2_reg_n_0_[5] ),
         .Q(red_flag[5]),
         .R(u_color_detect_n_1));
   FDRE \red_flag_reg[6] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color2_reg_n_0_[6] ),
         .Q(red_flag[6]),
         .R(u_color_detect_n_1));
@@ -33343,6 +33342,8 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .SR(u_color_detect_n_1),
         .aresetn(aresetn),
         .\hist_blue_reg[0]_0 (\hist_blue_reg[0] ),
+        .\hist_red_reg[0]_0 (\hist_red_reg[0] ),
+        .\hist_red_reg[0]_1 (\hist_red_reg[0]_0 ),
         .is_color1(is_color1),
         .is_color2(is_color2),
         .max_zone_color1(max_zone_color1),
@@ -33383,14 +33384,14 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I4(v_cnt_reg[2]),
         .I5(v_cnt_reg[4]),
         .O(\v_cnt[10]_i_3_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair77" *) 
+  (* SOFT_HLUTNM = "soft_lutpair73" *) 
   LUT2 #(
     .INIT(4'h6)) 
     \v_cnt[1]_i_1 
        (.I0(v_cnt_reg[0]),
         .I1(v_cnt_reg[1]),
         .O(p_0_in[1]));
-  (* SOFT_HLUTNM = "soft_lutpair67" *) 
+  (* SOFT_HLUTNM = "soft_lutpair63" *) 
   LUT3 #(
     .INIT(8'h78)) 
     \v_cnt[2]_i_1 
@@ -33398,7 +33399,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(v_cnt_reg[1]),
         .I2(v_cnt_reg[2]),
         .O(\v_cnt[2]_i_1_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair64" *) 
+  (* SOFT_HLUTNM = "soft_lutpair60" *) 
   LUT4 #(
     .INIT(16'h7F80)) 
     \v_cnt[3]_i_1 
@@ -33407,7 +33408,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I2(v_cnt_reg[2]),
         .I3(v_cnt_reg[3]),
         .O(p_0_in[3]));
-  (* SOFT_HLUTNM = "soft_lutpair64" *) 
+  (* SOFT_HLUTNM = "soft_lutpair60" *) 
   LUT5 #(
     .INIT(32'h7FFF8000)) 
     \v_cnt[4]_i_1 
@@ -33437,14 +33438,14 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I4(v_cnt_reg[5]),
         .I5(v_cnt_reg[6]),
         .O(p_0_in[6]));
-  (* SOFT_HLUTNM = "soft_lutpair77" *) 
+  (* SOFT_HLUTNM = "soft_lutpair73" *) 
   LUT2 #(
     .INIT(4'h7)) 
     \v_cnt[6]_i_2 
        (.I0(v_cnt_reg[1]),
         .I1(v_cnt_reg[0]),
         .O(\v_cnt[6]_i_2_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair68" *) 
+  (* SOFT_HLUTNM = "soft_lutpair64" *) 
   LUT3 #(
     .INIT(8'h78)) 
     \v_cnt[7]_i_1 
@@ -33452,7 +33453,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(v_cnt_reg[6]),
         .I2(v_cnt_reg[7]),
         .O(p_0_in[7]));
-  (* SOFT_HLUTNM = "soft_lutpair63" *) 
+  (* SOFT_HLUTNM = "soft_lutpair59" *) 
   LUT4 #(
     .INIT(16'h7F80)) 
     \v_cnt[8]_i_1 
@@ -33461,7 +33462,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I2(v_cnt_reg[7]),
         .I3(v_cnt_reg[8]),
         .O(p_0_in[8]));
-  (* SOFT_HLUTNM = "soft_lutpair63" *) 
+  (* SOFT_HLUTNM = "soft_lutpair59" *) 
   LUT5 #(
     .INIT(32'h7FFF8000)) 
     \v_cnt[9]_i_1 
@@ -33556,7 +33557,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I4(C),
         .I5(\zone_count_color1_reg_n_0_[76][0] ),
         .O(\zone_count_color1[1][0]_i_10_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair70" *) 
+  (* SOFT_HLUTNM = "soft_lutpair66" *) 
   LUT3 #(
     .INIT(8'hB8)) 
     \zone_count_color1[1][0]_i_11 
@@ -33564,7 +33565,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(zone_id[1]),
         .I2(\zone_count_color1[1][0]_i_20_n_0 ),
         .O(\zone_count_color1[1][0]_i_11_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair70" *) 
+  (* SOFT_HLUTNM = "soft_lutpair66" *) 
   LUT3 #(
     .INIT(8'hB8)) 
     \zone_count_color1[1][0]_i_12 
@@ -33572,7 +33573,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(zone_id[1]),
         .I2(\zone_count_color1[1][0]_i_22_n_0 ),
         .O(\zone_count_color1[1][0]_i_12_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair69" *) 
+  (* SOFT_HLUTNM = "soft_lutpair65" *) 
   LUT3 #(
     .INIT(8'hB8)) 
     \zone_count_color1[1][0]_i_13 
@@ -33580,7 +33581,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(zone_id[1]),
         .I2(\zone_count_color1[1][0]_i_24_n_0 ),
         .O(\zone_count_color1[1][0]_i_13_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair69" *) 
+  (* SOFT_HLUTNM = "soft_lutpair65" *) 
   LUT3 #(
     .INIT(8'hB8)) 
     \zone_count_color1[1][0]_i_14 
@@ -33588,7 +33589,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(zone_id[1]),
         .I2(\zone_count_color1[1][0]_i_26_n_0 ),
         .O(\zone_count_color1[1][0]_i_14_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair72" *) 
+  (* SOFT_HLUTNM = "soft_lutpair68" *) 
   LUT3 #(
     .INIT(8'hB8)) 
     \zone_count_color1[1][0]_i_15 
@@ -33596,7 +33597,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(zone_id[1]),
         .I2(\zone_count_color1[1][0]_i_28_n_0 ),
         .O(\zone_count_color1[1][0]_i_15_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair72" *) 
+  (* SOFT_HLUTNM = "soft_lutpair68" *) 
   LUT3 #(
     .INIT(8'hB8)) 
     \zone_count_color1[1][0]_i_16 
@@ -33604,7 +33605,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(zone_id[1]),
         .I2(\zone_count_color1[1][0]_i_30_n_0 ),
         .O(\zone_count_color1[1][0]_i_16_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair71" *) 
+  (* SOFT_HLUTNM = "soft_lutpair67" *) 
   LUT3 #(
     .INIT(8'hB8)) 
     \zone_count_color1[1][0]_i_17 
@@ -33612,7 +33613,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(zone_id[1]),
         .I2(\zone_count_color1[1][0]_i_32_n_0 ),
         .O(\zone_count_color1[1][0]_i_17_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair71" *) 
+  (* SOFT_HLUTNM = "soft_lutpair67" *) 
   LUT3 #(
     .INIT(8'hB8)) 
     \zone_count_color1[1][0]_i_18 
@@ -58108,7 +58109,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I4(C),
         .I5(\zone_count_color2_reg[76]_75 [0]),
         .O(\zone_count_color2[1][0]_i_10_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair74" *) 
+  (* SOFT_HLUTNM = "soft_lutpair70" *) 
   LUT3 #(
     .INIT(8'hB8)) 
     \zone_count_color2[1][0]_i_11 
@@ -58116,7 +58117,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(zone_id[1]),
         .I2(\zone_count_color2[1][0]_i_20_n_0 ),
         .O(\zone_count_color2[1][0]_i_11_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair74" *) 
+  (* SOFT_HLUTNM = "soft_lutpair70" *) 
   LUT3 #(
     .INIT(8'hB8)) 
     \zone_count_color2[1][0]_i_12 
@@ -58124,7 +58125,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(zone_id[1]),
         .I2(\zone_count_color2[1][0]_i_22_n_0 ),
         .O(\zone_count_color2[1][0]_i_12_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair73" *) 
+  (* SOFT_HLUTNM = "soft_lutpair69" *) 
   LUT3 #(
     .INIT(8'hB8)) 
     \zone_count_color2[1][0]_i_13 
@@ -58132,7 +58133,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(zone_id[1]),
         .I2(\zone_count_color2[1][0]_i_24_n_0 ),
         .O(\zone_count_color2[1][0]_i_13_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair73" *) 
+  (* SOFT_HLUTNM = "soft_lutpair69" *) 
   LUT3 #(
     .INIT(8'hB8)) 
     \zone_count_color2[1][0]_i_14 
@@ -58140,7 +58141,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(zone_id[1]),
         .I2(\zone_count_color2[1][0]_i_26_n_0 ),
         .O(\zone_count_color2[1][0]_i_14_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair76" *) 
+  (* SOFT_HLUTNM = "soft_lutpair72" *) 
   LUT3 #(
     .INIT(8'hB8)) 
     \zone_count_color2[1][0]_i_15 
@@ -58148,7 +58149,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(zone_id[1]),
         .I2(\zone_count_color2[1][0]_i_28_n_0 ),
         .O(\zone_count_color2[1][0]_i_15_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair76" *) 
+  (* SOFT_HLUTNM = "soft_lutpair72" *) 
   LUT3 #(
     .INIT(8'hB8)) 
     \zone_count_color2[1][0]_i_16 
@@ -58156,7 +58157,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(zone_id[1]),
         .I2(\zone_count_color2[1][0]_i_30_n_0 ),
         .O(\zone_count_color2[1][0]_i_16_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair75" *) 
+  (* SOFT_HLUTNM = "soft_lutpair71" *) 
   LUT3 #(
     .INIT(8'hB8)) 
     \zone_count_color2[1][0]_i_17 
@@ -58164,7 +58165,7 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(zone_id[1]),
         .I2(\zone_count_color2[1][0]_i_32_n_0 ),
         .O(\zone_count_color2[1][0]_i_17_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair75" *) 
+  (* SOFT_HLUTNM = "soft_lutpair71" *) 
   LUT3 #(
     .INIT(8'hB8)) 
     \zone_count_color2[1][0]_i_18 
@@ -82642,17 +82643,8 @@ module system_AXI4_HandSignal_0_0_print_grid
     \y_cnt_reg[8] ,
     o_R2__17_carry_i_7_0,
     o_R2__17_carry__0_i_1,
-    s_axis_tdata_7_sp_1,
-    s_axis_tdata_6_sp_1,
-    s_axis_tdata_5_sp_1,
-    s_axis_tdata_4_sp_1,
-    s_axis_tdata_3_sp_1,
-    s_axis_tdata_2_sp_1,
-    s_axis_tdata_1_sp_1,
-    s_axis_tdata_0_sp_1,
-    \y_cnt_reg[3] ,
-    \y_cnt_reg[3]_0 ,
-    p_1_in,
+    sw_0,
+    din,
     DI,
     S,
     o_R2_carry__1_0,
@@ -82663,25 +82655,17 @@ module system_AXI4_HandSignal_0_0_print_grid
     o_R2__17_carry__0_i_1_0,
     o_R2__29_carry_i_1,
     o_R2__29_carry__0_i_1,
-    \sync_reg1_reg[8] ,
-    \sync_reg1[15]_i_3_0 ,
+    \sync_reg1[23]_i_2_0 ,
+    \sync_reg1[23]_i_5_0 ,
+    sw,
     s_axis_tdata,
-    p_0_in);
+    p_1_in);
   output [1:0]O;
   output [1:0]\y_cnt_reg[8] ;
   output [3:0]o_R2__17_carry_i_7_0;
   output [0:0]o_R2__17_carry__0_i_1;
-  output s_axis_tdata_7_sp_1;
-  output s_axis_tdata_6_sp_1;
-  output s_axis_tdata_5_sp_1;
-  output s_axis_tdata_4_sp_1;
-  output s_axis_tdata_3_sp_1;
-  output s_axis_tdata_2_sp_1;
-  output s_axis_tdata_1_sp_1;
-  output s_axis_tdata_0_sp_1;
-  output \y_cnt_reg[3] ;
-  output \y_cnt_reg[3]_0 ;
-  output p_1_in;
+  output sw_0;
+  output [7:0]din;
   input [1:0]DI;
   input [2:0]S;
   input [3:0]o_R2_carry__1_0;
@@ -82692,15 +82676,17 @@ module system_AXI4_HandSignal_0_0_print_grid
   input [1:0]o_R2__17_carry__0_i_1_0;
   input [1:0]o_R2__29_carry_i_1;
   input [0:0]o_R2__29_carry__0_i_1;
-  input [3:0]\sync_reg1_reg[8] ;
-  input [3:0]\sync_reg1[15]_i_3_0 ;
+  input [3:0]\sync_reg1[23]_i_2_0 ;
+  input [3:0]\sync_reg1[23]_i_5_0 ;
+  input sw;
   input [7:0]s_axis_tdata;
-  input p_0_in;
+  input p_1_in;
 
   wire [1:0]DI;
   wire [1:0]O;
   wire [6:0]Q;
   wire [2:0]S;
+  wire [7:0]din;
   wire [0:0]o_R2;
   wire [0:0]o_R2__17_carry__0_i_1;
   wire [1:0]o_R2__17_carry__0_i_1_0;
@@ -82747,25 +82733,17 @@ module system_AXI4_HandSignal_0_0_print_grid
   wire o_R2_carry_n_1;
   wire o_R2_carry_n_2;
   wire o_R2_carry_n_3;
-  wire p_0_in;
   wire p_1_in;
   wire [7:0]s_axis_tdata;
-  wire s_axis_tdata_0_sn_1;
-  wire s_axis_tdata_1_sn_1;
-  wire s_axis_tdata_2_sn_1;
-  wire s_axis_tdata_3_sn_1;
-  wire s_axis_tdata_4_sn_1;
-  wire s_axis_tdata_5_sn_1;
-  wire s_axis_tdata_6_sn_1;
-  wire s_axis_tdata_7_sn_1;
-  wire \sync_reg1[15]_i_2_n_0 ;
-  wire [3:0]\sync_reg1[15]_i_3_0 ;
-  wire \sync_reg1[15]_i_3_n_0 ;
-  wire \sync_reg1[15]_i_4_n_0 ;
-  wire \sync_reg1[15]_i_6_n_0 ;
-  wire [3:0]\sync_reg1_reg[8] ;
-  wire \y_cnt_reg[3] ;
-  wire \y_cnt_reg[3]_0 ;
+  wire sw;
+  wire sw_0;
+  wire [3:0]\sync_reg1[23]_i_2_0 ;
+  wire \sync_reg1[23]_i_2_n_0 ;
+  wire \sync_reg1[23]_i_4_n_0 ;
+  wire [3:0]\sync_reg1[23]_i_5_0 ;
+  wire \sync_reg1[23]_i_5_n_0 ;
+  wire \sync_reg1[23]_i_6_n_0 ;
+  wire \sync_reg1[23]_i_7_n_0 ;
   wire [1:0]\y_cnt_reg[8] ;
   wire [3:0]NLW_o_R2__17_carry__0_CO_UNCONNECTED;
   wire [3:1]NLW_o_R2__17_carry__0_O_UNCONNECTED;
@@ -82776,14 +82754,69 @@ module system_AXI4_HandSignal_0_0_print_grid
   wire [3:1]NLW_o_R2_carry__2_CO_UNCONNECTED;
   wire [3:2]NLW_o_R2_carry__2_O_UNCONNECTED;
 
-  assign s_axis_tdata_0_sp_1 = s_axis_tdata_0_sn_1;
-  assign s_axis_tdata_1_sp_1 = s_axis_tdata_1_sn_1;
-  assign s_axis_tdata_2_sp_1 = s_axis_tdata_2_sn_1;
-  assign s_axis_tdata_3_sp_1 = s_axis_tdata_3_sn_1;
-  assign s_axis_tdata_4_sp_1 = s_axis_tdata_4_sn_1;
-  assign s_axis_tdata_5_sp_1 = s_axis_tdata_5_sn_1;
-  assign s_axis_tdata_6_sp_1 = s_axis_tdata_6_sn_1;
-  assign s_axis_tdata_7_sp_1 = s_axis_tdata_7_sn_1;
+  (* SOFT_HLUTNM = "soft_lutpair74" *) 
+  LUT3 #(
+    .INIT(8'hF4)) 
+    \dout_reg[0]_srl3_i_1 
+       (.I0(\sync_reg1[23]_i_2_n_0 ),
+        .I1(sw),
+        .I2(s_axis_tdata[0]),
+        .O(din[0]));
+  (* SOFT_HLUTNM = "soft_lutpair75" *) 
+  LUT3 #(
+    .INIT(8'hF4)) 
+    \dout_reg[1]_srl3_i_1 
+       (.I0(\sync_reg1[23]_i_2_n_0 ),
+        .I1(sw),
+        .I2(s_axis_tdata[1]),
+        .O(din[1]));
+  (* SOFT_HLUTNM = "soft_lutpair75" *) 
+  LUT3 #(
+    .INIT(8'hF4)) 
+    \dout_reg[2]_srl3_i_1 
+       (.I0(\sync_reg1[23]_i_2_n_0 ),
+        .I1(sw),
+        .I2(s_axis_tdata[2]),
+        .O(din[2]));
+  (* SOFT_HLUTNM = "soft_lutpair76" *) 
+  LUT3 #(
+    .INIT(8'hF4)) 
+    \dout_reg[3]_srl3_i_1 
+       (.I0(\sync_reg1[23]_i_2_n_0 ),
+        .I1(sw),
+        .I2(s_axis_tdata[3]),
+        .O(din[3]));
+  (* SOFT_HLUTNM = "soft_lutpair76" *) 
+  LUT3 #(
+    .INIT(8'hF4)) 
+    \dout_reg[4]_srl3_i_1 
+       (.I0(\sync_reg1[23]_i_2_n_0 ),
+        .I1(sw),
+        .I2(s_axis_tdata[4]),
+        .O(din[4]));
+  (* SOFT_HLUTNM = "soft_lutpair77" *) 
+  LUT3 #(
+    .INIT(8'hF4)) 
+    \dout_reg[5]_srl3_i_1 
+       (.I0(\sync_reg1[23]_i_2_n_0 ),
+        .I1(sw),
+        .I2(s_axis_tdata[5]),
+        .O(din[5]));
+  (* SOFT_HLUTNM = "soft_lutpair77" *) 
+  LUT3 #(
+    .INIT(8'hF4)) 
+    \dout_reg[6]_srl3_i_1 
+       (.I0(\sync_reg1[23]_i_2_n_0 ),
+        .I1(sw),
+        .I2(s_axis_tdata[6]),
+        .O(din[6]));
+  LUT3 #(
+    .INIT(8'hF4)) 
+    \dout_reg[7]_srl3_i_1 
+       (.I0(\sync_reg1[23]_i_2_n_0 ),
+        .I1(sw),
+        .I2(s_axis_tdata[7]),
+        .O(din[7]));
   CARRY4 o_R2__17_carry
        (.CI(1'b0),
         .CO({o_R2__17_carry_n_0,o_R2__17_carry_n_1,o_R2__17_carry_n_2,o_R2__17_carry_n_3}),
@@ -82841,7 +82874,7 @@ module system_AXI4_HandSignal_0_0_print_grid
         .CYINIT(1'b1),
         .DI({Q[2:0],DI[0]}),
         .O({o_R2__29_carry_n_4,o_R2__29_carry_n_5,o_R2__29_carry_n_6,o_R2}),
-        .S(\sync_reg1_reg[8] ));
+        .S(\sync_reg1[23]_i_2_0 ));
   (* ADDER_THRESHOLD = "35" *) 
   CARRY4 o_R2__29_carry__0
        (.CI(o_R2__29_carry_n_0),
@@ -82849,7 +82882,7 @@ module system_AXI4_HandSignal_0_0_print_grid
         .CYINIT(1'b0),
         .DI({1'b0,Q[5:3]}),
         .O({o_R2__29_carry__0_n_4,o_R2__29_carry__0_n_5,o_R2__29_carry__0_n_6,o_R2__29_carry__0_n_7}),
-        .S(\sync_reg1[15]_i_3_0 ));
+        .S(\sync_reg1[23]_i_5_0 ));
   (* ADDER_THRESHOLD = "35" *) 
   CARRY4 o_R2_carry
        (.CI(1'b0),
@@ -82882,151 +82915,59 @@ module system_AXI4_HandSignal_0_0_print_grid
         .DI({1'b0,1'b0,1'b0,Q[6]}),
         .O({NLW_o_R2_carry__2_O_UNCONNECTED[3:2],\y_cnt_reg[8] }),
         .S({1'b0,1'b0,o_R2__17_carry__0_i_1_0}));
+  (* SOFT_HLUTNM = "soft_lutpair74" *) 
+  LUT2 #(
+    .INIT(4'h2)) 
+    \sync_reg1[23]_i_1 
+       (.I0(sw),
+        .I1(\sync_reg1[23]_i_2_n_0 ),
+        .O(sw_0));
   LUT6 #(
-    .INIT(64'hFFFFFF2800000000)) 
-    \sync_reg1[0]_i_1 
-       (.I0(o_R2),
-        .I1(\sync_reg1[15]_i_2_n_0 ),
-        .I2(o_R2__29_carry_n_6),
-        .I3(\sync_reg1[15]_i_3_n_0 ),
-        .I4(\sync_reg1[15]_i_4_n_0 ),
-        .I5(s_axis_tdata[0]),
-        .O(s_axis_tdata_0_sn_1));
-  LUT6 #(
-    .INIT(64'hFFFFFFFF000000D7)) 
-    \sync_reg1[15]_i_1 
-       (.I0(o_R2),
-        .I1(\sync_reg1[15]_i_2_n_0 ),
-        .I2(o_R2__29_carry_n_6),
-        .I3(\sync_reg1[15]_i_3_n_0 ),
-        .I4(\sync_reg1[15]_i_4_n_0 ),
-        .I5(p_0_in),
-        .O(\y_cnt_reg[3]_0 ));
-  LUT3 #(
-    .INIT(8'hF8)) 
-    \sync_reg1[15]_i_2 
-       (.I0(\sync_reg1[15]_i_6_n_0 ),
-        .I1(o_R2__29_carry__0_n_5),
-        .I2(o_R2__29_carry__0_n_4),
-        .O(\sync_reg1[15]_i_2_n_0 ));
-  LUT6 #(
-    .INIT(64'hBEBEBEDEDEDEDEDE)) 
-    \sync_reg1[15]_i_3 
-       (.I0(o_R2__29_carry__0_n_6),
-        .I1(o_R2__29_carry__0_n_7),
-        .I2(\sync_reg1[15]_i_2_n_0 ),
+    .INIT(64'h5455555454545454)) 
+    \sync_reg1[23]_i_2 
+       (.I0(p_1_in),
+        .I1(\sync_reg1[23]_i_4_n_0 ),
+        .I2(\sync_reg1[23]_i_5_n_0 ),
         .I3(o_R2__29_carry_n_6),
-        .I4(o_R2__29_carry_n_5),
-        .I5(o_R2__29_carry_n_4),
-        .O(\sync_reg1[15]_i_3_n_0 ));
+        .I4(\sync_reg1[23]_i_6_n_0 ),
+        .I5(o_R2),
+        .O(\sync_reg1[23]_i_2_n_0 ));
   LUT6 #(
     .INIT(64'h9FFF9FFCFF9FFFFC)) 
-    \sync_reg1[15]_i_4 
+    \sync_reg1[23]_i_4 
        (.I0(o_R2__29_carry_n_6),
         .I1(o_R2__29_carry_n_5),
         .I2(o_R2__29_carry_n_4),
         .I3(o_R2__29_carry__0_n_5),
         .I4(o_R2__29_carry__0_n_4),
-        .I5(\sync_reg1[15]_i_6_n_0 ),
-        .O(\sync_reg1[15]_i_4_n_0 ));
+        .I5(\sync_reg1[23]_i_7_n_0 ),
+        .O(\sync_reg1[23]_i_4_n_0 ));
+  LUT6 #(
+    .INIT(64'hBEBEBEDEDEDEDEDE)) 
+    \sync_reg1[23]_i_5 
+       (.I0(o_R2__29_carry__0_n_6),
+        .I1(o_R2__29_carry__0_n_7),
+        .I2(\sync_reg1[23]_i_6_n_0 ),
+        .I3(o_R2__29_carry_n_6),
+        .I4(o_R2__29_carry_n_5),
+        .I5(o_R2__29_carry_n_4),
+        .O(\sync_reg1[23]_i_5_n_0 ));
+  LUT3 #(
+    .INIT(8'hF8)) 
+    \sync_reg1[23]_i_6 
+       (.I0(\sync_reg1[23]_i_7_n_0 ),
+        .I1(o_R2__29_carry__0_n_5),
+        .I2(o_R2__29_carry__0_n_4),
+        .O(\sync_reg1[23]_i_6_n_0 ));
   LUT5 #(
     .INIT(32'hFFFFA800)) 
-    \sync_reg1[15]_i_6 
+    \sync_reg1[23]_i_7 
        (.I0(o_R2__29_carry_n_4),
         .I1(o_R2__29_carry_n_5),
         .I2(o_R2__29_carry_n_6),
         .I3(o_R2__29_carry__0_n_7),
         .I4(o_R2__29_carry__0_n_6),
-        .O(\sync_reg1[15]_i_6_n_0 ));
-  LUT6 #(
-    .INIT(64'hFFFFFF2800000000)) 
-    \sync_reg1[1]_i_1 
-       (.I0(o_R2),
-        .I1(\sync_reg1[15]_i_2_n_0 ),
-        .I2(o_R2__29_carry_n_6),
-        .I3(\sync_reg1[15]_i_3_n_0 ),
-        .I4(\sync_reg1[15]_i_4_n_0 ),
-        .I5(s_axis_tdata[1]),
-        .O(s_axis_tdata_1_sn_1));
-  LUT5 #(
-    .INIT(32'h000000D7)) 
-    \sync_reg1[23]_i_1 
-       (.I0(o_R2),
-        .I1(\sync_reg1[15]_i_2_n_0 ),
-        .I2(o_R2__29_carry_n_6),
-        .I3(\sync_reg1[15]_i_3_n_0 ),
-        .I4(\sync_reg1[15]_i_4_n_0 ),
-        .O(p_1_in));
-  LUT6 #(
-    .INIT(64'hFFFFFF2800000000)) 
-    \sync_reg1[2]_i_1 
-       (.I0(o_R2),
-        .I1(\sync_reg1[15]_i_2_n_0 ),
-        .I2(o_R2__29_carry_n_6),
-        .I3(\sync_reg1[15]_i_3_n_0 ),
-        .I4(\sync_reg1[15]_i_4_n_0 ),
-        .I5(s_axis_tdata[2]),
-        .O(s_axis_tdata_2_sn_1));
-  LUT6 #(
-    .INIT(64'hFFFFFF2800000000)) 
-    \sync_reg1[3]_i_1 
-       (.I0(o_R2),
-        .I1(\sync_reg1[15]_i_2_n_0 ),
-        .I2(o_R2__29_carry_n_6),
-        .I3(\sync_reg1[15]_i_3_n_0 ),
-        .I4(\sync_reg1[15]_i_4_n_0 ),
-        .I5(s_axis_tdata[3]),
-        .O(s_axis_tdata_3_sn_1));
-  LUT6 #(
-    .INIT(64'hFFFFFF2800000000)) 
-    \sync_reg1[4]_i_1 
-       (.I0(o_R2),
-        .I1(\sync_reg1[15]_i_2_n_0 ),
-        .I2(o_R2__29_carry_n_6),
-        .I3(\sync_reg1[15]_i_3_n_0 ),
-        .I4(\sync_reg1[15]_i_4_n_0 ),
-        .I5(s_axis_tdata[4]),
-        .O(s_axis_tdata_4_sn_1));
-  LUT6 #(
-    .INIT(64'hFFFFFF2800000000)) 
-    \sync_reg1[5]_i_1 
-       (.I0(o_R2),
-        .I1(\sync_reg1[15]_i_2_n_0 ),
-        .I2(o_R2__29_carry_n_6),
-        .I3(\sync_reg1[15]_i_3_n_0 ),
-        .I4(\sync_reg1[15]_i_4_n_0 ),
-        .I5(s_axis_tdata[5]),
-        .O(s_axis_tdata_5_sn_1));
-  LUT6 #(
-    .INIT(64'hFFFFFF2800000000)) 
-    \sync_reg1[6]_i_1 
-       (.I0(o_R2),
-        .I1(\sync_reg1[15]_i_2_n_0 ),
-        .I2(o_R2__29_carry_n_6),
-        .I3(\sync_reg1[15]_i_3_n_0 ),
-        .I4(\sync_reg1[15]_i_4_n_0 ),
-        .I5(s_axis_tdata[6]),
-        .O(s_axis_tdata_6_sn_1));
-  LUT6 #(
-    .INIT(64'hFFFFFF2800000000)) 
-    \sync_reg1[7]_i_1 
-       (.I0(o_R2),
-        .I1(\sync_reg1[15]_i_2_n_0 ),
-        .I2(o_R2__29_carry_n_6),
-        .I3(\sync_reg1[15]_i_3_n_0 ),
-        .I4(\sync_reg1[15]_i_4_n_0 ),
-        .I5(p_0_in),
-        .O(\y_cnt_reg[3] ));
-  LUT6 #(
-    .INIT(64'hFFFFFF2800000000)) 
-    \sync_reg1[7]_i_2 
-       (.I0(o_R2),
-        .I1(\sync_reg1[15]_i_2_n_0 ),
-        .I2(o_R2__29_carry_n_6),
-        .I3(\sync_reg1[15]_i_3_n_0 ),
-        .I4(\sync_reg1[15]_i_4_n_0 ),
-        .I5(s_axis_tdata[7]),
-        .O(s_axis_tdata_7_sn_1));
+        .O(\sync_reg1[23]_i_7_n_0 ));
 endmodule
 
 (* ORIG_REF_NAME = "rgb_color_detect" *) 
@@ -83040,6 +82981,8 @@ module system_AXI4_HandSignal_0_0_rgb_color_detect
     s_axis_tdata,
     CO,
     \hist_blue_reg[0]_0 ,
+    \hist_red_reg[0]_0 ,
+    \hist_red_reg[0]_1 ,
     s_axis_tvalid,
     \max_zone_color1_reg[0]_rep__1 ,
     \max_zone_color2_reg[0]_rep__1 ,
@@ -83053,6 +82996,8 @@ module system_AXI4_HandSignal_0_0_rgb_color_detect
   input [15:0]s_axis_tdata;
   input [0:0]CO;
   input [0:0]\hist_blue_reg[0]_0 ;
+  input [0:0]\hist_red_reg[0]_0 ;
+  input [0:0]\hist_red_reg[0]_1 ;
   input s_axis_tvalid;
   input [0:0]\max_zone_color1_reg[0]_rep__1 ;
   input [0:0]\max_zone_color2_reg[0]_rep__1 ;
@@ -83062,54 +83007,15 @@ module system_AXI4_HandSignal_0_0_rgb_color_detect
   wire [0:0]SR;
   wire aresetn;
   wire [6:0]hist_blue;
-  wire \hist_blue[0]_i_18_n_0 ;
-  wire \hist_blue[0]_i_19_n_0 ;
-  wire \hist_blue[0]_i_1_n_0 ;
-  wire \hist_blue[0]_i_20_n_0 ;
-  wire \hist_blue[0]_i_21_n_0 ;
-  wire \hist_blue[0]_i_22_n_0 ;
-  wire \hist_blue[0]_i_23_n_0 ;
-  wire \hist_blue[0]_i_24_n_0 ;
-  wire \hist_blue[0]_i_25_n_0 ;
-  wire \hist_blue[0]_i_26_n_0 ;
-  wire \hist_blue[0]_i_27_n_0 ;
-  wire \hist_blue[0]_i_3_n_0 ;
-  wire \hist_blue[0]_i_8_n_0 ;
+  wire \hist_blue[0]_i_2_n_0 ;
   wire [7:7]hist_blue__0;
   wire [0:0]\hist_blue_reg[0]_0 ;
-  wire \hist_blue_reg[0]_i_17_n_0 ;
-  wire \hist_blue_reg[0]_i_17_n_1 ;
-  wire \hist_blue_reg[0]_i_17_n_2 ;
-  wire \hist_blue_reg[0]_i_17_n_3 ;
-  wire \hist_blue_reg[0]_i_4_n_3 ;
-  wire \hist_blue_reg[0]_i_7_n_0 ;
-  wire \hist_blue_reg[0]_i_7_n_1 ;
-  wire \hist_blue_reg[0]_i_7_n_2 ;
-  wire \hist_blue_reg[0]_i_7_n_3 ;
   wire [6:0]hist_red;
-  wire \hist_red[0]_i_18_n_0 ;
-  wire \hist_red[0]_i_19_n_0 ;
   wire \hist_red[0]_i_1_n_0 ;
-  wire \hist_red[0]_i_20_n_0 ;
-  wire \hist_red[0]_i_21_n_0 ;
-  wire \hist_red[0]_i_22_n_0 ;
-  wire \hist_red[0]_i_23_n_0 ;
-  wire \hist_red[0]_i_24_n_0 ;
-  wire \hist_red[0]_i_25_n_0 ;
-  wire \hist_red[0]_i_26_n_0 ;
-  wire \hist_red[0]_i_27_n_0 ;
-  wire \hist_red[0]_i_4_n_0 ;
-  wire \hist_red[0]_i_8_n_0 ;
+  wire \hist_red[0]_i_3_n_0 ;
   wire [7:7]hist_red__0;
-  wire \hist_red_reg[0]_i_17_n_0 ;
-  wire \hist_red_reg[0]_i_17_n_1 ;
-  wire \hist_red_reg[0]_i_17_n_2 ;
-  wire \hist_red_reg[0]_i_17_n_3 ;
-  wire \hist_red_reg[0]_i_3_n_3 ;
-  wire \hist_red_reg[0]_i_7_n_0 ;
-  wire \hist_red_reg[0]_i_7_n_1 ;
-  wire \hist_red_reg[0]_i_7_n_2 ;
-  wire \hist_red_reg[0]_i_7_n_3 ;
+  wire [0:0]\hist_red_reg[0]_0 ;
+  wire [0:0]\hist_red_reg[0]_1 ;
   wire is_blue_i_1_n_0;
   wire is_blue_i_2_n_0;
   wire is_color1;
@@ -83120,132 +83026,41 @@ module system_AXI4_HandSignal_0_0_rgb_color_detect
   wire [0:0]\max_zone_color1_reg[0]_rep__1 ;
   wire max_zone_color2;
   wire [0:0]\max_zone_color2_reg[0]_rep__1 ;
+  wire [0:0]p_2_out;
   wire pclk;
   wire [15:0]s_axis_tdata;
   wire s_axis_tvalid;
-  wire [3:0]\NLW_hist_blue_reg[0]_i_17_O_UNCONNECTED ;
-  wire [3:1]\NLW_hist_blue_reg[0]_i_4_CO_UNCONNECTED ;
-  wire [3:0]\NLW_hist_blue_reg[0]_i_4_O_UNCONNECTED ;
-  wire [3:0]\NLW_hist_blue_reg[0]_i_7_O_UNCONNECTED ;
-  wire [3:0]\NLW_hist_red_reg[0]_i_17_O_UNCONNECTED ;
-  wire [3:1]\NLW_hist_red_reg[0]_i_3_CO_UNCONNECTED ;
-  wire [3:0]\NLW_hist_red_reg[0]_i_3_O_UNCONNECTED ;
-  wire [3:0]\NLW_hist_red_reg[0]_i_7_O_UNCONNECTED ;
 
-  LUT5 #(
-    .INIT(32'h0000A888)) 
-    \hist_blue[0]_i_1 
-       (.I0(\hist_blue_reg[0]_0 ),
-        .I1(s_axis_tdata[7]),
-        .I2(\hist_blue[0]_i_3_n_0 ),
-        .I3(s_axis_tdata[6]),
-        .I4(\hist_blue_reg[0]_i_4_n_3 ),
-        .O(\hist_blue[0]_i_1_n_0 ));
-  LUT2 #(
-    .INIT(4'h2)) 
-    \hist_blue[0]_i_18 
-       (.I0(s_axis_tdata[14]),
-        .I1(s_axis_tdata[6]),
-        .O(\hist_blue[0]_i_18_n_0 ));
   LUT1 #(
     .INIT(2'h1)) 
-    \hist_blue[0]_i_19 
-       (.I0(s_axis_tdata[5]),
-        .O(\hist_blue[0]_i_19_n_0 ));
-  LUT4 #(
-    .INIT(16'hB44B)) 
-    \hist_blue[0]_i_20 
-       (.I0(s_axis_tdata[6]),
-        .I1(s_axis_tdata[14]),
-        .I2(s_axis_tdata[7]),
-        .I3(s_axis_tdata[15]),
-        .O(\hist_blue[0]_i_20_n_0 ));
-  LUT3 #(
-    .INIT(8'h96)) 
-    \hist_blue[0]_i_21 
-       (.I0(s_axis_tdata[5]),
-        .I1(s_axis_tdata[6]),
-        .I2(s_axis_tdata[14]),
-        .O(\hist_blue[0]_i_21_n_0 ));
-  LUT2 #(
-    .INIT(4'h6)) 
-    \hist_blue[0]_i_22 
-       (.I0(s_axis_tdata[5]),
-        .I1(s_axis_tdata[13]),
-        .O(\hist_blue[0]_i_22_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_blue[0]_i_23 
-       (.I0(s_axis_tdata[12]),
-        .I1(s_axis_tdata[4]),
-        .O(\hist_blue[0]_i_23_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_blue[0]_i_24 
-       (.I0(s_axis_tdata[11]),
-        .I1(s_axis_tdata[3]),
-        .O(\hist_blue[0]_i_24_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_blue[0]_i_25 
-       (.I0(s_axis_tdata[10]),
-        .I1(s_axis_tdata[2]),
-        .O(\hist_blue[0]_i_25_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_blue[0]_i_26 
-       (.I0(s_axis_tdata[9]),
+    \blue_flag[0]_i_1 
+       (.I0(aresetn),
+        .O(SR));
+  LUT5 #(
+    .INIT(32'h00A80000)) 
+    \hist_blue[0]_i_1 
+       (.I0(s_axis_tdata[7]),
         .I1(s_axis_tdata[1]),
-        .O(\hist_blue[0]_i_26_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_blue[0]_i_27 
-       (.I0(s_axis_tdata[8]),
-        .I1(s_axis_tdata[0]),
-        .O(\hist_blue[0]_i_27_n_0 ));
+        .I2(\hist_blue[0]_i_2_n_0 ),
+        .I3(CO),
+        .I4(\hist_blue_reg[0]_0 ),
+        .O(p_2_out));
   LUT6 #(
     .INIT(64'hFFFFFFFFFFFFFFFE)) 
-    \hist_blue[0]_i_3 
+    \hist_blue[0]_i_2 
        (.I0(s_axis_tdata[2]),
-        .I1(s_axis_tdata[1]),
+        .I1(s_axis_tdata[0]),
         .I2(s_axis_tdata[5]),
-        .I3(s_axis_tdata[0]),
-        .I4(s_axis_tdata[3]),
-        .I5(s_axis_tdata[4]),
-        .O(\hist_blue[0]_i_3_n_0 ));
-  LUT2 #(
-    .INIT(4'hB)) 
-    \hist_blue[0]_i_8 
-       (.I0(s_axis_tdata[7]),
-        .I1(s_axis_tdata[15]),
-        .O(\hist_blue[0]_i_8_n_0 ));
+        .I3(s_axis_tdata[4]),
+        .I4(s_axis_tdata[6]),
+        .I5(s_axis_tdata[3]),
+        .O(\hist_blue[0]_i_2_n_0 ));
   FDCE \hist_blue_reg[0] 
        (.C(pclk),
         .CE(1'b1),
         .CLR(SR),
-        .D(\hist_blue[0]_i_1_n_0 ),
+        .D(p_2_out),
         .Q(hist_blue[0]));
-  CARRY4 \hist_blue_reg[0]_i_17 
-       (.CI(1'b0),
-        .CO({\hist_blue_reg[0]_i_17_n_0 ,\hist_blue_reg[0]_i_17_n_1 ,\hist_blue_reg[0]_i_17_n_2 ,\hist_blue_reg[0]_i_17_n_3 }),
-        .CYINIT(1'b1),
-        .DI(s_axis_tdata[11:8]),
-        .O(\NLW_hist_blue_reg[0]_i_17_O_UNCONNECTED [3:0]),
-        .S({\hist_blue[0]_i_24_n_0 ,\hist_blue[0]_i_25_n_0 ,\hist_blue[0]_i_26_n_0 ,\hist_blue[0]_i_27_n_0 }));
-  CARRY4 \hist_blue_reg[0]_i_4 
-       (.CI(\hist_blue_reg[0]_i_7_n_0 ),
-        .CO({\NLW_hist_blue_reg[0]_i_4_CO_UNCONNECTED [3:1],\hist_blue_reg[0]_i_4_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b1}),
-        .O(\NLW_hist_blue_reg[0]_i_4_O_UNCONNECTED [3:0]),
-        .S({1'b0,1'b0,1'b0,\hist_blue[0]_i_8_n_0 }));
-  CARRY4 \hist_blue_reg[0]_i_7 
-       (.CI(\hist_blue_reg[0]_i_17_n_0 ),
-        .CO({\hist_blue_reg[0]_i_7_n_0 ,\hist_blue_reg[0]_i_7_n_1 ,\hist_blue_reg[0]_i_7_n_2 ,\hist_blue_reg[0]_i_7_n_3 }),
-        .CYINIT(1'b0),
-        .DI({\hist_blue[0]_i_18_n_0 ,\hist_blue[0]_i_19_n_0 ,s_axis_tdata[5],s_axis_tdata[12]}),
-        .O(\NLW_hist_blue_reg[0]_i_7_O_UNCONNECTED [3:0]),
-        .S({\hist_blue[0]_i_20_n_0 ,\hist_blue[0]_i_21_n_0 ,\hist_blue[0]_i_22_n_0 ,\hist_blue[0]_i_23_n_0 }));
   FDCE \hist_blue_reg[1] 
        (.C(pclk),
         .CE(1'b1),
@@ -83289,119 +83104,30 @@ module system_AXI4_HandSignal_0_0_rgb_color_detect
         .D(hist_blue[6]),
         .Q(hist_blue__0));
   LUT5 #(
-    .INIT(32'h22202020)) 
+    .INIT(32'h54000000)) 
     \hist_red[0]_i_1 
-       (.I0(CO),
-        .I1(\hist_red_reg[0]_i_3_n_3 ),
-        .I2(s_axis_tdata[15]),
-        .I3(\hist_red[0]_i_4_n_0 ),
-        .I4(s_axis_tdata[14]),
-        .O(\hist_red[0]_i_1_n_0 ));
-  LUT2 #(
-    .INIT(4'h2)) 
-    \hist_red[0]_i_18 
-       (.I0(s_axis_tdata[6]),
-        .I1(s_axis_tdata[14]),
-        .O(\hist_red[0]_i_18_n_0 ));
-  LUT1 #(
-    .INIT(2'h1)) 
-    \hist_red[0]_i_19 
-       (.I0(s_axis_tdata[13]),
-        .O(\hist_red[0]_i_19_n_0 ));
-  LUT4 #(
-    .INIT(16'hB44B)) 
-    \hist_red[0]_i_20 
-       (.I0(s_axis_tdata[14]),
-        .I1(s_axis_tdata[6]),
-        .I2(s_axis_tdata[15]),
-        .I3(s_axis_tdata[7]),
-        .O(\hist_red[0]_i_20_n_0 ));
-  LUT3 #(
-    .INIT(8'h96)) 
-    \hist_red[0]_i_21 
-       (.I0(s_axis_tdata[13]),
-        .I1(s_axis_tdata[14]),
-        .I2(s_axis_tdata[6]),
-        .O(\hist_red[0]_i_21_n_0 ));
-  LUT2 #(
-    .INIT(4'h6)) 
-    \hist_red[0]_i_22 
-       (.I0(s_axis_tdata[13]),
-        .I1(s_axis_tdata[5]),
-        .O(\hist_red[0]_i_22_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_red[0]_i_23 
-       (.I0(s_axis_tdata[4]),
-        .I1(s_axis_tdata[12]),
-        .O(\hist_red[0]_i_23_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_red[0]_i_24 
-       (.I0(s_axis_tdata[3]),
-        .I1(s_axis_tdata[11]),
-        .O(\hist_red[0]_i_24_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_red[0]_i_25 
-       (.I0(s_axis_tdata[2]),
-        .I1(s_axis_tdata[10]),
-        .O(\hist_red[0]_i_25_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_red[0]_i_26 
-       (.I0(s_axis_tdata[1]),
+       (.I0(\hist_red_reg[0]_0 ),
         .I1(s_axis_tdata[9]),
-        .O(\hist_red[0]_i_26_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_red[0]_i_27 
-       (.I0(s_axis_tdata[0]),
-        .I1(s_axis_tdata[8]),
-        .O(\hist_red[0]_i_27_n_0 ));
+        .I2(\hist_red[0]_i_3_n_0 ),
+        .I3(s_axis_tdata[15]),
+        .I4(\hist_red_reg[0]_1 ),
+        .O(\hist_red[0]_i_1_n_0 ));
   LUT6 #(
     .INIT(64'hFFFFFFFFFFFFFFFE)) 
-    \hist_red[0]_i_4 
+    \hist_red[0]_i_3 
        (.I0(s_axis_tdata[10]),
-        .I1(s_axis_tdata[9]),
-        .I2(s_axis_tdata[13]),
-        .I3(s_axis_tdata[8]),
-        .I4(s_axis_tdata[11]),
-        .I5(s_axis_tdata[12]),
-        .O(\hist_red[0]_i_4_n_0 ));
-  LUT2 #(
-    .INIT(4'hB)) 
-    \hist_red[0]_i_8 
-       (.I0(s_axis_tdata[15]),
-        .I1(s_axis_tdata[7]),
-        .O(\hist_red[0]_i_8_n_0 ));
+        .I1(s_axis_tdata[13]),
+        .I2(s_axis_tdata[8]),
+        .I3(s_axis_tdata[14]),
+        .I4(s_axis_tdata[12]),
+        .I5(s_axis_tdata[11]),
+        .O(\hist_red[0]_i_3_n_0 ));
   FDCE \hist_red_reg[0] 
        (.C(pclk),
         .CE(1'b1),
         .CLR(SR),
         .D(\hist_red[0]_i_1_n_0 ),
         .Q(hist_red[0]));
-  CARRY4 \hist_red_reg[0]_i_17 
-       (.CI(1'b0),
-        .CO({\hist_red_reg[0]_i_17_n_0 ,\hist_red_reg[0]_i_17_n_1 ,\hist_red_reg[0]_i_17_n_2 ,\hist_red_reg[0]_i_17_n_3 }),
-        .CYINIT(1'b1),
-        .DI(s_axis_tdata[3:0]),
-        .O(\NLW_hist_red_reg[0]_i_17_O_UNCONNECTED [3:0]),
-        .S({\hist_red[0]_i_24_n_0 ,\hist_red[0]_i_25_n_0 ,\hist_red[0]_i_26_n_0 ,\hist_red[0]_i_27_n_0 }));
-  CARRY4 \hist_red_reg[0]_i_3 
-       (.CI(\hist_red_reg[0]_i_7_n_0 ),
-        .CO({\NLW_hist_red_reg[0]_i_3_CO_UNCONNECTED [3:1],\hist_red_reg[0]_i_3_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b1}),
-        .O(\NLW_hist_red_reg[0]_i_3_O_UNCONNECTED [3:0]),
-        .S({1'b0,1'b0,1'b0,\hist_red[0]_i_8_n_0 }));
-  CARRY4 \hist_red_reg[0]_i_7 
-       (.CI(\hist_red_reg[0]_i_17_n_0 ),
-        .CO({\hist_red_reg[0]_i_7_n_0 ,\hist_red_reg[0]_i_7_n_1 ,\hist_red_reg[0]_i_7_n_2 ,\hist_red_reg[0]_i_7_n_3 }),
-        .CYINIT(1'b0),
-        .DI({\hist_red[0]_i_18_n_0 ,\hist_red[0]_i_19_n_0 ,s_axis_tdata[13],s_axis_tdata[4]}),
-        .O(\NLW_hist_red_reg[0]_i_7_O_UNCONNECTED [3:0]),
-        .S({\hist_red[0]_i_20_n_0 ,\hist_red[0]_i_21_n_0 ,\hist_red[0]_i_22_n_0 ,\hist_red[0]_i_23_n_0 }));
   FDCE \hist_red_reg[1] 
        (.C(pclk),
         .CE(1'b1),
@@ -83490,7 +83216,7 @@ module system_AXI4_HandSignal_0_0_rgb_color_detect
         .CLR(SR),
         .D(is_red_i_1_n_0),
         .Q(is_color2));
-  (* SOFT_HLUTNM = "soft_lutpair62" *) 
+  (* SOFT_HLUTNM = "soft_lutpair58" *) 
   LUT3 #(
     .INIT(8'h80)) 
     \max_zone_color1[6]_i_1 
@@ -83498,7 +83224,7 @@ module system_AXI4_HandSignal_0_0_rgb_color_detect
         .I1(\max_zone_color1_reg[0]_rep__1 ),
         .I2(is_color1),
         .O(max_zone_color1));
-  (* SOFT_HLUTNM = "soft_lutpair62" *) 
+  (* SOFT_HLUTNM = "soft_lutpair58" *) 
   LUT3 #(
     .INIT(8'h80)) 
     \max_zone_color2[6]_i_1 
@@ -83506,11 +83232,6 @@ module system_AXI4_HandSignal_0_0_rgb_color_detect
         .I1(\max_zone_color2_reg[0]_rep__1 ),
         .I2(is_color2),
         .O(max_zone_color2));
-  LUT1 #(
-    .INIT(2'h1)) 
-    \red_flag[0]_i_1 
-       (.I0(aresetn),
-        .O(SR));
 endmodule
 `ifndef GLBL
 `define GLBL

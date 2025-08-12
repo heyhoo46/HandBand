@@ -1,7 +1,7 @@
 --Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
---Date        : Fri Aug  1 17:17:55 2025
+--Date        : Fri Aug  8 20:03:18 2025
 --Host        : DESKTOP-7CFQ9ND running 64-bit major release  (build 9200)
 --Command     : generate_target system_wrapper.bd
 --Design      : system_wrapper
@@ -52,7 +52,8 @@ entity system_wrapper is
     hdmi_tx_clk_p : out STD_LOGIC;
     hdmi_tx_data_n : out STD_LOGIC_VECTOR ( 2 downto 0 );
     hdmi_tx_data_p : out STD_LOGIC_VECTOR ( 2 downto 0 );
-    start_raw : in STD_LOGIC
+    start_raw : in STD_LOGIC;
+    sw : in STD_LOGIC
   );
 end system_wrapper;
 
@@ -69,19 +70,7 @@ architecture STRUCTURE of system_wrapper is
     MOSI : out STD_LOGIC;
     CS : out STD_LOGIC_VECTOR ( 0 to 0 );
     SCLK : out STD_LOGIC;
-    cam_iic_sda_i : in STD_LOGIC;
-    cam_iic_sda_o : out STD_LOGIC;
-    cam_iic_sda_t : out STD_LOGIC;
-    cam_iic_scl_i : in STD_LOGIC;
-    cam_iic_scl_o : out STD_LOGIC;
-    cam_iic_scl_t : out STD_LOGIC;
-    hdmi_tx_clk_p : out STD_LOGIC;
-    hdmi_tx_clk_n : out STD_LOGIC;
-    hdmi_tx_data_p : out STD_LOGIC_VECTOR ( 2 downto 0 );
-    hdmi_tx_data_n : out STD_LOGIC_VECTOR ( 2 downto 0 );
-    cam_gpio_tri_i : in STD_LOGIC_VECTOR ( 0 to 0 );
-    cam_gpio_tri_o : out STD_LOGIC_VECTOR ( 0 to 0 );
-    cam_gpio_tri_t : out STD_LOGIC_VECTOR ( 0 to 0 );
+    sw : in STD_LOGIC;
     dphy_hs_clock_clk_p : in STD_LOGIC;
     dphy_hs_clock_clk_n : in STD_LOGIC;
     FIXED_IO_mio : inout STD_LOGIC_VECTOR ( 53 downto 0 );
@@ -90,6 +79,10 @@ architecture STRUCTURE of system_wrapper is
     FIXED_IO_ps_srstb : inout STD_LOGIC;
     FIXED_IO_ps_clk : inout STD_LOGIC;
     FIXED_IO_ps_porb : inout STD_LOGIC;
+    hdmi_tx_clk_p : out STD_LOGIC;
+    hdmi_tx_clk_n : out STD_LOGIC;
+    hdmi_tx_data_p : out STD_LOGIC_VECTOR ( 2 downto 0 );
+    hdmi_tx_data_n : out STD_LOGIC_VECTOR ( 2 downto 0 );
     DDR_cas_n : inout STD_LOGIC;
     DDR_cke : inout STD_LOGIC;
     DDR_ck_n : inout STD_LOGIC;
@@ -104,7 +97,16 @@ architecture STRUCTURE of system_wrapper is
     DDR_dm : inout STD_LOGIC_VECTOR ( 3 downto 0 );
     DDR_dq : inout STD_LOGIC_VECTOR ( 31 downto 0 );
     DDR_dqs_n : inout STD_LOGIC_VECTOR ( 3 downto 0 );
-    DDR_dqs_p : inout STD_LOGIC_VECTOR ( 3 downto 0 )
+    DDR_dqs_p : inout STD_LOGIC_VECTOR ( 3 downto 0 );
+    cam_iic_sda_i : in STD_LOGIC;
+    cam_iic_sda_o : out STD_LOGIC;
+    cam_iic_sda_t : out STD_LOGIC;
+    cam_iic_scl_i : in STD_LOGIC;
+    cam_iic_scl_o : out STD_LOGIC;
+    cam_iic_scl_t : out STD_LOGIC;
+    cam_gpio_tri_i : in STD_LOGIC_VECTOR ( 0 to 0 );
+    cam_gpio_tri_o : out STD_LOGIC_VECTOR ( 0 to 0 );
+    cam_gpio_tri_t : out STD_LOGIC_VECTOR ( 0 to 0 )
   );
   end component system;
   component IOBUF is
@@ -194,6 +196,7 @@ system_i: component system
       hdmi_tx_clk_p => hdmi_tx_clk_p,
       hdmi_tx_data_n(2 downto 0) => hdmi_tx_data_n(2 downto 0),
       hdmi_tx_data_p(2 downto 0) => hdmi_tx_data_p(2 downto 0),
-      start_raw => start_raw
+      start_raw => start_raw,
+      sw => sw
     );
 end STRUCTURE;

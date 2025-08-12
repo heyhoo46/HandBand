@@ -47,7 +47,7 @@
 -- DO NOT MODIFY THIS FILE.
 
 -- IP VLNV: xilinx.com:user:system_AXI_BayerToRGB_1_0:1.0
--- IP Revision: 17
+-- IP Revision: 32
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
@@ -100,7 +100,7 @@ ARCHITECTURE system_system_AXI_BayerToRG_0_0_arch OF system_system_AXI_BayerToRG
   ATTRIBUTE CHECK_LICENSE_TYPE : STRING;
   ATTRIBUTE CHECK_LICENSE_TYPE OF system_system_AXI_BayerToRG_0_0_arch : ARCHITECTURE IS "system_system_AXI_BayerToRG_0_0,AXI_BayerToRGB,{}";
   ATTRIBUTE CORE_GENERATION_INFO : STRING;
-  ATTRIBUTE CORE_GENERATION_INFO OF system_system_AXI_BayerToRG_0_0_arch: ARCHITECTURE IS "system_system_AXI_BayerToRG_0_0,AXI_BayerToRGB,{x_ipProduct=Vivado 2020.2,x_ipVendor=xilinx.com,x_ipLibrary=user,x_ipName=system_AXI_BayerToRGB_1_0,x_ipVersion=1.0,x_ipCoreRevision=17,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED,kAXI_InputDataWidth=40,kBayerWidth=10,kAXI_OutputDataWidth=32,kMaxSamplesPerClock=4}";
+  ATTRIBUTE CORE_GENERATION_INFO OF system_system_AXI_BayerToRG_0_0_arch: ARCHITECTURE IS "system_system_AXI_BayerToRG_0_0,AXI_BayerToRGB,{x_ipProduct=Vivado 2020.2,x_ipVendor=xilinx.com,x_ipLibrary=user,x_ipName=system_AXI_BayerToRGB_1_0,x_ipVersion=1.0,x_ipCoreRevision=32,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED,kAXI_InputDataWidth=40,kBayerWidth=10,kAXI_OutputDataWidth=32,kMaxSamplesPerClock=4}";
   ATTRIBUTE IP_DEFINITION_SOURCE : STRING;
   ATTRIBUTE IP_DEFINITION_SOURCE OF system_system_AXI_BayerToRG_0_0_arch: ARCHITECTURE IS "package_project";
   ATTRIBUTE X_INTERFACE_INFO : STRING;

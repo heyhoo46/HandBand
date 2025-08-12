@@ -1,0 +1,7 @@
+/*250808_test_spi*/
+the_ROM_image:
+{
+  [bootloader]<250808_test_spi/boot/fsbl.elf>
+   <bitstream> 
+  <elf,ps7_cortexa9_0>
+}

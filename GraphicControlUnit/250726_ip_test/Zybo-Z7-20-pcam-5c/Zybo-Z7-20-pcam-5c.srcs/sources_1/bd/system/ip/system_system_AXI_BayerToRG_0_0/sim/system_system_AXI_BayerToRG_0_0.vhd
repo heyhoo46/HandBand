@@ -47,7 +47,7 @@
 -- DO NOT MODIFY THIS FILE.
 
 -- IP VLNV: xilinx.com:user:system_AXI_BayerToRGB_1_0:1.0
--- IP Revision: 17
+-- IP Revision: 32
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;

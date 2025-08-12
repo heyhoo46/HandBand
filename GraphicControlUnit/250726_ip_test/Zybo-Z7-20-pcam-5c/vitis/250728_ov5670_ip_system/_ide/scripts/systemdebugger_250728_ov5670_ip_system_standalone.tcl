@@ -14,9 +14,9 @@ targets -set -nocase -filter {name =~"APU*"}
 rst -system
 after 3000
 targets -set -filter {jtag_cable_name =~ "Digilent Zybo Z7 210351B102DBA" && level==0 && jtag_device_ctx=="jsn-Zybo Z7-210351B102DBA-23727093-0"}
-fpga -file C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/vitis/250728_ov5670_ip/_ide/bitstream/GRBG_prev_colordetect.bit
+fpga -file C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/vitis/250728_ov5670_ip/_ide/bitstream/250807_rf_sw_v3.bit
 targets -set -nocase -filter {name =~"APU*"}
-loadhw -hw C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/vitis/system_wrapper_1/export/system_wrapper_1/hw/GRBG_prev_colordetect.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
+loadhw -hw C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/vitis/system_wrapper_1/export/system_wrapper_1/hw/250807_rf_sw_v3.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
 configparams force-mem-access 1
 targets -set -nocase -filter {name =~"APU*"}
 source C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/vitis/250728_ov5670_ip/_ide/psinit/ps7_init.tcl

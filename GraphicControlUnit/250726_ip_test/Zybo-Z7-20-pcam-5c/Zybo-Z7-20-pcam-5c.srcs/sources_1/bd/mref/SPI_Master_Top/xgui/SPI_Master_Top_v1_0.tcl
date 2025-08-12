@@ -6,7 +6,10 @@ proc init_gui { IPINST } {
   ipgui::add_param $IPINST -name "BYTES_PER_PACKET" -parent ${Page_0}
   ipgui::add_param $IPINST -name "DATA_WIDTH" -parent ${Page_0}
   ipgui::add_param $IPINST -name "PACKET_COUNT" -parent ${Page_0}
+  ipgui::add_param $IPINST -name "PACKET_REST_MSEC" -parent ${Page_0}
+  ipgui::add_param $IPINST -name "SCLK_DIV" -parent ${Page_0}
   ipgui::add_param $IPINST -name "SLAVE_CS" -parent ${Page_0}
+  ipgui::add_param $IPINST -name "SYSCLK" -parent ${Page_0}
 
 
 }
@@ -38,6 +41,24 @@ proc validate_PARAM_VALUE.PACKET_COUNT { PARAM_VALUE.PACKET_COUNT } {
 	return true
 }
 
+proc update_PARAM_VALUE.PACKET_REST_MSEC { PARAM_VALUE.PACKET_REST_MSEC } {
+	# Procedure called to update PACKET_REST_MSEC when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.PACKET_REST_MSEC { PARAM_VALUE.PACKET_REST_MSEC } {
+	# Procedure called to validate PACKET_REST_MSEC
+	return true
+}
+
+proc update_PARAM_VALUE.SCLK_DIV { PARAM_VALUE.SCLK_DIV } {
+	# Procedure called to update SCLK_DIV when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.SCLK_DIV { PARAM_VALUE.SCLK_DIV } {
+	# Procedure called to validate SCLK_DIV
+	return true
+}
+
 proc update_PARAM_VALUE.SLAVE_CS { PARAM_VALUE.SLAVE_CS } {
 	# Procedure called to update SLAVE_CS when any of the dependent parameters in the arguments change
 }
@@ -47,6 +68,25 @@ proc validate_PARAM_VALUE.SLAVE_CS { PARAM_VALUE.SLAVE_CS } {
 	return true
 }
 
+proc update_PARAM_VALUE.SYSCLK { PARAM_VALUE.SYSCLK } {
+	# Procedure called to update SYSCLK when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.SYSCLK { PARAM_VALUE.SYSCLK } {
+	# Procedure called to validate SYSCLK
+	return true
+}
+
+
+proc update_MODELPARAM_VALUE.SYSCLK { MODELPARAM_VALUE.SYSCLK PARAM_VALUE.SYSCLK } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	set_property value [get_property value ${PARAM_VALUE.SYSCLK}] ${MODELPARAM_VALUE.SYSCLK}
+}
+
+proc update_MODELPARAM_VALUE.PACKET_REST_MSEC { MODELPARAM_VALUE.PACKET_REST_MSEC PARAM_VALUE.PACKET_REST_MSEC } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	set_property value [get_property value ${PARAM_VALUE.PACKET_REST_MSEC}] ${MODELPARAM_VALUE.PACKET_REST_MSEC}
+}
 
 proc update_MODELPARAM_VALUE.DATA_WIDTH { MODELPARAM_VALUE.DATA_WIDTH PARAM_VALUE.DATA_WIDTH } {
 	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
@@ -66,5 +106,10 @@ proc update_MODELPARAM_VALUE.BYTES_PER_PACKET { MODELPARAM_VALUE.BYTES_PER_PACKE
 proc update_MODELPARAM_VALUE.PACKET_COUNT { MODELPARAM_VALUE.PACKET_COUNT PARAM_VALUE.PACKET_COUNT } {
 	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
 	set_property value [get_property value ${PARAM_VALUE.PACKET_COUNT}] ${MODELPARAM_VALUE.PACKET_COUNT}
+}
+
+proc update_MODELPARAM_VALUE.SCLK_DIV { MODELPARAM_VALUE.SCLK_DIV PARAM_VALUE.SCLK_DIV } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	set_property value [get_property value ${PARAM_VALUE.SCLK_DIV}] ${MODELPARAM_VALUE.SCLK_DIV}
 }
 

@@ -1,7 +1,7 @@
 --Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
---Date        : Fri Aug  1 17:17:55 2025
+--Date        : Fri Aug  8 20:03:39 2025
 --Host        : DESKTOP-7CFQ9ND running 64-bit major release  (build 9200)
 --Command     : generate_target system.bd
 --Design      : system
@@ -2825,10 +2825,11 @@ entity system is
     hdmi_tx_clk_p : out STD_LOGIC;
     hdmi_tx_data_n : out STD_LOGIC_VECTOR ( 2 downto 0 );
     hdmi_tx_data_p : out STD_LOGIC_VECTOR ( 2 downto 0 );
-    start_raw : in STD_LOGIC
+    start_raw : in STD_LOGIC;
+    sw : in STD_LOGIC
   );
   attribute CORE_GENERATION_INFO : string;
-  attribute CORE_GENERATION_INFO of system : entity is "system,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=system,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=33,numReposBlks=21,numNonXlnxBlks=4,numHierBlks=12,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=3,numPkgbdBlks=0,bdsource=USER,synth_mode=OOC_per_IP}";
+  attribute CORE_GENERATION_INFO of system : entity is "system,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=system,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=34,numReposBlks=22,numNonXlnxBlks=4,numHierBlks=12,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=3,numPkgbdBlks=0,bdsource=USER,synth_mode=OOC_per_IP}";
   attribute HW_HANDOFF : string;
   attribute HW_HANDOFF of system : entity is "system.hwdef";
 end system;
@@ -3416,36 +3417,6 @@ architecture STRUCTURE of system is
     dout : out STD_LOGIC_VECTOR ( 2 downto 0 )
   );
   end component system_xlconcat_0_0;
-  component system_SPI_Master_Top_0_0 is
-  port (
-    clk : in STD_LOGIC;
-    reset : in STD_LOGIC;
-    start_raw : in STD_LOGIC;
-    done : out STD_LOGIC;
-    packet_data : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    SCLK : out STD_LOGIC;
-    MOSI : out STD_LOGIC;
-    CS : out STD_LOGIC_VECTOR ( 0 to 0 )
-  );
-  end component system_SPI_Master_Top_0_0;
-  component system_AXI4_HandSignal_0_0 is
-  port (
-    aclk : in STD_LOGIC;
-    pclk : in STD_LOGIC;
-    aresetn : in STD_LOGIC;
-    s_axis_tdata : in STD_LOGIC_VECTOR ( 23 downto 0 );
-    s_axis_tvalid : in STD_LOGIC;
-    s_axis_tready : out STD_LOGIC;
-    s_axis_tlast : in STD_LOGIC;
-    s_axis_tuser : in STD_LOGIC;
-    m_axis_tdata : out STD_LOGIC_VECTOR ( 23 downto 0 );
-    m_axis_tvalid : out STD_LOGIC;
-    m_axis_tready : in STD_LOGIC;
-    m_axis_tlast : out STD_LOGIC;
-    m_axis_tuser : out STD_LOGIC;
-    o_color_spi_data : out STD_LOGIC_VECTOR ( 31 downto 0 )
-  );
-  end component system_AXI4_HandSignal_0_0;
   component system_system_AXI_BayerToRG_0_0 is
   port (
     StreamClk : in STD_LOGIC;
@@ -3462,6 +3433,53 @@ architecture STRUCTURE of system is
     m_axis_video_tlast : out STD_LOGIC
   );
   end component system_system_AXI_BayerToRG_0_0;
+  component system_axis_register_slice_0_0 is
+  port (
+    aclk : in STD_LOGIC;
+    aresetn : in STD_LOGIC;
+    s_axis_tvalid : in STD_LOGIC;
+    s_axis_tready : out STD_LOGIC;
+    s_axis_tdata : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    s_axis_tlast : in STD_LOGIC;
+    s_axis_tuser : in STD_LOGIC_VECTOR ( 0 to 0 );
+    m_axis_tvalid : out STD_LOGIC;
+    m_axis_tready : in STD_LOGIC;
+    m_axis_tdata : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    m_axis_tlast : out STD_LOGIC;
+    m_axis_tuser : out STD_LOGIC_VECTOR ( 0 to 0 )
+  );
+  end component system_axis_register_slice_0_0;
+  component system_AXI4_HandSignal_0_0 is
+  port (
+    aclk : in STD_LOGIC;
+    pclk : in STD_LOGIC;
+    aresetn : in STD_LOGIC;
+    sw : in STD_LOGIC;
+    s_axis_tdata : in STD_LOGIC_VECTOR ( 23 downto 0 );
+    s_axis_tvalid : in STD_LOGIC;
+    s_axis_tready : out STD_LOGIC;
+    s_axis_tlast : in STD_LOGIC;
+    s_axis_tuser : in STD_LOGIC;
+    m_axis_tdata : out STD_LOGIC_VECTOR ( 23 downto 0 );
+    m_axis_tvalid : out STD_LOGIC;
+    m_axis_tready : in STD_LOGIC;
+    m_axis_tlast : out STD_LOGIC;
+    m_axis_tuser : out STD_LOGIC;
+    o_color_spi_data : out STD_LOGIC_VECTOR ( 31 downto 0 )
+  );
+  end component system_AXI4_HandSignal_0_0;
+  component system_SPI_Master_Top_0_0 is
+  port (
+    clk : in STD_LOGIC;
+    reset : in STD_LOGIC;
+    start_raw : in STD_LOGIC;
+    done : out STD_LOGIC;
+    packet_data : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    SCLK : out STD_LOGIC;
+    MOSI : out STD_LOGIC;
+    CS : out STD_LOGIC_VECTOR ( 0 to 0 )
+  );
+  end component system_SPI_Master_Top_0_0;
   signal AXI4_HandSignal_0_m_axis_tdata : STD_LOGIC_VECTOR ( 23 downto 0 );
   signal AXI4_HandSignal_0_m_axis_tlast : STD_LOGIC;
   signal AXI4_HandSignal_0_m_axis_tuser : STD_LOGIC;
@@ -3566,6 +3584,11 @@ architecture STRUCTURE of system is
   signal axi_vdma_0_m_axis_mm2s_tvalid : STD_LOGIC;
   signal axi_vdma_0_mm2s_introut : STD_LOGIC;
   signal axi_vdma_0_s2mm_introut : STD_LOGIC;
+  signal axis_register_slice_0_M_AXIS_TDATA : STD_LOGIC_VECTOR ( 31 downto 0 );
+  signal axis_register_slice_0_M_AXIS_TLAST : STD_LOGIC;
+  signal axis_register_slice_0_M_AXIS_TREADY : STD_LOGIC;
+  signal axis_register_slice_0_M_AXIS_TUSER : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal axis_register_slice_0_M_AXIS_TVALID : STD_LOGIC;
   signal clk_wiz_0_locked : STD_LOGIC;
   signal clk_wiz_1_locked : STD_LOGIC;
   signal clk_wiz_1_pxl_clk_5x : STD_LOGIC;
@@ -3767,6 +3790,7 @@ architecture STRUCTURE of system is
   signal rst_vid_clk_dyn_peripheral_reset : STD_LOGIC_VECTOR ( 0 to 0 );
   signal s_axil_clk_50 : STD_LOGIC;
   signal start_raw_0_1 : STD_LOGIC;
+  signal sw_0_1 : STD_LOGIC;
   signal system_AXI_BayerToRG_0_AXI_Stream_Master_TDATA : STD_LOGIC_VECTOR ( 31 downto 0 );
   signal system_AXI_BayerToRG_0_AXI_Stream_Master_TLAST : STD_LOGIC;
   signal system_AXI_BayerToRG_0_AXI_Stream_Master_TREADY : STD_LOGIC;
@@ -3925,6 +3949,7 @@ begin
   processing_system7_0_IIC_0_SCL_I <= cam_iic_scl_i;
   processing_system7_0_IIC_0_SDA_I <= cam_iic_sda_i;
   start_raw_0_1 <= start_raw;
+  sw_0_1 <= sw;
 AXI4_HandSignal_0: component system_AXI4_HandSignal_0_0
      port map (
       aclk => mm_clk_150,
@@ -3940,7 +3965,8 @@ AXI4_HandSignal_0: component system_AXI4_HandSignal_0_0
       s_axis_tlast => axi_vdma_0_m_axis_mm2s_tlast,
       s_axis_tready => AXI4_HandSignal_0_s_axis_tready,
       s_axis_tuser => axi_vdma_0_m_axis_mm2s_tuser(0),
-      s_axis_tvalid => axi_vdma_0_m_axis_mm2s_tvalid
+      s_axis_tvalid => axi_vdma_0_m_axis_mm2s_tvalid,
+      sw => sw_0_1
     );
 AXI_GammaCorrection_0: component system_AXI_GammaCorrection_0_0
      port map (
@@ -3972,11 +3998,11 @@ AXI_GammaCorrection_0: component system_AXI_GammaCorrection_0_0
       m_axis_video_tuser => AXI_GammaCorrection_0_m_axis_video_TUSER,
       m_axis_video_tvalid => AXI_GammaCorrection_0_m_axis_video_TVALID,
       sStreamReset_n => rst_clk_wiz_0_50M_peripheral_aresetn(0),
-      s_axis_video_tdata(31 downto 0) => system_AXI_BayerToRG_0_AXI_Stream_Master_TDATA(31 downto 0),
-      s_axis_video_tlast => system_AXI_BayerToRG_0_AXI_Stream_Master_TLAST,
-      s_axis_video_tready => system_AXI_BayerToRG_0_AXI_Stream_Master_TREADY,
-      s_axis_video_tuser => system_AXI_BayerToRG_0_AXI_Stream_Master_TUSER,
-      s_axis_video_tvalid => system_AXI_BayerToRG_0_AXI_Stream_Master_TVALID
+      s_axis_video_tdata(31 downto 0) => axis_register_slice_0_M_AXIS_TDATA(31 downto 0),
+      s_axis_video_tlast => axis_register_slice_0_M_AXIS_TLAST,
+      s_axis_video_tready => axis_register_slice_0_M_AXIS_TREADY,
+      s_axis_video_tuser => axis_register_slice_0_M_AXIS_TUSER(0),
+      s_axis_video_tvalid => axis_register_slice_0_M_AXIS_TVALID
     );
 DVIClocking_0: component system_DVIClocking_0_0
      port map (
@@ -4280,6 +4306,21 @@ axi_vdma_0: component system_axi_vdma_0_0
       s_axis_s2mm_tready => AXI_GammaCorrection_0_m_axis_video_TREADY,
       s_axis_s2mm_tuser(0) => AXI_GammaCorrection_0_m_axis_video_TUSER,
       s_axis_s2mm_tvalid => AXI_GammaCorrection_0_m_axis_video_TVALID
+    );
+axis_register_slice_0: component system_axis_register_slice_0_0
+     port map (
+      aclk => mm_clk_150,
+      aresetn => rst_clk_wiz_0_50M_peripheral_aresetn(0),
+      m_axis_tdata(31 downto 0) => axis_register_slice_0_M_AXIS_TDATA(31 downto 0),
+      m_axis_tlast => axis_register_slice_0_M_AXIS_TLAST,
+      m_axis_tready => axis_register_slice_0_M_AXIS_TREADY,
+      m_axis_tuser(0) => axis_register_slice_0_M_AXIS_TUSER(0),
+      m_axis_tvalid => axis_register_slice_0_M_AXIS_TVALID,
+      s_axis_tdata(31 downto 0) => system_AXI_BayerToRG_0_AXI_Stream_Master_TDATA(31 downto 0),
+      s_axis_tlast => system_AXI_BayerToRG_0_AXI_Stream_Master_TLAST,
+      s_axis_tready => system_AXI_BayerToRG_0_AXI_Stream_Master_TREADY,
+      s_axis_tuser(0) => system_AXI_BayerToRG_0_AXI_Stream_Master_TUSER,
+      s_axis_tvalid => system_AXI_BayerToRG_0_AXI_Stream_Master_TVALID
     );
 clk_wiz_0: component system_clk_wiz_0_0
      port map (

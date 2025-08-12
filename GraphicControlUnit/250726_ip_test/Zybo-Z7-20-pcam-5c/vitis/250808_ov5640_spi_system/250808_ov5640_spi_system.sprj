@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ASCII"?>
+<systemproject:SystemProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sdkproject="http://www.xilinx.com/sdkproject" xmlns:systemproject="http://www.xilinx.com/systemproject" name="250808_ov5640_spi_system" platform="C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/vitis/250808_spi_delay_100ms/export/250808_spi_delay_100ms/250808_spi_delay_100ms.xpfm" platformUID="xilinx:::0.0(custom)" sysConfig="250808_spi_delay_100ms" runtime="cpp" rootFSLocation="" linuxImage="" sysroot="">
+  <configuration name="Debug" id="com.xilinx.sdx.system.managedbuilder.debugConfiguration.892171853">
+    <configBuildOptions xsi:type="systemproject:SystemOptions">
+      <applications name="250808_ov5640_spi" domainName="standalone_ps7_cortexa9_0" domainPrettyName="standalone_ps7_cortexa9_0" appBuildConfig="Debug"/>
+      <options xsi:type="sdkproject:SdkOptions" generateSdCard="true"/>
+    </configBuildOptions>
+  </configuration>
+  <configuration name="Release" id="com.xilinx.sdx.system.managedbuilder.releaseConfiguration.1063942925">
+    <configBuildOptions xsi:type="systemproject:SystemOptions">
+      <applications name="250808_ov5640_spi" domainName="standalone_ps7_cortexa9_0" domainPrettyName="standalone_ps7_cortexa9_0" appBuildConfig="Release"/>
+      <options xsi:type="sdkproject:SdkOptions" generateSdCard="true"/>
+    </configBuildOptions>
+  </configuration>
+</systemproject:SystemProject>

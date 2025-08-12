@@ -24,16 +24,18 @@ module hand_signal #(
     wire is_color1, is_color2;
 
     rgb_color_detect u_color_detect (
-        .pclk     (pclk),
-        .rst      (rst),
-        .R        (R),
-        .G        (G),
-        .B        (B),
-        // .tuser      (tuser),    // frame 시작
-        // .tlast      (tlast), 
-        .is_blue  (is_color1),
-        .is_red   (is_color2)
+        .pclk   (pclk),
+        .rst    (rst),
+        .R      (R),
+        .G      (G),
+        .B      (B),
+        // .tvalid (tvalid),
+        // .tuser  (tuser),
+        // .tlast  (tlast),
+        .is_blue(is_color1),
+        .is_red (is_color2)
     );
+
 
     reg [$clog2(ZONES)-1:0] max_zone_color1, max_zone_color2;
 

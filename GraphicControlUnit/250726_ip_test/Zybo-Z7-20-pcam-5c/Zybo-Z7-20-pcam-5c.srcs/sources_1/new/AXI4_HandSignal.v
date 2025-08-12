@@ -4,6 +4,7 @@ module AXI4_HandSignal(
     input           aclk,
     input           pclk,
     input           aresetn,
+    input           sw,
     // AXI4S Slave 입력
     input   [23:0]  s_axis_tdata,
     input           s_axis_tvalid,
@@ -46,7 +47,8 @@ module AXI4_HandSignal(
     assign R = s_axis_tdata[23:16];
     assign G = s_axis_tdata[7:0];
     assign B = s_axis_tdata[15:8];
-    assign o_color_spi_data = { red_x, blue_y, blue_x, red_y };
+    // assign o_color_spi_data = { red_x, blue_y, blue_x, red_y };
+    assign o_color_spi_data = { blue_y, blue_x, red_y, red_x };
     assign filtered_pixel_pclk_video = {o_R, o_B, o_G};
 
     assign handshake = s_axis_tvalid && m_axis_tready;
@@ -77,6 +79,7 @@ module AXI4_HandSignal(
     print_grid #(.IMG_WIDTH(IMG_WIDTH), .IMG_HEIGHT(IMG_HEIGHT), .NX(NX), .NY(NY)) U_print_grid(
         .clk(pclk),
         .rst(~aresetn),
+        .sw(sw),
         .tvalid(s_axis_tvalid),
         .tuser(s_axis_tuser), 
         .tlast(s_axis_tlast),  

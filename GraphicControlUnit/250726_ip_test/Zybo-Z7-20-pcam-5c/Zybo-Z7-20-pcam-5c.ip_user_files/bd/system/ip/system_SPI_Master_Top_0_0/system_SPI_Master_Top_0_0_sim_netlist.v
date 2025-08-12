@@ -1,7 +1,7 @@
 // Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
-// Date        : Mon Jul 28 12:46:10 2025
+// Date        : Tue Aug  5 16:01:20 2025
 // Host        : DESKTOP-7CFQ9ND running 64-bit major release  (build 9200)
 // Command     : write_verilog -force -mode funcsim
 //               c:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_SPI_Master_Top_0_0/system_SPI_Master_Top_0_0_sim_netlist.v
@@ -38,7 +38,7 @@ module system_SPI_Master_Top_0_0
   wire MOSI;
   wire SCLK;
   wire U0_n_0;
-  wire \U_Debounce/r_1khz ;
+  wire \U_btn_debounce/r_1khz ;
   wire clk;
   wire [31:0]packet_data;
   wire reset;
@@ -48,7 +48,7 @@ module system_SPI_Master_Top_0_0
   GND GND
        (.G(\<const0> ));
   system_SPI_Master_Top_0_0_SPI_Master_Top U0
-       (.CLK(\U_Debounce/r_1khz ),
+       (.CLK(\U_btn_debounce/r_1khz ),
         .CS(CS),
         .MOSI(MOSI),
         .SCLK(SCLK),
@@ -61,33 +61,25 @@ module system_SPI_Master_Top_0_0
     .INIT(2'h1)) 
     \q_reg_reg[7]_i_1 
        (.I0(U0_n_0),
-        .O(\U_Debounce/r_1khz ));
+        .O(\U_btn_debounce/r_1khz ));
 endmodule
 
 (* ORIG_REF_NAME = "SPI_Master" *) 
 module system_SPI_Master_Top_0_0_SPI_Master
-   (Q,
+   (\FSM_onehot_state_reg[3]_0 ,
+    CS,
     SCLK,
     MOSI,
-    CS,
-    \sclk_counter_reg_reg[7]_0 ,
-    \FSM_onehot_state_reg[3]_0 ,
     spi_start,
-    \FSM_sequential_state[0]_i_3 ,
-    \FSM_sequential_state[0]_i_3_0 ,
-    \temp_tx_data_reg_reg[7]_0 ,
+    Q,
     clk,
     reset);
-  output [0:0]Q;
+  output \FSM_onehot_state_reg[3]_0 ;
+  output [0:0]CS;
   output SCLK;
   output MOSI;
-  output [0:0]CS;
-  output \sclk_counter_reg_reg[7]_0 ;
-  output \FSM_onehot_state_reg[3]_0 ;
   input spi_start;
-  input \FSM_sequential_state[0]_i_3 ;
-  input \FSM_sequential_state[0]_i_3_0 ;
-  input [7:0]\temp_tx_data_reg_reg[7]_0 ;
+  input [7:0]Q;
   input clk;
   input reset;
 
@@ -98,11 +90,10 @@ module system_SPI_Master_Top_0_0_SPI_Master
   wire \FSM_onehot_state_reg[3]_0 ;
   wire \FSM_onehot_state_reg_n_0_[0] ;
   wire \FSM_onehot_state_reg_n_0_[2] ;
-  wire \FSM_sequential_state[0]_i_3 ;
-  wire \FSM_sequential_state[0]_i_3_0 ;
-  wire \FSM_sequential_state[0]_i_5_n_0 ;
+  wire \FSM_onehot_state_reg_n_0_[3] ;
   wire MOSI;
-  wire [0:0]Q;
+  wire MOSI_INST_0_i_2_n_0;
+  wire [7:0]Q;
   wire SCLK;
   wire SCLK_INST_0_i_1_n_0;
   wire SCLK_INST_0_i_2_n_0;
@@ -123,24 +114,24 @@ module system_SPI_Master_Top_0_0_SPI_Master
   wire \sclk_counter_reg[6]_i_1_n_0 ;
   wire \sclk_counter_reg[7]_i_1_n_0 ;
   wire \sclk_counter_reg[7]_i_3_n_0 ;
-  wire \sclk_counter_reg_reg[7]_0 ;
+  wire \sclk_counter_reg[7]_i_4_n_0 ;
   wire spi_mosi;
   wire spi_start;
   wire [7:0]temp_tx_data_next;
-  wire [7:0]\temp_tx_data_reg_reg[7]_0 ;
+  wire \temp_tx_data_reg_reg_n_0_[7] ;
 
-  (* SOFT_HLUTNM = "soft_lutpair27" *) 
+  (* SOFT_HLUTNM = "soft_lutpair22" *) 
   LUT2 #(
-    .INIT(4'h2)) 
+    .INIT(4'hE)) 
     \CS[0]_INST_0 
-       (.I0(\FSM_onehot_state_reg_n_0_[0] ),
-        .I1(spi_start),
+       (.I0(\FSM_onehot_state_reg_n_0_[2] ),
+        .I1(\FSM_onehot_state_reg_n_0_[3] ),
         .O(CS));
   LUT6 #(
-    .INIT(64'h44FF4444FCFF0000)) 
+    .INIT(64'hAAFFAAAAFEFFAAAA)) 
     \FSM_onehot_state[0]_i_1 
-       (.I0(\FSM_onehot_state[2]_i_2_n_0 ),
-        .I1(Q),
+       (.I0(\FSM_onehot_state_reg[3]_0 ),
+        .I1(\FSM_onehot_state_reg_n_0_[3] ),
         .I2(\FSM_onehot_state_reg_n_0_[2] ),
         .I3(spi_start),
         .I4(\FSM_onehot_state_reg_n_0_[0] ),
@@ -151,12 +142,12 @@ module system_SPI_Master_Top_0_0_SPI_Master
     \FSM_onehot_state[2]_i_1 
        (.I0(spi_start),
         .I1(\FSM_onehot_state_reg_n_0_[0] ),
-        .I2(Q),
+        .I2(\FSM_onehot_state_reg_n_0_[3] ),
         .I3(\FSM_onehot_state[2]_i_2_n_0 ),
         .I4(SCLK_INST_0_i_1_n_0),
         .I5(\FSM_onehot_state_reg_n_0_[2] ),
         .O(\FSM_onehot_state[2]_i_1_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair28" *) 
+  (* SOFT_HLUTNM = "soft_lutpair27" *) 
   LUT3 #(
     .INIT(8'h7F)) 
     \FSM_onehot_state[2]_i_2 
@@ -190,37 +181,18 @@ module system_SPI_Master_Top_0_0_SPI_Master
         .CE(1'b1),
         .CLR(reset),
         .D(SCLK),
-        .Q(Q));
-  LUT6 #(
-    .INIT(64'h0000002000000000)) 
-    \FSM_sequential_state[0]_i_4 
-       (.I0(\FSM_sequential_state[0]_i_3 ),
-        .I1(\FSM_sequential_state[0]_i_3_0 ),
-        .I2(Q),
-        .I3(\FSM_onehot_state[2]_i_2_n_0 ),
-        .I4(SCLK_INST_0_i_2_n_0),
-        .I5(\FSM_sequential_state[0]_i_5_n_0 ),
+        .Q(\FSM_onehot_state_reg_n_0_[3] ));
+  (* SOFT_HLUTNM = "soft_lutpair21" *) 
+  LUT5 #(
+    .INIT(32'h80000000)) 
+    \FSM_sequential_state[1]_i_2 
+       (.I0(\FSM_onehot_state_reg_n_0_[3] ),
+        .I1(SCLK_INST_0_i_1_n_0),
+        .I2(bit_counter_reg[1]),
+        .I3(bit_counter_reg[0]),
+        .I4(bit_counter_reg[2]),
         .O(\FSM_onehot_state_reg[3]_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair25" *) 
-  LUT4 #(
-    .INIT(16'h0080)) 
-    \FSM_sequential_state[0]_i_5 
-       (.I0(sclk_counter_reg[7]),
-        .I1(sclk_counter_reg[2]),
-        .I2(sclk_counter_reg[4]),
-        .I3(sclk_counter_reg[1]),
-        .O(\FSM_sequential_state[0]_i_5_n_0 ));
-  LUT6 #(
-    .INIT(64'hFFFFFFFFEFFFFFFF)) 
-    \FSM_sequential_state[1]_i_3 
-       (.I0(\FSM_onehot_state[2]_i_2_n_0 ),
-        .I1(SCLK_INST_0_i_2_n_0),
-        .I2(sclk_counter_reg[7]),
-        .I3(sclk_counter_reg[2]),
-        .I4(sclk_counter_reg[4]),
-        .I5(sclk_counter_reg[1]),
-        .O(\sclk_counter_reg_reg[7]_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair27" *) 
+  (* SOFT_HLUTNM = "soft_lutpair26" *) 
   LUT3 #(
     .INIT(8'h8A)) 
     MOSI_INST_0
@@ -228,17 +200,28 @@ module system_SPI_Master_Top_0_0_SPI_Master
         .I1(spi_start),
         .I2(\FSM_onehot_state_reg_n_0_[0] ),
         .O(MOSI));
+  LUT2 #(
+    .INIT(4'h8)) 
+    MOSI_INST_0_i_1
+       (.I0(\temp_tx_data_reg_reg_n_0_[7] ),
+        .I1(MOSI_INST_0_i_2_n_0),
+        .O(spi_mosi));
   (* SOFT_HLUTNM = "soft_lutpair23" *) 
+  LUT1 #(
+    .INIT(2'h1)) 
+    MOSI_INST_0_i_2
+       (.I0(\FSM_onehot_state_reg_n_0_[0] ),
+        .O(MOSI_INST_0_i_2_n_0));
+  (* SOFT_HLUTNM = "soft_lutpair22" *) 
   LUT5 #(
     .INIT(32'hAEAACCCC)) 
     SCLK_INST_0
        (.I0(\FSM_onehot_state_reg_n_0_[2] ),
-        .I1(Q),
+        .I1(\FSM_onehot_state_reg_n_0_[3] ),
         .I2(spi_start),
         .I3(\FSM_onehot_state_reg_n_0_[0] ),
         .I4(SCLK_INST_0_i_1_n_0),
         .O(SCLK));
-  (* SOFT_HLUTNM = "soft_lutpair25" *) 
   LUT5 #(
     .INIT(32'h00004000)) 
     SCLK_INST_0_i_1
@@ -256,35 +239,35 @@ module system_SPI_Master_Top_0_0_SPI_Master
         .I2(sclk_counter_reg[0]),
         .I3(sclk_counter_reg[6]),
         .O(SCLK_INST_0_i_2_n_0));
-  (* SOFT_HLUTNM = "soft_lutpair28" *) 
+  (* SOFT_HLUTNM = "soft_lutpair27" *) 
   LUT2 #(
     .INIT(4'h2)) 
     \bit_counter_reg[0]_i_1 
-       (.I0(Q),
+       (.I0(\FSM_onehot_state_reg_n_0_[3] ),
         .I1(bit_counter_reg[0]),
         .O(bit_counter_next[0]));
-  (* SOFT_HLUTNM = "soft_lutpair26" *) 
+  (* SOFT_HLUTNM = "soft_lutpair25" *) 
   LUT3 #(
     .INIT(8'h60)) 
     \bit_counter_reg[1]_i_1 
        (.I0(bit_counter_reg[1]),
         .I1(bit_counter_reg[0]),
-        .I2(Q),
+        .I2(\FSM_onehot_state_reg_n_0_[3] ),
         .O(\bit_counter_reg[1]_i_1_n_0 ));
   LUT5 #(
     .INIT(32'hF8888888)) 
     \bit_counter_reg[2]_i_1 
        (.I0(spi_start),
         .I1(\FSM_onehot_state_reg_n_0_[0] ),
-        .I2(Q),
+        .I2(\FSM_onehot_state_reg_n_0_[3] ),
         .I3(\FSM_onehot_state[2]_i_2_n_0 ),
         .I4(SCLK_INST_0_i_1_n_0),
         .O(\bit_counter_reg[2]_i_1_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair26" *) 
+  (* SOFT_HLUTNM = "soft_lutpair25" *) 
   LUT4 #(
     .INIT(16'h2A80)) 
     \bit_counter_reg[2]_i_2 
-       (.I0(Q),
+       (.I0(\FSM_onehot_state_reg_n_0_[3] ),
         .I1(bit_counter_reg[0]),
         .I2(bit_counter_reg[1]),
         .I3(bit_counter_reg[2]),
@@ -313,14 +296,14 @@ module system_SPI_Master_Top_0_0_SPI_Master
     \sclk_counter_reg[0]_i_1 
        (.I0(sclk_counter_reg[0]),
         .I1(\FSM_onehot_state_reg_n_0_[2] ),
-        .I2(Q),
+        .I2(\FSM_onehot_state_reg_n_0_[3] ),
         .O(\sclk_counter_reg[0]_i_1_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair24" *) 
+  (* SOFT_HLUTNM = "soft_lutpair20" *) 
   LUT5 #(
     .INIT(32'h00545400)) 
     \sclk_counter_reg[1]_i_1 
        (.I0(SCLK_INST_0_i_1_n_0),
-        .I1(Q),
+        .I1(\FSM_onehot_state_reg_n_0_[3] ),
         .I2(\FSM_onehot_state_reg_n_0_[2] ),
         .I3(sclk_counter_reg[1]),
         .I4(sclk_counter_reg[0]),
@@ -329,7 +312,7 @@ module system_SPI_Master_Top_0_0_SPI_Master
     .INIT(64'h0054545454000000)) 
     \sclk_counter_reg[2]_i_1 
        (.I0(SCLK_INST_0_i_1_n_0),
-        .I1(Q),
+        .I1(\FSM_onehot_state_reg_n_0_[3] ),
         .I2(\FSM_onehot_state_reg_n_0_[2] ),
         .I3(sclk_counter_reg[0]),
         .I4(sclk_counter_reg[1]),
@@ -339,7 +322,7 @@ module system_SPI_Master_Top_0_0_SPI_Master
     .INIT(64'h0EEEEEEEE0000000)) 
     \sclk_counter_reg[3]_i_1 
        (.I0(\FSM_onehot_state_reg_n_0_[2] ),
-        .I1(Q),
+        .I1(\FSM_onehot_state_reg_n_0_[3] ),
         .I2(sclk_counter_reg[1]),
         .I3(sclk_counter_reg[0]),
         .I4(sclk_counter_reg[2]),
@@ -355,19 +338,20 @@ module system_SPI_Master_Top_0_0_SPI_Master
         .I4(sclk_counter_reg[1]),
         .I5(sclk_counter_reg[4]),
         .O(sclk_counter_next[4]));
-  (* SOFT_HLUTNM = "soft_lutpair23" *) 
+  (* SOFT_HLUTNM = "soft_lutpair20" *) 
   LUT3 #(
     .INIT(8'h0E)) 
     \sclk_counter_reg[4]_i_2 
        (.I0(\FSM_onehot_state_reg_n_0_[2] ),
-        .I1(Q),
+        .I1(\FSM_onehot_state_reg_n_0_[3] ),
         .I2(SCLK_INST_0_i_1_n_0),
         .O(\sclk_counter_reg[4]_i_2_n_0 ));
+  (* SOFT_HLUTNM = "soft_lutpair24" *) 
   LUT4 #(
     .INIT(16'hE00E)) 
     \sclk_counter_reg[5]_i_1 
        (.I0(\FSM_onehot_state_reg_n_0_[2] ),
-        .I1(Q),
+        .I1(\FSM_onehot_state_reg_n_0_[3] ),
         .I2(\sclk_counter_reg[5]_i_2_n_0 ),
         .I3(sclk_counter_reg[5]),
         .O(\sclk_counter_reg[5]_i_1_n_0 ));
@@ -384,15 +368,15 @@ module system_SPI_Master_Top_0_0_SPI_Master
     .INIT(16'h0EE0)) 
     \sclk_counter_reg[6]_i_1 
        (.I0(\FSM_onehot_state_reg_n_0_[2] ),
-        .I1(Q),
-        .I2(\sclk_counter_reg[7]_i_3_n_0 ),
+        .I1(\FSM_onehot_state_reg_n_0_[3] ),
+        .I2(\sclk_counter_reg[7]_i_4_n_0 ),
         .I3(sclk_counter_reg[6]),
         .O(\sclk_counter_reg[6]_i_1_n_0 ));
   LUT5 #(
     .INIT(32'hFFFFF888)) 
     \sclk_counter_reg[7]_i_1 
-       (.I0(Q),
-        .I1(\sclk_counter_reg_reg[7]_0 ),
+       (.I0(\FSM_onehot_state_reg_n_0_[3] ),
+        .I1(\sclk_counter_reg[7]_i_3_n_0 ),
         .I2(\FSM_onehot_state_reg_n_0_[0] ),
         .I3(spi_start),
         .I4(\FSM_onehot_state_reg_n_0_[2] ),
@@ -401,22 +385,31 @@ module system_SPI_Master_Top_0_0_SPI_Master
     .INIT(64'h0054545454000000)) 
     \sclk_counter_reg[7]_i_2 
        (.I0(SCLK_INST_0_i_1_n_0),
-        .I1(Q),
+        .I1(\FSM_onehot_state_reg_n_0_[3] ),
         .I2(\FSM_onehot_state_reg_n_0_[2] ),
-        .I3(\sclk_counter_reg[7]_i_3_n_0 ),
+        .I3(\sclk_counter_reg[7]_i_4_n_0 ),
         .I4(sclk_counter_reg[6]),
         .I5(sclk_counter_reg[7]),
         .O(sclk_counter_next[7]));
+  (* SOFT_HLUTNM = "soft_lutpair21" *) 
+  LUT4 #(
+    .INIT(16'h7FFF)) 
+    \sclk_counter_reg[7]_i_3 
+       (.I0(bit_counter_reg[2]),
+        .I1(bit_counter_reg[0]),
+        .I2(bit_counter_reg[1]),
+        .I3(SCLK_INST_0_i_1_n_0),
+        .O(\sclk_counter_reg[7]_i_3_n_0 ));
   LUT6 #(
     .INIT(64'h8000000000000000)) 
-    \sclk_counter_reg[7]_i_3 
+    \sclk_counter_reg[7]_i_4 
        (.I0(sclk_counter_reg[5]),
         .I1(sclk_counter_reg[3]),
         .I2(sclk_counter_reg[2]),
         .I3(sclk_counter_reg[0]),
         .I4(sclk_counter_reg[1]),
         .I5(sclk_counter_reg[4]),
-        .O(\sclk_counter_reg[7]_i_3_n_0 ));
+        .O(\sclk_counter_reg[7]_i_4_n_0 ));
   FDCE \sclk_counter_reg_reg[0] 
        (.C(clk),
         .CE(\sclk_counter_reg[7]_i_1_n_0 ),
@@ -465,72 +458,74 @@ module system_SPI_Master_Top_0_0_SPI_Master
         .CLR(reset),
         .D(sclk_counter_next[7]),
         .Q(sclk_counter_reg[7]));
+  (* SOFT_HLUTNM = "soft_lutpair26" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \temp_tx_data_reg[0]_i_1 
        (.I0(\FSM_onehot_state_reg_n_0_[0] ),
-        .I1(\temp_tx_data_reg_reg[7]_0 [0]),
+        .I1(Q[0]),
         .O(temp_tx_data_next[0]));
   LUT5 #(
     .INIT(32'hFFFFF888)) 
     \temp_tx_data_reg[1]_i_1 
-       (.I0(\temp_tx_data_reg_reg[7]_0 [1]),
+       (.I0(Q[1]),
         .I1(\FSM_onehot_state_reg_n_0_[0] ),
-        .I2(Q),
+        .I2(\FSM_onehot_state_reg_n_0_[3] ),
         .I3(in19[1]),
         .I4(\FSM_onehot_state_reg_n_0_[2] ),
         .O(temp_tx_data_next[1]));
   LUT5 #(
     .INIT(32'hFFFFF888)) 
     \temp_tx_data_reg[2]_i_1 
-       (.I0(\temp_tx_data_reg_reg[7]_0 [2]),
+       (.I0(Q[2]),
         .I1(\FSM_onehot_state_reg_n_0_[0] ),
-        .I2(Q),
+        .I2(\FSM_onehot_state_reg_n_0_[3] ),
         .I3(in19[2]),
         .I4(\FSM_onehot_state_reg_n_0_[2] ),
         .O(temp_tx_data_next[2]));
   LUT5 #(
     .INIT(32'hFFFFF888)) 
     \temp_tx_data_reg[3]_i_1 
-       (.I0(\temp_tx_data_reg_reg[7]_0 [3]),
+       (.I0(Q[3]),
         .I1(\FSM_onehot_state_reg_n_0_[0] ),
-        .I2(Q),
+        .I2(\FSM_onehot_state_reg_n_0_[3] ),
         .I3(in19[3]),
         .I4(\FSM_onehot_state_reg_n_0_[2] ),
         .O(temp_tx_data_next[3]));
   LUT5 #(
     .INIT(32'hFFFFF888)) 
     \temp_tx_data_reg[4]_i_1 
-       (.I0(\temp_tx_data_reg_reg[7]_0 [4]),
+       (.I0(Q[4]),
         .I1(\FSM_onehot_state_reg_n_0_[0] ),
-        .I2(Q),
+        .I2(\FSM_onehot_state_reg_n_0_[3] ),
         .I3(in19[4]),
         .I4(\FSM_onehot_state_reg_n_0_[2] ),
         .O(temp_tx_data_next[4]));
   LUT5 #(
     .INIT(32'hFFFFF888)) 
     \temp_tx_data_reg[5]_i_1 
-       (.I0(\temp_tx_data_reg_reg[7]_0 [5]),
+       (.I0(Q[5]),
         .I1(\FSM_onehot_state_reg_n_0_[0] ),
-        .I2(Q),
+        .I2(\FSM_onehot_state_reg_n_0_[3] ),
         .I3(in19[5]),
         .I4(\FSM_onehot_state_reg_n_0_[2] ),
         .O(temp_tx_data_next[5]));
   LUT5 #(
     .INIT(32'hFFFFF888)) 
     \temp_tx_data_reg[6]_i_1 
-       (.I0(\temp_tx_data_reg_reg[7]_0 [6]),
+       (.I0(Q[6]),
         .I1(\FSM_onehot_state_reg_n_0_[0] ),
-        .I2(Q),
+        .I2(\FSM_onehot_state_reg_n_0_[3] ),
         .I3(in19[6]),
         .I4(\FSM_onehot_state_reg_n_0_[2] ),
         .O(temp_tx_data_next[6]));
+  (* SOFT_HLUTNM = "soft_lutpair23" *) 
   LUT5 #(
     .INIT(32'hFFFFF888)) 
     \temp_tx_data_reg[7]_i_1 
-       (.I0(\temp_tx_data_reg_reg[7]_0 [7]),
+       (.I0(Q[7]),
         .I1(\FSM_onehot_state_reg_n_0_[0] ),
-        .I2(Q),
+        .I2(\FSM_onehot_state_reg_n_0_[3] ),
         .I3(in19[7]),
         .I4(\FSM_onehot_state_reg_n_0_[2] ),
         .O(temp_tx_data_next[7]));
@@ -581,15 +576,15 @@ module system_SPI_Master_Top_0_0_SPI_Master
         .CE(\bit_counter_reg[2]_i_1_n_0 ),
         .CLR(reset),
         .D(temp_tx_data_next[7]),
-        .Q(spi_mosi));
+        .Q(\temp_tx_data_reg_reg_n_0_[7] ));
 endmodule
 
 (* ORIG_REF_NAME = "SPI_Master_Top" *) 
 module system_SPI_Master_Top_0_0_SPI_Master_Top
    (\counter_reg_reg[0] ,
     SCLK,
-    MOSI,
     CS,
+    MOSI,
     clk,
     reset,
     start_raw,
@@ -597,8 +592,8 @@ module system_SPI_Master_Top_0_0_SPI_Master_Top
     packet_data);
   output \counter_reg_reg[0] ;
   output SCLK;
-  output MOSI;
   output [0:0]CS;
+  output MOSI;
   input clk;
   input reset;
   input start_raw;
@@ -609,12 +604,8 @@ module system_SPI_Master_Top_0_0_SPI_Master_Top
   wire [0:0]CS;
   wire MOSI;
   wire SCLK;
-  wire U_Debounce_n_1;
-  wire U_Packet_Controller_n_3;
-  wire U_Packet_Controller_n_4;
   wire U_SPI_Master_n_0;
-  wire U_SPI_Master_n_4;
-  wire U_SPI_Master_n_5;
+  wire U_btn_debounce_n_1;
   wire clk;
   wire \counter_reg_reg[0] ;
   wire [31:0]packet_data;
@@ -624,83 +615,64 @@ module system_SPI_Master_Top_0_0_SPI_Master_Top
   wire start_raw;
   wire [1:0]state;
 
-  system_SPI_Master_Top_0_0_btn_debounce U_Debounce
-       (.CLK(CLK),
-        .clk(clk),
-        .\counter_reg_reg[0]_0 (\counter_reg_reg[0] ),
-        .edge_detect_reg_0(U_Debounce_n_1),
-        .reset(reset),
-        .start_raw(start_raw),
-        .state(state));
   system_SPI_Master_Top_0_0_SPI_Packet_Controller U_Packet_Controller
-       (.\FSM_sequential_state_reg[0]_0 (U_SPI_Master_n_5),
-        .\FSM_sequential_state_reg[1]_0 (U_Packet_Controller_n_4),
-        .\FSM_sequential_state_reg[1]_1 (U_SPI_Master_n_4),
-        .Q(U_SPI_Master_n_0),
-        .\byte_counter_reg[0]_0 (U_Packet_Controller_n_3),
+       (.\FSM_sequential_state_reg[1]_0 (U_SPI_Master_n_0),
+        .Q(spi_tx_data),
         .clk(clk),
-        .\current_packet_reg[0]_0 (U_Debounce_n_1),
+        .\current_packet_reg[0]_0 (U_btn_debounce_n_1),
         .packet_data(packet_data),
         .reset(reset),
         .spi_start(spi_start),
-        .\spi_tx_data_reg[7]_0 (spi_tx_data),
         .state(state));
   system_SPI_Master_Top_0_0_SPI_Master U_SPI_Master
        (.CS(CS),
-        .\FSM_onehot_state_reg[3]_0 (U_SPI_Master_n_5),
-        .\FSM_sequential_state[0]_i_3 (U_Packet_Controller_n_3),
-        .\FSM_sequential_state[0]_i_3_0 (U_Packet_Controller_n_4),
+        .\FSM_onehot_state_reg[3]_0 (U_SPI_Master_n_0),
         .MOSI(MOSI),
-        .Q(U_SPI_Master_n_0),
+        .Q(spi_tx_data),
         .SCLK(SCLK),
         .clk(clk),
         .reset(reset),
-        .\sclk_counter_reg_reg[7]_0 (U_SPI_Master_n_4),
-        .spi_start(spi_start),
-        .\temp_tx_data_reg_reg[7]_0 (spi_tx_data));
+        .spi_start(spi_start));
+  system_SPI_Master_Top_0_0_btn_debounce U_btn_debounce
+       (.CLK(CLK),
+        .\FSM_sequential_state_reg[0] (U_btn_debounce_n_1),
+        .clk(clk),
+        .\counter_reg_reg[0]_0 (\counter_reg_reg[0] ),
+        .reset(reset),
+        .start_raw(start_raw),
+        .state(state));
 endmodule
 
 (* ORIG_REF_NAME = "SPI_Packet_Controller" *) 
 module system_SPI_Master_Top_0_0_SPI_Packet_Controller
    (spi_start,
     state,
-    \byte_counter_reg[0]_0 ,
-    \FSM_sequential_state_reg[1]_0 ,
-    \spi_tx_data_reg[7]_0 ,
-    reset,
-    clk,
-    \current_packet_reg[0]_0 ,
-    \FSM_sequential_state_reg[0]_0 ,
-    \FSM_sequential_state_reg[1]_1 ,
     Q,
+    clk,
+    \FSM_sequential_state_reg[1]_0 ,
+    reset,
+    \current_packet_reg[0]_0 ,
     packet_data);
   output spi_start;
   output [1:0]state;
-  output \byte_counter_reg[0]_0 ;
-  output \FSM_sequential_state_reg[1]_0 ;
-  output [7:0]\spi_tx_data_reg[7]_0 ;
-  input reset;
+  output [7:0]Q;
   input clk;
+  input \FSM_sequential_state_reg[1]_0 ;
+  input reset;
   input \current_packet_reg[0]_0 ;
-  input \FSM_sequential_state_reg[0]_0 ;
-  input \FSM_sequential_state_reg[1]_1 ;
-  input [0:0]Q;
   input [31:0]packet_data;
 
   wire \FSM_sequential_state[0]_i_1_n_0 ;
   wire \FSM_sequential_state[0]_i_3_n_0 ;
   wire \FSM_sequential_state[1]_i_1_n_0 ;
-  wire \FSM_sequential_state[1]_i_2_n_0 ;
+  wire \FSM_sequential_state[1]_i_3_n_0 ;
+  wire \FSM_sequential_state[1]_i_4_n_0 ;
   wire \FSM_sequential_state[1]_i_5_n_0 ;
-  wire \FSM_sequential_state[1]_i_6_n_0 ;
-  wire \FSM_sequential_state_reg[0]_0 ;
   wire \FSM_sequential_state_reg[1]_0 ;
-  wire \FSM_sequential_state_reg[1]_1 ;
-  wire [0:0]Q;
+  wire [7:0]Q;
   wire [1:0]byte_counter;
   wire \byte_counter[0]_i_1_n_0 ;
   wire \byte_counter[1]_i_1_n_0 ;
-  wire \byte_counter_reg[0]_0 ;
   wire clk;
   wire \current_packet_reg[0]_0 ;
   wire \current_packet_reg_n_0_[0] ;
@@ -736,6 +708,7 @@ module system_SPI_Master_Top_0_0_SPI_Packet_Controller
   wire \current_packet_reg_n_0_[8] ;
   wire \current_packet_reg_n_0_[9] ;
   wire [31:1]in6;
+  wire [7:0]p_0_in;
   wire [3:0]packet_counter;
   wire \packet_counter[1]_i_1_n_0 ;
   wire \packet_counter[2]_i_1_n_0 ;
@@ -753,9 +726,8 @@ module system_SPI_Master_Top_0_0_SPI_Packet_Controller
   wire [31:0]packet_data;
   wire reset;
   wire spi_start;
+  wire spi_start_i_1_n_0;
   wire spi_start_next;
-  wire [7:0]spi_tx_data_next;
-  wire [7:0]\spi_tx_data_reg[7]_0 ;
   wire [1:0]state;
   wire [0:0]state_next__0;
   wire [31:0]timer_counter;
@@ -795,80 +767,72 @@ module system_SPI_Master_Top_0_0_SPI_Packet_Controller
   wire [3:2]\NLW_timer_counter_reg[31]_i_4_CO_UNCONNECTED ;
   wire [3:3]\NLW_timer_counter_reg[31]_i_4_O_UNCONNECTED ;
 
-  (* SOFT_HLUTNM = "soft_lutpair7" *) 
-  LUT3 #(
-    .INIT(8'hB8)) 
+  LUT6 #(
+    .INIT(64'hAAAAAAAAE0F0F0F0)) 
     \FSM_sequential_state[0]_i_1 
        (.I0(state_next__0),
-        .I1(\FSM_sequential_state[0]_i_3_n_0 ),
+        .I1(state[1]),
         .I2(state[0]),
+        .I3(\FSM_sequential_state[0]_i_3_n_0 ),
+        .I4(\FSM_sequential_state_reg[1]_0 ),
+        .I5(\FSM_sequential_state[1]_i_3_n_0 ),
         .O(\FSM_sequential_state[0]_i_1_n_0 ));
   LUT6 #(
-    .INIT(64'hFFFFFFF70000FFFF)) 
+    .INIT(64'hFFFF0000FFF7FFFF)) 
     \FSM_sequential_state[0]_i_2 
        (.I0(packet_counter[3]),
         .I1(packet_counter[0]),
         .I2(packet_counter[2]),
         .I3(packet_counter[1]),
-        .I4(state[1]),
-        .I5(state[0]),
+        .I4(state[0]),
+        .I5(state[1]),
         .O(state_next__0));
-  LUT6 #(
-    .INIT(64'hFFFFFFFFFFFF0400)) 
+  LUT2 #(
+    .INIT(4'h8)) 
     \FSM_sequential_state[0]_i_3 
-       (.I0(\packet_counter[3]_i_3_n_0 ),
-        .I1(\packet_counter[3]_i_4_n_0 ),
-        .I2(\packet_counter[3]_i_5_n_0 ),
-        .I3(state[1]),
-        .I4(\current_packet_reg[0]_0 ),
-        .I5(\FSM_sequential_state_reg[0]_0 ),
+       (.I0(byte_counter[1]),
+        .I1(byte_counter[0]),
         .O(\FSM_sequential_state[0]_i_3_n_0 ));
   LUT6 #(
-    .INIT(64'h55BA550055AA5500)) 
+    .INIT(64'h44444444EAAAAAAA)) 
     \FSM_sequential_state[1]_i_1 
-       (.I0(\FSM_sequential_state[1]_i_2_n_0 ),
-        .I1(\FSM_sequential_state_reg[1]_1 ),
-        .I2(Q),
-        .I3(state[1]),
-        .I4(state[0]),
-        .I5(\byte_counter_reg[0]_0 ),
+       (.I0(state[1]),
+        .I1(state[0]),
+        .I2(byte_counter[0]),
+        .I3(byte_counter[1]),
+        .I4(\FSM_sequential_state_reg[1]_0 ),
+        .I5(\FSM_sequential_state[1]_i_3_n_0 ),
         .O(\FSM_sequential_state[1]_i_1_n_0 ));
   LUT6 #(
     .INIT(64'hAAAAAAAAAAAAAEAA)) 
-    \FSM_sequential_state[1]_i_2 
+    \FSM_sequential_state[1]_i_3 
        (.I0(\current_packet_reg[0]_0 ),
         .I1(state[1]),
         .I2(\packet_counter[3]_i_5_n_0 ),
         .I3(\packet_counter[3]_i_4_n_0 ),
-        .I4(\FSM_sequential_state[1]_i_5_n_0 ),
-        .I5(\FSM_sequential_state[1]_i_6_n_0 ),
-        .O(\FSM_sequential_state[1]_i_2_n_0 ));
-  LUT2 #(
-    .INIT(4'h8)) 
-    \FSM_sequential_state[1]_i_4 
-       (.I0(byte_counter[0]),
-        .I1(byte_counter[1]),
-        .O(\byte_counter_reg[0]_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair2" *) 
+        .I4(\FSM_sequential_state[1]_i_4_n_0 ),
+        .I5(\FSM_sequential_state[1]_i_5_n_0 ),
+        .O(\FSM_sequential_state[1]_i_3_n_0 ));
+  (* SOFT_HLUTNM = "soft_lutpair0" *) 
   LUT5 #(
     .INIT(32'hFFFFBFFF)) 
-    \FSM_sequential_state[1]_i_5 
+    \FSM_sequential_state[1]_i_4 
        (.I0(timer_counter[24]),
         .I1(timer_counter[22]),
         .I2(timer_counter[3]),
         .I3(timer_counter[13]),
         .I4(\packet_counter[3]_i_9_n_0 ),
-        .O(\FSM_sequential_state[1]_i_5_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair3" *) 
+        .O(\FSM_sequential_state[1]_i_4_n_0 ));
+  (* SOFT_HLUTNM = "soft_lutpair1" *) 
   LUT5 #(
     .INIT(32'hFFFFF7FF)) 
-    \FSM_sequential_state[1]_i_6 
+    \FSM_sequential_state[1]_i_5 
        (.I0(timer_counter[18]),
         .I1(timer_counter[21]),
         .I2(timer_counter[10]),
         .I3(timer_counter[4]),
         .I4(\packet_counter[3]_i_7_n_0 ),
-        .O(\FSM_sequential_state[1]_i_6_n_0 ));
+        .O(\FSM_sequential_state[1]_i_5_n_0 ));
   (* FSM_ENCODED_STATES = "IDLE:00,TRANSMIT:01,WAIT_TIMER:11,COOLDOWN:10" *) 
   FDRE \FSM_sequential_state_reg[0] 
        (.C(clk),
@@ -884,32 +848,25 @@ module system_SPI_Master_Top_0_0_SPI_Packet_Controller
         .Q(state[1]),
         .R(reset));
   LUT6 #(
-    .INIT(64'h555500BA554500BA)) 
+    .INIT(64'h5530453055205520)) 
     \byte_counter[0]_i_1 
        (.I0(\packet_counter[3]_i_1_n_0 ),
-        .I1(\FSM_sequential_state_reg[1]_1 ),
-        .I2(Q),
-        .I3(\FSM_sequential_state_reg[1]_0 ),
-        .I4(byte_counter[0]),
-        .I5(byte_counter[1]),
+        .I1(state[1]),
+        .I2(state[0]),
+        .I3(byte_counter[0]),
+        .I4(byte_counter[1]),
+        .I5(\FSM_sequential_state_reg[1]_0 ),
         .O(\byte_counter[0]_i_1_n_0 ));
   LUT6 #(
-    .INIT(64'h555555FF00BA0000)) 
+    .INIT(64'h5575300055752000)) 
     \byte_counter[1]_i_1 
        (.I0(\packet_counter[3]_i_1_n_0 ),
-        .I1(\FSM_sequential_state_reg[1]_1 ),
-        .I2(Q),
-        .I3(\FSM_sequential_state_reg[1]_0 ),
-        .I4(byte_counter[0]),
-        .I5(byte_counter[1]),
+        .I1(state[1]),
+        .I2(state[0]),
+        .I3(byte_counter[0]),
+        .I4(byte_counter[1]),
+        .I5(\FSM_sequential_state_reg[1]_0 ),
         .O(\byte_counter[1]_i_1_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair7" *) 
-  LUT2 #(
-    .INIT(4'hB)) 
-    \byte_counter[1]_i_2 
-       (.I0(state[1]),
-        .I1(state[0]),
-        .O(\FSM_sequential_state_reg[1]_0 ));
   FDRE \byte_counter_reg[0] 
        (.C(clk),
         .CE(1'b1),
@@ -1114,14 +1071,14 @@ module system_SPI_Master_Top_0_0_SPI_Packet_Controller
         .D(packet_data[9]),
         .Q(\current_packet_reg_n_0_[9] ),
         .R(reset));
-  (* SOFT_HLUTNM = "soft_lutpair6" *) 
+  (* SOFT_HLUTNM = "soft_lutpair4" *) 
   LUT2 #(
     .INIT(4'h2)) 
     \packet_counter[0]_i_1 
        (.I0(state[1]),
         .I1(packet_counter[0]),
         .O(packet_counter_next[0]));
-  (* SOFT_HLUTNM = "soft_lutpair6" *) 
+  (* SOFT_HLUTNM = "soft_lutpair4" *) 
   LUT3 #(
     .INIT(8'h60)) 
     \packet_counter[1]_i_1 
@@ -1129,7 +1086,7 @@ module system_SPI_Master_Top_0_0_SPI_Packet_Controller
         .I1(packet_counter[0]),
         .I2(state[1]),
         .O(\packet_counter[1]_i_1_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair4" *) 
+  (* SOFT_HLUTNM = "soft_lutpair2" *) 
   LUT4 #(
     .INIT(16'h7800)) 
     \packet_counter[2]_i_1 
@@ -1148,7 +1105,7 @@ module system_SPI_Master_Top_0_0_SPI_Packet_Controller
         .I4(\current_packet_reg[0]_0 ),
         .I5(state[0]),
         .O(\packet_counter[3]_i_1_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair2" *) 
+  (* SOFT_HLUTNM = "soft_lutpair0" *) 
   LUT4 #(
     .INIT(16'hFF7F)) 
     \packet_counter[3]_i_10 
@@ -1165,7 +1122,7 @@ module system_SPI_Master_Top_0_0_SPI_Packet_Controller
         .I2(timer_counter[14]),
         .I3(timer_counter[26]),
         .O(\packet_counter[3]_i_11_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair5" *) 
+  (* SOFT_HLUTNM = "soft_lutpair3" *) 
   LUT4 #(
     .INIT(16'hFFFD)) 
     \packet_counter[3]_i_12 
@@ -1174,7 +1131,7 @@ module system_SPI_Master_Top_0_0_SPI_Packet_Controller
         .I2(timer_counter[29]),
         .I3(timer_counter[19]),
         .O(\packet_counter[3]_i_12_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair4" *) 
+  (* SOFT_HLUTNM = "soft_lutpair2" *) 
   LUT5 #(
     .INIT(32'h2AAA8000)) 
     \packet_counter[3]_i_2 
@@ -1218,7 +1175,7 @@ module system_SPI_Master_Top_0_0_SPI_Packet_Controller
         .I2(timer_counter[25]),
         .I3(timer_counter[20]),
         .O(\packet_counter[3]_i_7_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair3" *) 
+  (* SOFT_HLUTNM = "soft_lutpair1" *) 
   LUT4 #(
     .INIT(16'hDFFF)) 
     \packet_counter[3]_i_8 
@@ -1259,221 +1216,226 @@ module system_SPI_Master_Top_0_0_SPI_Packet_Controller
         .D(packet_counter_next[3]),
         .Q(packet_counter[3]),
         .R(reset));
-  LUT6 #(
-    .INIT(64'hAAAAAAAAAABAAAAA)) 
+  LUT4 #(
+    .INIT(16'h0004)) 
     spi_start_i_1
-       (.I0(\packet_counter[3]_i_1_n_0 ),
-        .I1(\FSM_sequential_state_reg[1]_1 ),
-        .I2(Q),
-        .I3(state[1]),
-        .I4(state[0]),
-        .I5(\byte_counter_reg[0]_0 ),
-        .O(spi_start_next));
+       (.I0(\FSM_sequential_state_reg[1]_0 ),
+        .I1(state[0]),
+        .I2(state[1]),
+        .I3(reset),
+        .O(spi_start_i_1_n_0));
   FDRE spi_start_reg
        (.C(clk),
         .CE(1'b1),
-        .D(spi_start_next),
+        .D(spi_start_i_1_n_0),
         .Q(spi_start),
-        .R(reset));
+        .R(1'b0));
   LUT6 #(
-    .INIT(64'hF0CCFFAAF0CC00AA)) 
+    .INIT(64'hFFCCAAF000CCAAF0)) 
     \spi_tx_data[0]_i_1 
-       (.I0(\current_packet_reg_n_0_[0] ),
-        .I1(\current_packet_reg_n_0_[8] ),
-        .I2(\current_packet_reg_n_0_[24] ),
-        .I3(byte_counter[1]),
-        .I4(byte_counter[0]),
-        .I5(\current_packet_reg_n_0_[16] ),
-        .O(spi_tx_data_next[0]));
+       (.I0(\current_packet_reg_n_0_[8] ),
+        .I1(\current_packet_reg_n_0_[16] ),
+        .I2(\current_packet_reg_n_0_[0] ),
+        .I3(byte_counter[0]),
+        .I4(byte_counter[1]),
+        .I5(\current_packet_reg_n_0_[24] ),
+        .O(p_0_in[0]));
   LUT6 #(
-    .INIT(64'hFFAACCF000AACCF0)) 
+    .INIT(64'hF0FFCCAAF000CCAA)) 
     \spi_tx_data[1]_i_1 
-       (.I0(\current_packet_reg_n_0_[9] ),
-        .I1(\current_packet_reg_n_0_[17] ),
-        .I2(\current_packet_reg_n_0_[1] ),
-        .I3(byte_counter[1]),
-        .I4(byte_counter[0]),
-        .I5(\current_packet_reg_n_0_[25] ),
-        .O(spi_tx_data_next[1]));
+       (.I0(\current_packet_reg_n_0_[1] ),
+        .I1(\current_packet_reg_n_0_[9] ),
+        .I2(\current_packet_reg_n_0_[25] ),
+        .I3(byte_counter[0]),
+        .I4(byte_counter[1]),
+        .I5(\current_packet_reg_n_0_[17] ),
+        .O(p_0_in[1]));
   LUT6 #(
-    .INIT(64'hFFCCF0AA00CCF0AA)) 
+    .INIT(64'hF0FFCCAAF000CCAA)) 
     \spi_tx_data[2]_i_1 
        (.I0(\current_packet_reg_n_0_[2] ),
         .I1(\current_packet_reg_n_0_[10] ),
-        .I2(\current_packet_reg_n_0_[18] ),
-        .I3(byte_counter[1]),
-        .I4(byte_counter[0]),
-        .I5(\current_packet_reg_n_0_[26] ),
-        .O(spi_tx_data_next[2]));
+        .I2(\current_packet_reg_n_0_[26] ),
+        .I3(byte_counter[0]),
+        .I4(byte_counter[1]),
+        .I5(\current_packet_reg_n_0_[18] ),
+        .O(p_0_in[2]));
   LUT6 #(
-    .INIT(64'hCCAAFFF0CCAA00F0)) 
+    .INIT(64'hFFCCF0AA00CCF0AA)) 
     \spi_tx_data[3]_i_1 
-       (.I0(\current_packet_reg_n_0_[11] ),
-        .I1(\current_packet_reg_n_0_[27] ),
-        .I2(\current_packet_reg_n_0_[3] ),
+       (.I0(\current_packet_reg_n_0_[3] ),
+        .I1(\current_packet_reg_n_0_[11] ),
+        .I2(\current_packet_reg_n_0_[19] ),
         .I3(byte_counter[1]),
         .I4(byte_counter[0]),
-        .I5(\current_packet_reg_n_0_[19] ),
-        .O(spi_tx_data_next[3]));
+        .I5(\current_packet_reg_n_0_[27] ),
+        .O(p_0_in[3]));
   LUT6 #(
-    .INIT(64'hF0CCFFAAF0CC00AA)) 
+    .INIT(64'hCCFFAAF0CC00AAF0)) 
     \spi_tx_data[4]_i_1 
-       (.I0(\current_packet_reg_n_0_[4] ),
-        .I1(\current_packet_reg_n_0_[12] ),
-        .I2(\current_packet_reg_n_0_[28] ),
-        .I3(byte_counter[1]),
-        .I4(byte_counter[0]),
+       (.I0(\current_packet_reg_n_0_[12] ),
+        .I1(\current_packet_reg_n_0_[28] ),
+        .I2(\current_packet_reg_n_0_[4] ),
+        .I3(byte_counter[0]),
+        .I4(byte_counter[1]),
         .I5(\current_packet_reg_n_0_[20] ),
-        .O(spi_tx_data_next[4]));
+        .O(p_0_in[4]));
   LUT6 #(
-    .INIT(64'hF0CCFFAAF0CC00AA)) 
+    .INIT(64'hF0FFCCAAF000CCAA)) 
     \spi_tx_data[5]_i_1 
        (.I0(\current_packet_reg_n_0_[5] ),
         .I1(\current_packet_reg_n_0_[13] ),
         .I2(\current_packet_reg_n_0_[29] ),
-        .I3(byte_counter[1]),
-        .I4(byte_counter[0]),
+        .I3(byte_counter[0]),
+        .I4(byte_counter[1]),
         .I5(\current_packet_reg_n_0_[21] ),
-        .O(spi_tx_data_next[5]));
+        .O(p_0_in[5]));
   LUT6 #(
-    .INIT(64'hFFCCF0AA00CCF0AA)) 
+    .INIT(64'hF0FFCCAAF000CCAA)) 
     \spi_tx_data[6]_i_1 
        (.I0(\current_packet_reg_n_0_[6] ),
         .I1(\current_packet_reg_n_0_[14] ),
-        .I2(\current_packet_reg_n_0_[22] ),
-        .I3(byte_counter[1]),
-        .I4(byte_counter[0]),
-        .I5(\current_packet_reg_n_0_[30] ),
-        .O(spi_tx_data_next[6]));
-  LUT6 #(
-    .INIT(64'hFFAACCF000AACCF0)) 
+        .I2(\current_packet_reg_n_0_[30] ),
+        .I3(byte_counter[0]),
+        .I4(byte_counter[1]),
+        .I5(\current_packet_reg_n_0_[22] ),
+        .O(p_0_in[6]));
+  LUT3 #(
+    .INIT(8'h04)) 
     \spi_tx_data[7]_i_1 
-       (.I0(\current_packet_reg_n_0_[15] ),
-        .I1(\current_packet_reg_n_0_[23] ),
-        .I2(\current_packet_reg_n_0_[7] ),
+       (.I0(state[1]),
+        .I1(state[0]),
+        .I2(\FSM_sequential_state_reg[1]_0 ),
+        .O(spi_start_next));
+  LUT6 #(
+    .INIT(64'hFFCCF0AA00CCF0AA)) 
+    \spi_tx_data[7]_i_2 
+       (.I0(\current_packet_reg_n_0_[7] ),
+        .I1(\current_packet_reg_n_0_[15] ),
+        .I2(\current_packet_reg_n_0_[23] ),
         .I3(byte_counter[1]),
         .I4(byte_counter[0]),
         .I5(\current_packet_reg_n_0_[31] ),
-        .O(spi_tx_data_next[7]));
+        .O(p_0_in[7]));
   FDRE \spi_tx_data_reg[0] 
        (.C(clk),
-        .CE(1'b1),
-        .D(spi_tx_data_next[0]),
-        .Q(\spi_tx_data_reg[7]_0 [0]),
+        .CE(spi_start_next),
+        .D(p_0_in[0]),
+        .Q(Q[0]),
         .R(reset));
   FDRE \spi_tx_data_reg[1] 
        (.C(clk),
-        .CE(1'b1),
-        .D(spi_tx_data_next[1]),
-        .Q(\spi_tx_data_reg[7]_0 [1]),
+        .CE(spi_start_next),
+        .D(p_0_in[1]),
+        .Q(Q[1]),
         .R(reset));
   FDRE \spi_tx_data_reg[2] 
        (.C(clk),
-        .CE(1'b1),
-        .D(spi_tx_data_next[2]),
-        .Q(\spi_tx_data_reg[7]_0 [2]),
+        .CE(spi_start_next),
+        .D(p_0_in[2]),
+        .Q(Q[2]),
         .R(reset));
   FDRE \spi_tx_data_reg[3] 
        (.C(clk),
-        .CE(1'b1),
-        .D(spi_tx_data_next[3]),
-        .Q(\spi_tx_data_reg[7]_0 [3]),
+        .CE(spi_start_next),
+        .D(p_0_in[3]),
+        .Q(Q[3]),
         .R(reset));
   FDRE \spi_tx_data_reg[4] 
        (.C(clk),
-        .CE(1'b1),
-        .D(spi_tx_data_next[4]),
-        .Q(\spi_tx_data_reg[7]_0 [4]),
+        .CE(spi_start_next),
+        .D(p_0_in[4]),
+        .Q(Q[4]),
         .R(reset));
   FDRE \spi_tx_data_reg[5] 
        (.C(clk),
-        .CE(1'b1),
-        .D(spi_tx_data_next[5]),
-        .Q(\spi_tx_data_reg[7]_0 [5]),
+        .CE(spi_start_next),
+        .D(p_0_in[5]),
+        .Q(Q[5]),
         .R(reset));
   FDRE \spi_tx_data_reg[6] 
        (.C(clk),
-        .CE(1'b1),
-        .D(spi_tx_data_next[6]),
-        .Q(\spi_tx_data_reg[7]_0 [6]),
+        .CE(spi_start_next),
+        .D(p_0_in[6]),
+        .Q(Q[6]),
         .R(reset));
   FDRE \spi_tx_data_reg[7] 
        (.C(clk),
-        .CE(1'b1),
-        .D(spi_tx_data_next[7]),
-        .Q(\spi_tx_data_reg[7]_0 [7]),
+        .CE(spi_start_next),
+        .D(p_0_in[7]),
+        .Q(Q[7]),
         .R(reset));
-  (* SOFT_HLUTNM = "soft_lutpair5" *) 
+  (* SOFT_HLUTNM = "soft_lutpair3" *) 
   LUT2 #(
     .INIT(4'h2)) 
     \timer_counter[0]_i_1 
        (.I0(state[1]),
         .I1(timer_counter[0]),
         .O(timer_counter_next[0]));
-  (* SOFT_HLUTNM = "soft_lutpair18" *) 
+  (* SOFT_HLUTNM = "soft_lutpair15" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[10]_i_1 
        (.I0(state[1]),
         .I1(in6[10]),
         .O(timer_counter_next[10]));
-  (* SOFT_HLUTNM = "soft_lutpair18" *) 
+  (* SOFT_HLUTNM = "soft_lutpair15" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[11]_i_1 
        (.I0(state[1]),
         .I1(in6[11]),
         .O(timer_counter_next[11]));
-  (* SOFT_HLUTNM = "soft_lutpair17" *) 
+  (* SOFT_HLUTNM = "soft_lutpair14" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[12]_i_1 
        (.I0(state[1]),
         .I1(in6[12]),
         .O(timer_counter_next[12]));
-  (* SOFT_HLUTNM = "soft_lutpair17" *) 
+  (* SOFT_HLUTNM = "soft_lutpair14" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[13]_i_1 
        (.I0(state[1]),
         .I1(in6[13]),
         .O(timer_counter_next[13]));
-  (* SOFT_HLUTNM = "soft_lutpair16" *) 
+  (* SOFT_HLUTNM = "soft_lutpair13" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[14]_i_1 
        (.I0(state[1]),
         .I1(in6[14]),
         .O(timer_counter_next[14]));
-  (* SOFT_HLUTNM = "soft_lutpair16" *) 
+  (* SOFT_HLUTNM = "soft_lutpair13" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[15]_i_1 
        (.I0(state[1]),
         .I1(in6[15]),
         .O(timer_counter_next[15]));
-  (* SOFT_HLUTNM = "soft_lutpair15" *) 
+  (* SOFT_HLUTNM = "soft_lutpair12" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[16]_i_1 
        (.I0(state[1]),
         .I1(in6[16]),
         .O(timer_counter_next[16]));
-  (* SOFT_HLUTNM = "soft_lutpair15" *) 
+  (* SOFT_HLUTNM = "soft_lutpair12" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[17]_i_1 
        (.I0(state[1]),
         .I1(in6[17]),
         .O(timer_counter_next[17]));
-  (* SOFT_HLUTNM = "soft_lutpair14" *) 
+  (* SOFT_HLUTNM = "soft_lutpair11" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[18]_i_1 
        (.I0(state[1]),
         .I1(in6[18]),
         .O(timer_counter_next[18]));
-  (* SOFT_HLUTNM = "soft_lutpair14" *) 
+  (* SOFT_HLUTNM = "soft_lutpair11" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[19]_i_1 
@@ -1486,84 +1448,84 @@ module system_SPI_Master_Top_0_0_SPI_Packet_Controller
        (.I0(state[1]),
         .I1(in6[1]),
         .O(timer_counter_next[1]));
-  (* SOFT_HLUTNM = "soft_lutpair13" *) 
+  (* SOFT_HLUTNM = "soft_lutpair10" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[20]_i_1 
        (.I0(state[1]),
         .I1(in6[20]),
         .O(timer_counter_next[20]));
-  (* SOFT_HLUTNM = "soft_lutpair13" *) 
+  (* SOFT_HLUTNM = "soft_lutpair10" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[21]_i_1 
        (.I0(state[1]),
         .I1(in6[21]),
         .O(timer_counter_next[21]));
-  (* SOFT_HLUTNM = "soft_lutpair12" *) 
+  (* SOFT_HLUTNM = "soft_lutpair9" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[22]_i_1 
        (.I0(state[1]),
         .I1(in6[22]),
         .O(timer_counter_next[22]));
-  (* SOFT_HLUTNM = "soft_lutpair12" *) 
+  (* SOFT_HLUTNM = "soft_lutpair9" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[23]_i_1 
        (.I0(state[1]),
         .I1(in6[23]),
         .O(timer_counter_next[23]));
-  (* SOFT_HLUTNM = "soft_lutpair11" *) 
+  (* SOFT_HLUTNM = "soft_lutpair8" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[24]_i_1 
        (.I0(state[1]),
         .I1(in6[24]),
         .O(timer_counter_next[24]));
-  (* SOFT_HLUTNM = "soft_lutpair11" *) 
+  (* SOFT_HLUTNM = "soft_lutpair8" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[25]_i_1 
        (.I0(state[1]),
         .I1(in6[25]),
         .O(timer_counter_next[25]));
-  (* SOFT_HLUTNM = "soft_lutpair10" *) 
+  (* SOFT_HLUTNM = "soft_lutpair7" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[26]_i_1 
        (.I0(state[1]),
         .I1(in6[26]),
         .O(timer_counter_next[26]));
-  (* SOFT_HLUTNM = "soft_lutpair10" *) 
+  (* SOFT_HLUTNM = "soft_lutpair7" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[27]_i_1 
        (.I0(state[1]),
         .I1(in6[27]),
         .O(timer_counter_next[27]));
-  (* SOFT_HLUTNM = "soft_lutpair9" *) 
+  (* SOFT_HLUTNM = "soft_lutpair6" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[28]_i_1 
        (.I0(state[1]),
         .I1(in6[28]),
         .O(timer_counter_next[28]));
-  (* SOFT_HLUTNM = "soft_lutpair9" *) 
+  (* SOFT_HLUTNM = "soft_lutpair6" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[29]_i_1 
        (.I0(state[1]),
         .I1(in6[29]),
         .O(timer_counter_next[29]));
-  (* SOFT_HLUTNM = "soft_lutpair22" *) 
+  (* SOFT_HLUTNM = "soft_lutpair19" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[2]_i_1 
        (.I0(state[1]),
         .I1(in6[2]),
         .O(timer_counter_next[2]));
-  (* SOFT_HLUTNM = "soft_lutpair8" *) 
+  (* SOFT_HLUTNM = "soft_lutpair5" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[30]_i_1 
@@ -1571,16 +1533,16 @@ module system_SPI_Master_Top_0_0_SPI_Packet_Controller
         .I1(in6[30]),
         .O(timer_counter_next[30]));
   LUT6 #(
-    .INIT(64'h0000FFFF40004000)) 
+    .INIT(64'h0000FFFF80008000)) 
     \timer_counter[31]_i_1 
-       (.I0(\FSM_sequential_state_reg[1]_1 ),
-        .I1(Q),
-        .I2(state[0]),
-        .I3(\byte_counter_reg[0]_0 ),
+       (.I0(state[0]),
+        .I1(byte_counter[0]),
+        .I2(byte_counter[1]),
+        .I3(\FSM_sequential_state_reg[1]_0 ),
         .I4(\timer_counter[31]_i_3_n_0 ),
         .I5(state[1]),
         .O(\timer_counter[31]_i_1_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair8" *) 
+  (* SOFT_HLUTNM = "soft_lutpair5" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[31]_i_2 
@@ -1592,52 +1554,52 @@ module system_SPI_Master_Top_0_0_SPI_Packet_Controller
     \timer_counter[31]_i_3 
        (.I0(\packet_counter[3]_i_5_n_0 ),
         .I1(\packet_counter[3]_i_4_n_0 ),
-        .I2(\FSM_sequential_state[1]_i_5_n_0 ),
-        .I3(\FSM_sequential_state[1]_i_6_n_0 ),
+        .I2(\FSM_sequential_state[1]_i_4_n_0 ),
+        .I3(\FSM_sequential_state[1]_i_5_n_0 ),
         .O(\timer_counter[31]_i_3_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair22" *) 
+  (* SOFT_HLUTNM = "soft_lutpair19" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[3]_i_1 
        (.I0(state[1]),
         .I1(in6[3]),
         .O(timer_counter_next[3]));
-  (* SOFT_HLUTNM = "soft_lutpair21" *) 
+  (* SOFT_HLUTNM = "soft_lutpair18" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[4]_i_1 
        (.I0(state[1]),
         .I1(in6[4]),
         .O(timer_counter_next[4]));
-  (* SOFT_HLUTNM = "soft_lutpair21" *) 
+  (* SOFT_HLUTNM = "soft_lutpair18" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[5]_i_1 
        (.I0(state[1]),
         .I1(in6[5]),
         .O(timer_counter_next[5]));
-  (* SOFT_HLUTNM = "soft_lutpair20" *) 
+  (* SOFT_HLUTNM = "soft_lutpair17" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[6]_i_1 
        (.I0(state[1]),
         .I1(in6[6]),
         .O(timer_counter_next[6]));
-  (* SOFT_HLUTNM = "soft_lutpair20" *) 
+  (* SOFT_HLUTNM = "soft_lutpair17" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[7]_i_1 
        (.I0(state[1]),
         .I1(in6[7]),
         .O(timer_counter_next[7]));
-  (* SOFT_HLUTNM = "soft_lutpair19" *) 
+  (* SOFT_HLUTNM = "soft_lutpair16" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[8]_i_1 
        (.I0(state[1]),
         .I1(in6[8]),
         .O(timer_counter_next[8]));
-  (* SOFT_HLUTNM = "soft_lutpair19" *) 
+  (* SOFT_HLUTNM = "soft_lutpair16" *) 
   LUT2 #(
     .INIT(4'h8)) 
     \timer_counter[9]_i_1 
@@ -1905,14 +1867,14 @@ endmodule
 (* ORIG_REF_NAME = "btn_debounce" *) 
 module system_SPI_Master_Top_0_0_btn_debounce
    (\counter_reg_reg[0]_0 ,
-    edge_detect_reg_0,
+    \FSM_sequential_state_reg[0] ,
     clk,
     reset,
     state,
     start_raw,
     CLK);
   output \counter_reg_reg[0]_0 ;
-  output edge_detect_reg_0;
+  output \FSM_sequential_state_reg[0] ;
   input clk;
   input reset;
   input [1:0]state;
@@ -1920,6 +1882,7 @@ module system_SPI_Master_Top_0_0_btn_debounce
   input CLK;
 
   wire CLK;
+  wire \FSM_sequential_state_reg[0] ;
   wire btn_debounce;
   wire clk;
   wire [16:0]counter_next;
@@ -1949,7 +1912,6 @@ module system_SPI_Master_Top_0_0_btn_debounce
   wire [16:1]data0;
   wire edge_detect;
   wire edge_detect_i_2_n_0;
-  wire edge_detect_reg_0;
   wire \packet_counter[3]_i_13_n_0 ;
   wire [6:0]q_next;
   wire \q_reg_reg_n_0_[0] ;
@@ -2006,7 +1968,7 @@ module system_SPI_Master_Top_0_0_btn_debounce
         .I4(counter_reg[3]),
         .I5(\counter_reg[0]_i_3_n_0 ),
         .O(\counter_reg[0]_i_2_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair0" *) 
+  (* SOFT_HLUTNM = "soft_lutpair28" *) 
   LUT5 #(
     .INIT(32'hFFFFEFFF)) 
     \counter_reg[0]_i_3 
@@ -2086,7 +2048,7 @@ module system_SPI_Master_Top_0_0_btn_debounce
         .I4(counter_reg[0]),
         .I5(data0[16]),
         .O(counter_next[16]));
-  (* SOFT_HLUTNM = "soft_lutpair0" *) 
+  (* SOFT_HLUTNM = "soft_lutpair28" *) 
   LUT4 #(
     .INIT(16'hFFF7)) 
     \counter_reg[16]_i_2 
@@ -2311,7 +2273,7 @@ module system_SPI_Master_Top_0_0_btn_debounce
         .CLR(reset),
         .D(counter_next[9]),
         .Q(counter_reg[9]));
-  (* SOFT_HLUTNM = "soft_lutpair1" *) 
+  (* SOFT_HLUTNM = "soft_lutpair29" *) 
   LUT5 #(
     .INIT(32'h00008000)) 
     edge_detect_i_1
@@ -2335,7 +2297,7 @@ module system_SPI_Master_Top_0_0_btn_debounce
         .CLR(reset),
         .D(btn_debounce),
         .Q(edge_detect));
-  (* SOFT_HLUTNM = "soft_lutpair1" *) 
+  (* SOFT_HLUTNM = "soft_lutpair29" *) 
   LUT4 #(
     .INIT(16'h8000)) 
     \packet_counter[3]_i_13 
@@ -2349,10 +2311,10 @@ module system_SPI_Master_Top_0_0_btn_debounce
     \packet_counter[3]_i_6 
        (.I0(edge_detect_i_2_n_0),
         .I1(\packet_counter[3]_i_13_n_0 ),
-        .I2(edge_detect),
+        .I2(state[0]),
         .I3(state[1]),
-        .I4(state[0]),
-        .O(edge_detect_reg_0));
+        .I4(edge_detect),
+        .O(\FSM_sequential_state_reg[0] ));
   LUT5 #(
     .INIT(32'hFFFFFFFE)) 
     \q_reg[7]_i_2 

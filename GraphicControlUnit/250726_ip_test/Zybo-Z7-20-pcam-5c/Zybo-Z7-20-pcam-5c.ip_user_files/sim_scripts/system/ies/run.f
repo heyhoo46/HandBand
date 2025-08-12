@@ -204,8 +204,8 @@
 -makelib ies_lib/xil_defaultlib \
   "../../../bd/system/ip/system_AXI4_HandSignal_0_0/sim/system_AXI4_HandSignal_0_0.vhd" \
   "../../../bd/system/ip/system_SPI_Master_Top_0_0/sim/system_SPI_Master_Top_0_0.vhd" \
-  "../../../bd/system/ipshared/dfeb/LineBuffer.vhd" \
-  "../../../bd/system/ipshared/dfeb/system_AXI_BayerToRGB_v2.vhd" \
+  "../../../bd/system/ipshared/bcd1/LineBuffer.vhd" \
+  "../../../bd/system/ipshared/bcd1/system_AXI_BayerToRGB_v2.vhd" \
   "../../../bd/system/ip/system_system_AXI_BayerToRG_0_0/sim/system_system_AXI_BayerToRG_0_0.vhd" \
 -endlib
 -makelib ies_lib/axi_protocol_converter_v2_1_22 \

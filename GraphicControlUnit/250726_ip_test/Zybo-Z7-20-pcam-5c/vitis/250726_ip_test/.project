@@ -3,7 +3,6 @@
 	<name>250726_ip_test</name>
 	<comment>Created by Vitis v2020.2</comment>
 	<projects>
-		<project>system_wrapper</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

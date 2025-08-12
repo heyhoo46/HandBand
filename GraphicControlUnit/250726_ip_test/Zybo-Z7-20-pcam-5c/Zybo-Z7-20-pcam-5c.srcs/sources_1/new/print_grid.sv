@@ -6,6 +6,7 @@ module print_grid #(
 ) (
     input        clk,
     input        rst,
+    input        sw,
     input        tvalid,
     input        tuser, 
     input        tlast,  
@@ -21,15 +22,21 @@ module print_grid #(
 
     // 그리드 출력
     always_comb begin
-        {o_R, o_G, o_B} = {R, G, B};
-
-        // 세로 그리드 (녹색)
-        if ((x_cnt % X_UNIT) < 3) begin
-            {o_R, o_G, o_B} = 24'h00FF00;
+        if(sw) begin
+            // 세로 그리드 (녹색)
+            if ((x_cnt % X_UNIT) < 3) begin
+                {o_R, o_G, o_B} = 24'h00FF00;
+            end
+            // 가로 그리드 (빨강)
+            else if ((y_cnt % Y_UNIT) < 3) begin
+                {o_R, o_G, o_B} = 24'h00FF00;
+            end
+            else begin
+                {o_R, o_G, o_B} = {R, G, B};
+            end
         end
-        // 가로 그리드 (빨강)
-        if ((y_cnt % Y_UNIT) < 3) begin
-            {o_R, o_G, o_B} = 24'hFF0000;
+        else begin
+            {o_R, o_G, o_B} = {R, G, B};
         end
     end
 endmodule

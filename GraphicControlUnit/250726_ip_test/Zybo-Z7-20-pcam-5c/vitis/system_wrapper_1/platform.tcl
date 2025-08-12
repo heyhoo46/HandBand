@@ -214,3 +214,109 @@ platform clean
 platform generate
 platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/GRBG_prev_colordetect.xsa}
 platform generate -domains 
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/new_2x2_window.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/GRBG_prev_colordetect.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/GRBG_final.xsa}
+platform clean
+platform generate
+platform active {system_wrapper_1}
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/param_64_48_8.xsa}
+platform clean
+platform generate
+platform active {system_wrapper_1}
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/param_128_32_8.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/param_96_48_8.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/param_200_32_8.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/param_96_48_8.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/parameter_128_64_8.xsa}
+platform clean
+platform generate
+platform generate -domains 
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/param_96_48_8.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/rf_btn_v1.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/rf_btn_no_debounce.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/rf_btn_v1.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/250804_spi_rf.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/250804_spi_rf_128_48_8.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/param_96_48_8.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/rgb_max_value.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/rgb_max_value_btnFPGA.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/250804_128_64_8.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/250804_spi_rf_128_54_8.xsa}
+platform clean
+platform generate
+platform generate -domains 
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/250805_fpga_btn_96_48_8.xsa}
+platform clean
+platform generate
+platform active {system_wrapper_1}
+platform generate -domains 
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/250805_param_diff_rgb.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/250805_grbg.xsa}
+platform clean
+platform generate
+platform clean
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/250805_grbg_v2.xsa}
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/250805_rggb.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/250806_spi.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/250806_mirror_grbg.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/250807_rf_sw.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/250807_rf_sw_v2.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/250807_rf_sw_v3.xsa}
+platform clean
+platform generate
+platform active {system_wrapper_1}
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/250808_spi_delay.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/250807_rf_sw_v3.xsa}
+platform clean
+platform generate
+platform config -updatehw {C:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/250807_rf_sw_v3.xsa}
+platform clean
+platform generate

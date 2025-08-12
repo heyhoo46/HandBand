@@ -1,7 +1,7 @@
 -- Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
--- Date        : Mon Jul 28 12:46:10 2025
+-- Date        : Tue Aug  5 16:01:20 2025
 -- Host        : DESKTOP-7CFQ9ND running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim
 --               c:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_SPI_Master_Top_0_0/system_SPI_Master_Top_0_0_sim_netlist.vhdl
@@ -16,16 +16,12 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity system_SPI_Master_Top_0_0_SPI_Master is
   port (
-    Q : out STD_LOGIC_VECTOR ( 0 to 0 );
+    \FSM_onehot_state_reg[3]_0\ : out STD_LOGIC;
+    CS : out STD_LOGIC_VECTOR ( 0 to 0 );
     SCLK : out STD_LOGIC;
     MOSI : out STD_LOGIC;
-    CS : out STD_LOGIC_VECTOR ( 0 to 0 );
-    \sclk_counter_reg_reg[7]_0\ : out STD_LOGIC;
-    \FSM_onehot_state_reg[3]_0\ : out STD_LOGIC;
     spi_start : in STD_LOGIC;
-    \FSM_sequential_state[0]_i_3\ : in STD_LOGIC;
-    \FSM_sequential_state[0]_i_3_0\ : in STD_LOGIC;
-    \temp_tx_data_reg_reg[7]_0\ : in STD_LOGIC_VECTOR ( 7 downto 0 );
+    Q : in STD_LOGIC_VECTOR ( 7 downto 0 );
     clk : in STD_LOGIC;
     reset : in STD_LOGIC
   );
@@ -37,10 +33,11 @@ architecture STRUCTURE of system_SPI_Master_Top_0_0_SPI_Master is
   signal \FSM_onehot_state[0]_i_1_n_0\ : STD_LOGIC;
   signal \FSM_onehot_state[2]_i_1_n_0\ : STD_LOGIC;
   signal \FSM_onehot_state[2]_i_2_n_0\ : STD_LOGIC;
+  signal \^fsm_onehot_state_reg[3]_0\ : STD_LOGIC;
   signal \FSM_onehot_state_reg_n_0_[0]\ : STD_LOGIC;
   signal \FSM_onehot_state_reg_n_0_[2]\ : STD_LOGIC;
-  signal \FSM_sequential_state[0]_i_5_n_0\ : STD_LOGIC;
-  signal \^q\ : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal \FSM_onehot_state_reg_n_0_[3]\ : STD_LOGIC;
+  signal MOSI_INST_0_i_2_n_0 : STD_LOGIC;
   signal \^sclk\ : STD_LOGIC;
   signal SCLK_INST_0_i_1_n_0 : STD_LOGIC;
   signal SCLK_INST_0_i_2_n_0 : STD_LOGIC;
@@ -59,46 +56,50 @@ architecture STRUCTURE of system_SPI_Master_Top_0_0_SPI_Master is
   signal \sclk_counter_reg[6]_i_1_n_0\ : STD_LOGIC;
   signal \sclk_counter_reg[7]_i_1_n_0\ : STD_LOGIC;
   signal \sclk_counter_reg[7]_i_3_n_0\ : STD_LOGIC;
-  signal \^sclk_counter_reg_reg[7]_0\ : STD_LOGIC;
+  signal \sclk_counter_reg[7]_i_4_n_0\ : STD_LOGIC;
   signal spi_mosi : STD_LOGIC;
   signal temp_tx_data_next : STD_LOGIC_VECTOR ( 7 downto 0 );
+  signal \temp_tx_data_reg_reg_n_0_[7]\ : STD_LOGIC;
   attribute SOFT_HLUTNM : string;
-  attribute SOFT_HLUTNM of \CS[0]_INST_0\ : label is "soft_lutpair27";
-  attribute SOFT_HLUTNM of \FSM_onehot_state[2]_i_2\ : label is "soft_lutpair28";
+  attribute SOFT_HLUTNM of \CS[0]_INST_0\ : label is "soft_lutpair22";
+  attribute SOFT_HLUTNM of \FSM_onehot_state[2]_i_2\ : label is "soft_lutpair27";
   attribute FSM_ENCODED_STATES : string;
   attribute FSM_ENCODED_STATES of \FSM_onehot_state_reg[0]\ : label is "CP_DELAY:0010,CP1:1000,CP0:0100,IDLE:0001";
   attribute FSM_ENCODED_STATES of \FSM_onehot_state_reg[2]\ : label is "CP_DELAY:0010,CP1:1000,CP0:0100,IDLE:0001";
   attribute FSM_ENCODED_STATES of \FSM_onehot_state_reg[3]\ : label is "CP_DELAY:0010,CP1:1000,CP0:0100,IDLE:0001";
-  attribute SOFT_HLUTNM of \FSM_sequential_state[0]_i_5\ : label is "soft_lutpair25";
-  attribute SOFT_HLUTNM of MOSI_INST_0 : label is "soft_lutpair27";
-  attribute SOFT_HLUTNM of SCLK_INST_0 : label is "soft_lutpair23";
-  attribute SOFT_HLUTNM of SCLK_INST_0_i_1 : label is "soft_lutpair25";
-  attribute SOFT_HLUTNM of \bit_counter_reg[0]_i_1\ : label is "soft_lutpair28";
-  attribute SOFT_HLUTNM of \bit_counter_reg[1]_i_1\ : label is "soft_lutpair26";
-  attribute SOFT_HLUTNM of \bit_counter_reg[2]_i_2\ : label is "soft_lutpair26";
+  attribute SOFT_HLUTNM of \FSM_sequential_state[1]_i_2\ : label is "soft_lutpair21";
+  attribute SOFT_HLUTNM of MOSI_INST_0 : label is "soft_lutpair26";
+  attribute SOFT_HLUTNM of MOSI_INST_0_i_2 : label is "soft_lutpair23";
+  attribute SOFT_HLUTNM of SCLK_INST_0 : label is "soft_lutpair22";
+  attribute SOFT_HLUTNM of \bit_counter_reg[0]_i_1\ : label is "soft_lutpair27";
+  attribute SOFT_HLUTNM of \bit_counter_reg[1]_i_1\ : label is "soft_lutpair25";
+  attribute SOFT_HLUTNM of \bit_counter_reg[2]_i_2\ : label is "soft_lutpair25";
   attribute SOFT_HLUTNM of \sclk_counter_reg[0]_i_1\ : label is "soft_lutpair24";
-  attribute SOFT_HLUTNM of \sclk_counter_reg[1]_i_1\ : label is "soft_lutpair24";
-  attribute SOFT_HLUTNM of \sclk_counter_reg[4]_i_2\ : label is "soft_lutpair23";
+  attribute SOFT_HLUTNM of \sclk_counter_reg[1]_i_1\ : label is "soft_lutpair20";
+  attribute SOFT_HLUTNM of \sclk_counter_reg[4]_i_2\ : label is "soft_lutpair20";
+  attribute SOFT_HLUTNM of \sclk_counter_reg[5]_i_1\ : label is "soft_lutpair24";
+  attribute SOFT_HLUTNM of \sclk_counter_reg[7]_i_3\ : label is "soft_lutpair21";
+  attribute SOFT_HLUTNM of \temp_tx_data_reg[0]_i_1\ : label is "soft_lutpair26";
+  attribute SOFT_HLUTNM of \temp_tx_data_reg[7]_i_1\ : label is "soft_lutpair23";
 begin
-  Q(0) <= \^q\(0);
+  \FSM_onehot_state_reg[3]_0\ <= \^fsm_onehot_state_reg[3]_0\;
   SCLK <= \^sclk\;
-  \sclk_counter_reg_reg[7]_0\ <= \^sclk_counter_reg_reg[7]_0\;
 \CS[0]_INST_0\: unisim.vcomponents.LUT2
     generic map(
-      INIT => X"2"
+      INIT => X"E"
     )
         port map (
-      I0 => \FSM_onehot_state_reg_n_0_[0]\,
-      I1 => spi_start,
+      I0 => \FSM_onehot_state_reg_n_0_[2]\,
+      I1 => \FSM_onehot_state_reg_n_0_[3]\,
       O => CS(0)
     );
 \FSM_onehot_state[0]_i_1\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"44FF4444FCFF0000"
+      INIT => X"AAFFAAAAFEFFAAAA"
     )
         port map (
-      I0 => \FSM_onehot_state[2]_i_2_n_0\,
-      I1 => \^q\(0),
+      I0 => \^fsm_onehot_state_reg[3]_0\,
+      I1 => \FSM_onehot_state_reg_n_0_[3]\,
       I2 => \FSM_onehot_state_reg_n_0_[2]\,
       I3 => spi_start,
       I4 => \FSM_onehot_state_reg_n_0_[0]\,
@@ -112,7 +113,7 @@ begin
         port map (
       I0 => spi_start,
       I1 => \FSM_onehot_state_reg_n_0_[0]\,
-      I2 => \^q\(0),
+      I2 => \FSM_onehot_state_reg_n_0_[3]\,
       I3 => \FSM_onehot_state[2]_i_2_n_0\,
       I4 => SCLK_INST_0_i_1_n_0,
       I5 => \FSM_onehot_state_reg_n_0_[2]\,
@@ -159,44 +160,19 @@ begin
       CE => '1',
       CLR => reset,
       D => \^sclk\,
-      Q => \^q\(0)
+      Q => \FSM_onehot_state_reg_n_0_[3]\
     );
-\FSM_sequential_state[0]_i_4\: unisim.vcomponents.LUT6
+\FSM_sequential_state[1]_i_2\: unisim.vcomponents.LUT5
     generic map(
-      INIT => X"0000002000000000"
+      INIT => X"80000000"
     )
         port map (
-      I0 => \FSM_sequential_state[0]_i_3\,
-      I1 => \FSM_sequential_state[0]_i_3_0\,
-      I2 => \^q\(0),
-      I3 => \FSM_onehot_state[2]_i_2_n_0\,
-      I4 => SCLK_INST_0_i_2_n_0,
-      I5 => \FSM_sequential_state[0]_i_5_n_0\,
-      O => \FSM_onehot_state_reg[3]_0\
-    );
-\FSM_sequential_state[0]_i_5\: unisim.vcomponents.LUT4
-    generic map(
-      INIT => X"0080"
-    )
-        port map (
-      I0 => sclk_counter_reg(7),
-      I1 => sclk_counter_reg(2),
-      I2 => sclk_counter_reg(4),
-      I3 => sclk_counter_reg(1),
-      O => \FSM_sequential_state[0]_i_5_n_0\
-    );
-\FSM_sequential_state[1]_i_3\: unisim.vcomponents.LUT6
-    generic map(
-      INIT => X"FFFFFFFFEFFFFFFF"
-    )
-        port map (
-      I0 => \FSM_onehot_state[2]_i_2_n_0\,
-      I1 => SCLK_INST_0_i_2_n_0,
-      I2 => sclk_counter_reg(7),
-      I3 => sclk_counter_reg(2),
-      I4 => sclk_counter_reg(4),
-      I5 => sclk_counter_reg(1),
-      O => \^sclk_counter_reg_reg[7]_0\
+      I0 => \FSM_onehot_state_reg_n_0_[3]\,
+      I1 => SCLK_INST_0_i_1_n_0,
+      I2 => bit_counter_reg(1),
+      I3 => bit_counter_reg(0),
+      I4 => bit_counter_reg(2),
+      O => \^fsm_onehot_state_reg[3]_0\
     );
 MOSI_INST_0: unisim.vcomponents.LUT3
     generic map(
@@ -208,13 +184,30 @@ MOSI_INST_0: unisim.vcomponents.LUT3
       I2 => \FSM_onehot_state_reg_n_0_[0]\,
       O => MOSI
     );
+MOSI_INST_0_i_1: unisim.vcomponents.LUT2
+    generic map(
+      INIT => X"8"
+    )
+        port map (
+      I0 => \temp_tx_data_reg_reg_n_0_[7]\,
+      I1 => MOSI_INST_0_i_2_n_0,
+      O => spi_mosi
+    );
+MOSI_INST_0_i_2: unisim.vcomponents.LUT1
+    generic map(
+      INIT => X"1"
+    )
+        port map (
+      I0 => \FSM_onehot_state_reg_n_0_[0]\,
+      O => MOSI_INST_0_i_2_n_0
+    );
 SCLK_INST_0: unisim.vcomponents.LUT5
     generic map(
       INIT => X"AEAACCCC"
     )
         port map (
       I0 => \FSM_onehot_state_reg_n_0_[2]\,
-      I1 => \^q\(0),
+      I1 => \FSM_onehot_state_reg_n_0_[3]\,
       I2 => spi_start,
       I3 => \FSM_onehot_state_reg_n_0_[0]\,
       I4 => SCLK_INST_0_i_1_n_0,
@@ -248,7 +241,7 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
       INIT => X"2"
     )
         port map (
-      I0 => \^q\(0),
+      I0 => \FSM_onehot_state_reg_n_0_[3]\,
       I1 => bit_counter_reg(0),
       O => bit_counter_next(0)
     );
@@ -259,7 +252,7 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
         port map (
       I0 => bit_counter_reg(1),
       I1 => bit_counter_reg(0),
-      I2 => \^q\(0),
+      I2 => \FSM_onehot_state_reg_n_0_[3]\,
       O => \bit_counter_reg[1]_i_1_n_0\
     );
 \bit_counter_reg[2]_i_1\: unisim.vcomponents.LUT5
@@ -269,7 +262,7 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
         port map (
       I0 => spi_start,
       I1 => \FSM_onehot_state_reg_n_0_[0]\,
-      I2 => \^q\(0),
+      I2 => \FSM_onehot_state_reg_n_0_[3]\,
       I3 => \FSM_onehot_state[2]_i_2_n_0\,
       I4 => SCLK_INST_0_i_1_n_0,
       O => \bit_counter_reg[2]_i_1_n_0\
@@ -279,7 +272,7 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
       INIT => X"2A80"
     )
         port map (
-      I0 => \^q\(0),
+      I0 => \FSM_onehot_state_reg_n_0_[3]\,
       I1 => bit_counter_reg(0),
       I2 => bit_counter_reg(1),
       I3 => bit_counter_reg(2),
@@ -316,7 +309,7 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
         port map (
       I0 => sclk_counter_reg(0),
       I1 => \FSM_onehot_state_reg_n_0_[2]\,
-      I2 => \^q\(0),
+      I2 => \FSM_onehot_state_reg_n_0_[3]\,
       O => \sclk_counter_reg[0]_i_1_n_0\
     );
 \sclk_counter_reg[1]_i_1\: unisim.vcomponents.LUT5
@@ -325,7 +318,7 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
     )
         port map (
       I0 => SCLK_INST_0_i_1_n_0,
-      I1 => \^q\(0),
+      I1 => \FSM_onehot_state_reg_n_0_[3]\,
       I2 => \FSM_onehot_state_reg_n_0_[2]\,
       I3 => sclk_counter_reg(1),
       I4 => sclk_counter_reg(0),
@@ -337,7 +330,7 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
     )
         port map (
       I0 => SCLK_INST_0_i_1_n_0,
-      I1 => \^q\(0),
+      I1 => \FSM_onehot_state_reg_n_0_[3]\,
       I2 => \FSM_onehot_state_reg_n_0_[2]\,
       I3 => sclk_counter_reg(0),
       I4 => sclk_counter_reg(1),
@@ -350,7 +343,7 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
     )
         port map (
       I0 => \FSM_onehot_state_reg_n_0_[2]\,
-      I1 => \^q\(0),
+      I1 => \FSM_onehot_state_reg_n_0_[3]\,
       I2 => sclk_counter_reg(1),
       I3 => sclk_counter_reg(0),
       I4 => sclk_counter_reg(2),
@@ -376,7 +369,7 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
     )
         port map (
       I0 => \FSM_onehot_state_reg_n_0_[2]\,
-      I1 => \^q\(0),
+      I1 => \FSM_onehot_state_reg_n_0_[3]\,
       I2 => SCLK_INST_0_i_1_n_0,
       O => \sclk_counter_reg[4]_i_2_n_0\
     );
@@ -386,7 +379,7 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
     )
         port map (
       I0 => \FSM_onehot_state_reg_n_0_[2]\,
-      I1 => \^q\(0),
+      I1 => \FSM_onehot_state_reg_n_0_[3]\,
       I2 => \sclk_counter_reg[5]_i_2_n_0\,
       I3 => sclk_counter_reg(5),
       O => \sclk_counter_reg[5]_i_1_n_0\
@@ -409,8 +402,8 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
     )
         port map (
       I0 => \FSM_onehot_state_reg_n_0_[2]\,
-      I1 => \^q\(0),
-      I2 => \sclk_counter_reg[7]_i_3_n_0\,
+      I1 => \FSM_onehot_state_reg_n_0_[3]\,
+      I2 => \sclk_counter_reg[7]_i_4_n_0\,
       I3 => sclk_counter_reg(6),
       O => \sclk_counter_reg[6]_i_1_n_0\
     );
@@ -419,8 +412,8 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
       INIT => X"FFFFF888"
     )
         port map (
-      I0 => \^q\(0),
-      I1 => \^sclk_counter_reg_reg[7]_0\,
+      I0 => \FSM_onehot_state_reg_n_0_[3]\,
+      I1 => \sclk_counter_reg[7]_i_3_n_0\,
       I2 => \FSM_onehot_state_reg_n_0_[0]\,
       I3 => spi_start,
       I4 => \FSM_onehot_state_reg_n_0_[2]\,
@@ -432,14 +425,25 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
     )
         port map (
       I0 => SCLK_INST_0_i_1_n_0,
-      I1 => \^q\(0),
+      I1 => \FSM_onehot_state_reg_n_0_[3]\,
       I2 => \FSM_onehot_state_reg_n_0_[2]\,
-      I3 => \sclk_counter_reg[7]_i_3_n_0\,
+      I3 => \sclk_counter_reg[7]_i_4_n_0\,
       I4 => sclk_counter_reg(6),
       I5 => sclk_counter_reg(7),
       O => sclk_counter_next(7)
     );
-\sclk_counter_reg[7]_i_3\: unisim.vcomponents.LUT6
+\sclk_counter_reg[7]_i_3\: unisim.vcomponents.LUT4
+    generic map(
+      INIT => X"7FFF"
+    )
+        port map (
+      I0 => bit_counter_reg(2),
+      I1 => bit_counter_reg(0),
+      I2 => bit_counter_reg(1),
+      I3 => SCLK_INST_0_i_1_n_0,
+      O => \sclk_counter_reg[7]_i_3_n_0\
+    );
+\sclk_counter_reg[7]_i_4\: unisim.vcomponents.LUT6
     generic map(
       INIT => X"8000000000000000"
     )
@@ -450,7 +454,7 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
       I3 => sclk_counter_reg(0),
       I4 => sclk_counter_reg(1),
       I5 => sclk_counter_reg(4),
-      O => \sclk_counter_reg[7]_i_3_n_0\
+      O => \sclk_counter_reg[7]_i_4_n_0\
     );
 \sclk_counter_reg_reg[0]\: unisim.vcomponents.FDCE
      port map (
@@ -522,7 +526,7 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
     )
         port map (
       I0 => \FSM_onehot_state_reg_n_0_[0]\,
-      I1 => \temp_tx_data_reg_reg[7]_0\(0),
+      I1 => Q(0),
       O => temp_tx_data_next(0)
     );
 \temp_tx_data_reg[1]_i_1\: unisim.vcomponents.LUT5
@@ -530,9 +534,9 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
       INIT => X"FFFFF888"
     )
         port map (
-      I0 => \temp_tx_data_reg_reg[7]_0\(1),
+      I0 => Q(1),
       I1 => \FSM_onehot_state_reg_n_0_[0]\,
-      I2 => \^q\(0),
+      I2 => \FSM_onehot_state_reg_n_0_[3]\,
       I3 => in19(1),
       I4 => \FSM_onehot_state_reg_n_0_[2]\,
       O => temp_tx_data_next(1)
@@ -542,9 +546,9 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
       INIT => X"FFFFF888"
     )
         port map (
-      I0 => \temp_tx_data_reg_reg[7]_0\(2),
+      I0 => Q(2),
       I1 => \FSM_onehot_state_reg_n_0_[0]\,
-      I2 => \^q\(0),
+      I2 => \FSM_onehot_state_reg_n_0_[3]\,
       I3 => in19(2),
       I4 => \FSM_onehot_state_reg_n_0_[2]\,
       O => temp_tx_data_next(2)
@@ -554,9 +558,9 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
       INIT => X"FFFFF888"
     )
         port map (
-      I0 => \temp_tx_data_reg_reg[7]_0\(3),
+      I0 => Q(3),
       I1 => \FSM_onehot_state_reg_n_0_[0]\,
-      I2 => \^q\(0),
+      I2 => \FSM_onehot_state_reg_n_0_[3]\,
       I3 => in19(3),
       I4 => \FSM_onehot_state_reg_n_0_[2]\,
       O => temp_tx_data_next(3)
@@ -566,9 +570,9 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
       INIT => X"FFFFF888"
     )
         port map (
-      I0 => \temp_tx_data_reg_reg[7]_0\(4),
+      I0 => Q(4),
       I1 => \FSM_onehot_state_reg_n_0_[0]\,
-      I2 => \^q\(0),
+      I2 => \FSM_onehot_state_reg_n_0_[3]\,
       I3 => in19(4),
       I4 => \FSM_onehot_state_reg_n_0_[2]\,
       O => temp_tx_data_next(4)
@@ -578,9 +582,9 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
       INIT => X"FFFFF888"
     )
         port map (
-      I0 => \temp_tx_data_reg_reg[7]_0\(5),
+      I0 => Q(5),
       I1 => \FSM_onehot_state_reg_n_0_[0]\,
-      I2 => \^q\(0),
+      I2 => \FSM_onehot_state_reg_n_0_[3]\,
       I3 => in19(5),
       I4 => \FSM_onehot_state_reg_n_0_[2]\,
       O => temp_tx_data_next(5)
@@ -590,9 +594,9 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
       INIT => X"FFFFF888"
     )
         port map (
-      I0 => \temp_tx_data_reg_reg[7]_0\(6),
+      I0 => Q(6),
       I1 => \FSM_onehot_state_reg_n_0_[0]\,
-      I2 => \^q\(0),
+      I2 => \FSM_onehot_state_reg_n_0_[3]\,
       I3 => in19(6),
       I4 => \FSM_onehot_state_reg_n_0_[2]\,
       O => temp_tx_data_next(6)
@@ -602,9 +606,9 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
       INIT => X"FFFFF888"
     )
         port map (
-      I0 => \temp_tx_data_reg_reg[7]_0\(7),
+      I0 => Q(7),
       I1 => \FSM_onehot_state_reg_n_0_[0]\,
-      I2 => \^q\(0),
+      I2 => \FSM_onehot_state_reg_n_0_[3]\,
       I3 => in19(7),
       I4 => \FSM_onehot_state_reg_n_0_[2]\,
       O => temp_tx_data_next(7)
@@ -671,7 +675,7 @@ SCLK_INST_0_i_2: unisim.vcomponents.LUT4
       CE => \bit_counter_reg[2]_i_1_n_0\,
       CLR => reset,
       D => temp_tx_data_next(7),
-      Q => spi_mosi
+      Q => \temp_tx_data_reg_reg_n_0_[7]\
     );
 end STRUCTURE;
 library IEEE;
@@ -682,15 +686,11 @@ entity system_SPI_Master_Top_0_0_SPI_Packet_Controller is
   port (
     spi_start : out STD_LOGIC;
     state : out STD_LOGIC_VECTOR ( 1 downto 0 );
-    \byte_counter_reg[0]_0\ : out STD_LOGIC;
-    \FSM_sequential_state_reg[1]_0\ : out STD_LOGIC;
-    \spi_tx_data_reg[7]_0\ : out STD_LOGIC_VECTOR ( 7 downto 0 );
-    reset : in STD_LOGIC;
+    Q : out STD_LOGIC_VECTOR ( 7 downto 0 );
     clk : in STD_LOGIC;
+    \FSM_sequential_state_reg[1]_0\ : in STD_LOGIC;
+    reset : in STD_LOGIC;
     \current_packet_reg[0]_0\ : in STD_LOGIC;
-    \FSM_sequential_state_reg[0]_0\ : in STD_LOGIC;
-    \FSM_sequential_state_reg[1]_1\ : in STD_LOGIC;
-    Q : in STD_LOGIC_VECTOR ( 0 to 0 );
     packet_data : in STD_LOGIC_VECTOR ( 31 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
@@ -701,14 +701,12 @@ architecture STRUCTURE of system_SPI_Master_Top_0_0_SPI_Packet_Controller is
   signal \FSM_sequential_state[0]_i_1_n_0\ : STD_LOGIC;
   signal \FSM_sequential_state[0]_i_3_n_0\ : STD_LOGIC;
   signal \FSM_sequential_state[1]_i_1_n_0\ : STD_LOGIC;
-  signal \FSM_sequential_state[1]_i_2_n_0\ : STD_LOGIC;
+  signal \FSM_sequential_state[1]_i_3_n_0\ : STD_LOGIC;
+  signal \FSM_sequential_state[1]_i_4_n_0\ : STD_LOGIC;
   signal \FSM_sequential_state[1]_i_5_n_0\ : STD_LOGIC;
-  signal \FSM_sequential_state[1]_i_6_n_0\ : STD_LOGIC;
-  signal \^fsm_sequential_state_reg[1]_0\ : STD_LOGIC;
   signal byte_counter : STD_LOGIC_VECTOR ( 1 downto 0 );
   signal \byte_counter[0]_i_1_n_0\ : STD_LOGIC;
   signal \byte_counter[1]_i_1_n_0\ : STD_LOGIC;
-  signal \^byte_counter_reg[0]_0\ : STD_LOGIC;
   signal \current_packet_reg_n_0_[0]\ : STD_LOGIC;
   signal \current_packet_reg_n_0_[10]\ : STD_LOGIC;
   signal \current_packet_reg_n_0_[11]\ : STD_LOGIC;
@@ -742,6 +740,7 @@ architecture STRUCTURE of system_SPI_Master_Top_0_0_SPI_Packet_Controller is
   signal \current_packet_reg_n_0_[8]\ : STD_LOGIC;
   signal \current_packet_reg_n_0_[9]\ : STD_LOGIC;
   signal in6 : STD_LOGIC_VECTOR ( 31 downto 1 );
+  signal p_0_in : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal packet_counter : STD_LOGIC_VECTOR ( 3 downto 0 );
   signal \packet_counter[1]_i_1_n_0\ : STD_LOGIC;
   signal \packet_counter[2]_i_1_n_0\ : STD_LOGIC;
@@ -756,8 +755,8 @@ architecture STRUCTURE of system_SPI_Master_Top_0_0_SPI_Packet_Controller is
   signal \packet_counter[3]_i_8_n_0\ : STD_LOGIC;
   signal \packet_counter[3]_i_9_n_0\ : STD_LOGIC;
   signal packet_counter_next : STD_LOGIC_VECTOR ( 3 downto 0 );
+  signal spi_start_i_1_n_0 : STD_LOGIC;
   signal spi_start_next : STD_LOGIC;
-  signal spi_tx_data_next : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal \^state\ : STD_LOGIC_VECTOR ( 1 downto 0 );
   signal \state_next__0\ : STD_LOGIC_VECTOR ( 0 to 0 );
   signal timer_counter : STD_LOGIC_VECTOR ( 31 downto 0 );
@@ -797,51 +796,49 @@ architecture STRUCTURE of system_SPI_Master_Top_0_0_SPI_Packet_Controller is
   signal \NLW_timer_counter_reg[31]_i_4_CO_UNCONNECTED\ : STD_LOGIC_VECTOR ( 3 downto 2 );
   signal \NLW_timer_counter_reg[31]_i_4_O_UNCONNECTED\ : STD_LOGIC_VECTOR ( 3 to 3 );
   attribute SOFT_HLUTNM : string;
-  attribute SOFT_HLUTNM of \FSM_sequential_state[0]_i_1\ : label is "soft_lutpair7";
-  attribute SOFT_HLUTNM of \FSM_sequential_state[1]_i_5\ : label is "soft_lutpair2";
-  attribute SOFT_HLUTNM of \FSM_sequential_state[1]_i_6\ : label is "soft_lutpair3";
+  attribute SOFT_HLUTNM of \FSM_sequential_state[1]_i_4\ : label is "soft_lutpair0";
+  attribute SOFT_HLUTNM of \FSM_sequential_state[1]_i_5\ : label is "soft_lutpair1";
   attribute FSM_ENCODED_STATES : string;
   attribute FSM_ENCODED_STATES of \FSM_sequential_state_reg[0]\ : label is "IDLE:00,TRANSMIT:01,WAIT_TIMER:11,COOLDOWN:10";
   attribute FSM_ENCODED_STATES of \FSM_sequential_state_reg[1]\ : label is "IDLE:00,TRANSMIT:01,WAIT_TIMER:11,COOLDOWN:10";
-  attribute SOFT_HLUTNM of \byte_counter[1]_i_2\ : label is "soft_lutpair7";
-  attribute SOFT_HLUTNM of \packet_counter[0]_i_1\ : label is "soft_lutpair6";
-  attribute SOFT_HLUTNM of \packet_counter[1]_i_1\ : label is "soft_lutpair6";
-  attribute SOFT_HLUTNM of \packet_counter[2]_i_1\ : label is "soft_lutpair4";
-  attribute SOFT_HLUTNM of \packet_counter[3]_i_10\ : label is "soft_lutpair2";
-  attribute SOFT_HLUTNM of \packet_counter[3]_i_12\ : label is "soft_lutpair5";
-  attribute SOFT_HLUTNM of \packet_counter[3]_i_2\ : label is "soft_lutpair4";
-  attribute SOFT_HLUTNM of \packet_counter[3]_i_8\ : label is "soft_lutpair3";
-  attribute SOFT_HLUTNM of \timer_counter[0]_i_1\ : label is "soft_lutpair5";
-  attribute SOFT_HLUTNM of \timer_counter[10]_i_1\ : label is "soft_lutpair18";
-  attribute SOFT_HLUTNM of \timer_counter[11]_i_1\ : label is "soft_lutpair18";
-  attribute SOFT_HLUTNM of \timer_counter[12]_i_1\ : label is "soft_lutpair17";
-  attribute SOFT_HLUTNM of \timer_counter[13]_i_1\ : label is "soft_lutpair17";
-  attribute SOFT_HLUTNM of \timer_counter[14]_i_1\ : label is "soft_lutpair16";
-  attribute SOFT_HLUTNM of \timer_counter[15]_i_1\ : label is "soft_lutpair16";
-  attribute SOFT_HLUTNM of \timer_counter[16]_i_1\ : label is "soft_lutpair15";
-  attribute SOFT_HLUTNM of \timer_counter[17]_i_1\ : label is "soft_lutpair15";
-  attribute SOFT_HLUTNM of \timer_counter[18]_i_1\ : label is "soft_lutpair14";
-  attribute SOFT_HLUTNM of \timer_counter[19]_i_1\ : label is "soft_lutpair14";
-  attribute SOFT_HLUTNM of \timer_counter[20]_i_1\ : label is "soft_lutpair13";
-  attribute SOFT_HLUTNM of \timer_counter[21]_i_1\ : label is "soft_lutpair13";
-  attribute SOFT_HLUTNM of \timer_counter[22]_i_1\ : label is "soft_lutpair12";
-  attribute SOFT_HLUTNM of \timer_counter[23]_i_1\ : label is "soft_lutpair12";
-  attribute SOFT_HLUTNM of \timer_counter[24]_i_1\ : label is "soft_lutpair11";
-  attribute SOFT_HLUTNM of \timer_counter[25]_i_1\ : label is "soft_lutpair11";
-  attribute SOFT_HLUTNM of \timer_counter[26]_i_1\ : label is "soft_lutpair10";
-  attribute SOFT_HLUTNM of \timer_counter[27]_i_1\ : label is "soft_lutpair10";
-  attribute SOFT_HLUTNM of \timer_counter[28]_i_1\ : label is "soft_lutpair9";
-  attribute SOFT_HLUTNM of \timer_counter[29]_i_1\ : label is "soft_lutpair9";
-  attribute SOFT_HLUTNM of \timer_counter[2]_i_1\ : label is "soft_lutpair22";
-  attribute SOFT_HLUTNM of \timer_counter[30]_i_1\ : label is "soft_lutpair8";
-  attribute SOFT_HLUTNM of \timer_counter[31]_i_2\ : label is "soft_lutpair8";
-  attribute SOFT_HLUTNM of \timer_counter[3]_i_1\ : label is "soft_lutpair22";
-  attribute SOFT_HLUTNM of \timer_counter[4]_i_1\ : label is "soft_lutpair21";
-  attribute SOFT_HLUTNM of \timer_counter[5]_i_1\ : label is "soft_lutpair21";
-  attribute SOFT_HLUTNM of \timer_counter[6]_i_1\ : label is "soft_lutpair20";
-  attribute SOFT_HLUTNM of \timer_counter[7]_i_1\ : label is "soft_lutpair20";
-  attribute SOFT_HLUTNM of \timer_counter[8]_i_1\ : label is "soft_lutpair19";
-  attribute SOFT_HLUTNM of \timer_counter[9]_i_1\ : label is "soft_lutpair19";
+  attribute SOFT_HLUTNM of \packet_counter[0]_i_1\ : label is "soft_lutpair4";
+  attribute SOFT_HLUTNM of \packet_counter[1]_i_1\ : label is "soft_lutpair4";
+  attribute SOFT_HLUTNM of \packet_counter[2]_i_1\ : label is "soft_lutpair2";
+  attribute SOFT_HLUTNM of \packet_counter[3]_i_10\ : label is "soft_lutpair0";
+  attribute SOFT_HLUTNM of \packet_counter[3]_i_12\ : label is "soft_lutpair3";
+  attribute SOFT_HLUTNM of \packet_counter[3]_i_2\ : label is "soft_lutpair2";
+  attribute SOFT_HLUTNM of \packet_counter[3]_i_8\ : label is "soft_lutpair1";
+  attribute SOFT_HLUTNM of \timer_counter[0]_i_1\ : label is "soft_lutpair3";
+  attribute SOFT_HLUTNM of \timer_counter[10]_i_1\ : label is "soft_lutpair15";
+  attribute SOFT_HLUTNM of \timer_counter[11]_i_1\ : label is "soft_lutpair15";
+  attribute SOFT_HLUTNM of \timer_counter[12]_i_1\ : label is "soft_lutpair14";
+  attribute SOFT_HLUTNM of \timer_counter[13]_i_1\ : label is "soft_lutpair14";
+  attribute SOFT_HLUTNM of \timer_counter[14]_i_1\ : label is "soft_lutpair13";
+  attribute SOFT_HLUTNM of \timer_counter[15]_i_1\ : label is "soft_lutpair13";
+  attribute SOFT_HLUTNM of \timer_counter[16]_i_1\ : label is "soft_lutpair12";
+  attribute SOFT_HLUTNM of \timer_counter[17]_i_1\ : label is "soft_lutpair12";
+  attribute SOFT_HLUTNM of \timer_counter[18]_i_1\ : label is "soft_lutpair11";
+  attribute SOFT_HLUTNM of \timer_counter[19]_i_1\ : label is "soft_lutpair11";
+  attribute SOFT_HLUTNM of \timer_counter[20]_i_1\ : label is "soft_lutpair10";
+  attribute SOFT_HLUTNM of \timer_counter[21]_i_1\ : label is "soft_lutpair10";
+  attribute SOFT_HLUTNM of \timer_counter[22]_i_1\ : label is "soft_lutpair9";
+  attribute SOFT_HLUTNM of \timer_counter[23]_i_1\ : label is "soft_lutpair9";
+  attribute SOFT_HLUTNM of \timer_counter[24]_i_1\ : label is "soft_lutpair8";
+  attribute SOFT_HLUTNM of \timer_counter[25]_i_1\ : label is "soft_lutpair8";
+  attribute SOFT_HLUTNM of \timer_counter[26]_i_1\ : label is "soft_lutpair7";
+  attribute SOFT_HLUTNM of \timer_counter[27]_i_1\ : label is "soft_lutpair7";
+  attribute SOFT_HLUTNM of \timer_counter[28]_i_1\ : label is "soft_lutpair6";
+  attribute SOFT_HLUTNM of \timer_counter[29]_i_1\ : label is "soft_lutpair6";
+  attribute SOFT_HLUTNM of \timer_counter[2]_i_1\ : label is "soft_lutpair19";
+  attribute SOFT_HLUTNM of \timer_counter[30]_i_1\ : label is "soft_lutpair5";
+  attribute SOFT_HLUTNM of \timer_counter[31]_i_2\ : label is "soft_lutpair5";
+  attribute SOFT_HLUTNM of \timer_counter[3]_i_1\ : label is "soft_lutpair19";
+  attribute SOFT_HLUTNM of \timer_counter[4]_i_1\ : label is "soft_lutpair18";
+  attribute SOFT_HLUTNM of \timer_counter[5]_i_1\ : label is "soft_lutpair18";
+  attribute SOFT_HLUTNM of \timer_counter[6]_i_1\ : label is "soft_lutpair17";
+  attribute SOFT_HLUTNM of \timer_counter[7]_i_1\ : label is "soft_lutpair17";
+  attribute SOFT_HLUTNM of \timer_counter[8]_i_1\ : label is "soft_lutpair16";
+  attribute SOFT_HLUTNM of \timer_counter[9]_i_1\ : label is "soft_lutpair16";
   attribute ADDER_THRESHOLD : integer;
   attribute ADDER_THRESHOLD of \timer_counter_reg[12]_i_2\ : label is 35;
   attribute ADDER_THRESHOLD of \timer_counter_reg[16]_i_2\ : label is 35;
@@ -852,59 +849,56 @@ architecture STRUCTURE of system_SPI_Master_Top_0_0_SPI_Packet_Controller is
   attribute ADDER_THRESHOLD of \timer_counter_reg[4]_i_2\ : label is 35;
   attribute ADDER_THRESHOLD of \timer_counter_reg[8]_i_2\ : label is 35;
 begin
-  \FSM_sequential_state_reg[1]_0\ <= \^fsm_sequential_state_reg[1]_0\;
-  \byte_counter_reg[0]_0\ <= \^byte_counter_reg[0]_0\;
   state(1 downto 0) <= \^state\(1 downto 0);
-\FSM_sequential_state[0]_i_1\: unisim.vcomponents.LUT3
+\FSM_sequential_state[0]_i_1\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"B8"
+      INIT => X"AAAAAAAAE0F0F0F0"
     )
         port map (
       I0 => \state_next__0\(0),
-      I1 => \FSM_sequential_state[0]_i_3_n_0\,
+      I1 => \^state\(1),
       I2 => \^state\(0),
+      I3 => \FSM_sequential_state[0]_i_3_n_0\,
+      I4 => \FSM_sequential_state_reg[1]_0\,
+      I5 => \FSM_sequential_state[1]_i_3_n_0\,
       O => \FSM_sequential_state[0]_i_1_n_0\
     );
 \FSM_sequential_state[0]_i_2\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"FFFFFFF70000FFFF"
+      INIT => X"FFFF0000FFF7FFFF"
     )
         port map (
       I0 => packet_counter(3),
       I1 => packet_counter(0),
       I2 => packet_counter(2),
       I3 => packet_counter(1),
-      I4 => \^state\(1),
-      I5 => \^state\(0),
+      I4 => \^state\(0),
+      I5 => \^state\(1),
       O => \state_next__0\(0)
     );
-\FSM_sequential_state[0]_i_3\: unisim.vcomponents.LUT6
+\FSM_sequential_state[0]_i_3\: unisim.vcomponents.LUT2
     generic map(
-      INIT => X"FFFFFFFFFFFF0400"
+      INIT => X"8"
     )
         port map (
-      I0 => \packet_counter[3]_i_3_n_0\,
-      I1 => \packet_counter[3]_i_4_n_0\,
-      I2 => \packet_counter[3]_i_5_n_0\,
-      I3 => \^state\(1),
-      I4 => \current_packet_reg[0]_0\,
-      I5 => \FSM_sequential_state_reg[0]_0\,
+      I0 => byte_counter(1),
+      I1 => byte_counter(0),
       O => \FSM_sequential_state[0]_i_3_n_0\
     );
 \FSM_sequential_state[1]_i_1\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"55BA550055AA5500"
+      INIT => X"44444444EAAAAAAA"
     )
         port map (
-      I0 => \FSM_sequential_state[1]_i_2_n_0\,
-      I1 => \FSM_sequential_state_reg[1]_1\,
-      I2 => Q(0),
-      I3 => \^state\(1),
-      I4 => \^state\(0),
-      I5 => \^byte_counter_reg[0]_0\,
+      I0 => \^state\(1),
+      I1 => \^state\(0),
+      I2 => byte_counter(0),
+      I3 => byte_counter(1),
+      I4 => \FSM_sequential_state_reg[1]_0\,
+      I5 => \FSM_sequential_state[1]_i_3_n_0\,
       O => \FSM_sequential_state[1]_i_1_n_0\
     );
-\FSM_sequential_state[1]_i_2\: unisim.vcomponents.LUT6
+\FSM_sequential_state[1]_i_3\: unisim.vcomponents.LUT6
     generic map(
       INIT => X"AAAAAAAAAAAAAEAA"
     )
@@ -913,20 +907,11 @@ begin
       I1 => \^state\(1),
       I2 => \packet_counter[3]_i_5_n_0\,
       I3 => \packet_counter[3]_i_4_n_0\,
-      I4 => \FSM_sequential_state[1]_i_5_n_0\,
-      I5 => \FSM_sequential_state[1]_i_6_n_0\,
-      O => \FSM_sequential_state[1]_i_2_n_0\
+      I4 => \FSM_sequential_state[1]_i_4_n_0\,
+      I5 => \FSM_sequential_state[1]_i_5_n_0\,
+      O => \FSM_sequential_state[1]_i_3_n_0\
     );
-\FSM_sequential_state[1]_i_4\: unisim.vcomponents.LUT2
-    generic map(
-      INIT => X"8"
-    )
-        port map (
-      I0 => byte_counter(0),
-      I1 => byte_counter(1),
-      O => \^byte_counter_reg[0]_0\
-    );
-\FSM_sequential_state[1]_i_5\: unisim.vcomponents.LUT5
+\FSM_sequential_state[1]_i_4\: unisim.vcomponents.LUT5
     generic map(
       INIT => X"FFFFBFFF"
     )
@@ -936,9 +921,9 @@ begin
       I2 => timer_counter(3),
       I3 => timer_counter(13),
       I4 => \packet_counter[3]_i_9_n_0\,
-      O => \FSM_sequential_state[1]_i_5_n_0\
+      O => \FSM_sequential_state[1]_i_4_n_0\
     );
-\FSM_sequential_state[1]_i_6\: unisim.vcomponents.LUT5
+\FSM_sequential_state[1]_i_5\: unisim.vcomponents.LUT5
     generic map(
       INIT => X"FFFFF7FF"
     )
@@ -948,7 +933,7 @@ begin
       I2 => timer_counter(10),
       I3 => timer_counter(4),
       I4 => \packet_counter[3]_i_7_n_0\,
-      O => \FSM_sequential_state[1]_i_6_n_0\
+      O => \FSM_sequential_state[1]_i_5_n_0\
     );
 \FSM_sequential_state_reg[0]\: unisim.vcomponents.FDRE
      port map (
@@ -968,38 +953,29 @@ begin
     );
 \byte_counter[0]_i_1\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"555500BA554500BA"
+      INIT => X"5530453055205520"
     )
         port map (
       I0 => \packet_counter[3]_i_1_n_0\,
-      I1 => \FSM_sequential_state_reg[1]_1\,
-      I2 => Q(0),
-      I3 => \^fsm_sequential_state_reg[1]_0\,
-      I4 => byte_counter(0),
-      I5 => byte_counter(1),
+      I1 => \^state\(1),
+      I2 => \^state\(0),
+      I3 => byte_counter(0),
+      I4 => byte_counter(1),
+      I5 => \FSM_sequential_state_reg[1]_0\,
       O => \byte_counter[0]_i_1_n_0\
     );
 \byte_counter[1]_i_1\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"555555FF00BA0000"
+      INIT => X"5575300055752000"
     )
         port map (
       I0 => \packet_counter[3]_i_1_n_0\,
-      I1 => \FSM_sequential_state_reg[1]_1\,
-      I2 => Q(0),
-      I3 => \^fsm_sequential_state_reg[1]_0\,
-      I4 => byte_counter(0),
-      I5 => byte_counter(1),
+      I1 => \^state\(1),
+      I2 => \^state\(0),
+      I3 => byte_counter(0),
+      I4 => byte_counter(1),
+      I5 => \FSM_sequential_state_reg[1]_0\,
       O => \byte_counter[1]_i_1_n_0\
-    );
-\byte_counter[1]_i_2\: unisim.vcomponents.LUT2
-    generic map(
-      INIT => X"B"
-    )
-        port map (
-      I0 => \^state\(1),
-      I1 => \^state\(0),
-      O => \^fsm_sequential_state_reg[1]_0\
     );
 \byte_counter_reg[0]\: unisim.vcomponents.FDRE
      port map (
@@ -1461,193 +1437,201 @@ begin
       Q => packet_counter(3),
       R => reset
     );
-spi_start_i_1: unisim.vcomponents.LUT6
+spi_start_i_1: unisim.vcomponents.LUT4
     generic map(
-      INIT => X"AAAAAAAAAABAAAAA"
+      INIT => X"0004"
     )
         port map (
-      I0 => \packet_counter[3]_i_1_n_0\,
-      I1 => \FSM_sequential_state_reg[1]_1\,
-      I2 => Q(0),
-      I3 => \^state\(1),
-      I4 => \^state\(0),
-      I5 => \^byte_counter_reg[0]_0\,
-      O => spi_start_next
+      I0 => \FSM_sequential_state_reg[1]_0\,
+      I1 => \^state\(0),
+      I2 => \^state\(1),
+      I3 => reset,
+      O => spi_start_i_1_n_0
     );
 spi_start_reg: unisim.vcomponents.FDRE
      port map (
       C => clk,
       CE => '1',
-      D => spi_start_next,
+      D => spi_start_i_1_n_0,
       Q => spi_start,
-      R => reset
+      R => '0'
     );
 \spi_tx_data[0]_i_1\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"F0CCFFAAF0CC00AA"
+      INIT => X"FFCCAAF000CCAAF0"
     )
         port map (
-      I0 => \current_packet_reg_n_0_[0]\,
-      I1 => \current_packet_reg_n_0_[8]\,
-      I2 => \current_packet_reg_n_0_[24]\,
-      I3 => byte_counter(1),
-      I4 => byte_counter(0),
-      I5 => \current_packet_reg_n_0_[16]\,
-      O => spi_tx_data_next(0)
+      I0 => \current_packet_reg_n_0_[8]\,
+      I1 => \current_packet_reg_n_0_[16]\,
+      I2 => \current_packet_reg_n_0_[0]\,
+      I3 => byte_counter(0),
+      I4 => byte_counter(1),
+      I5 => \current_packet_reg_n_0_[24]\,
+      O => p_0_in(0)
     );
 \spi_tx_data[1]_i_1\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"FFAACCF000AACCF0"
+      INIT => X"F0FFCCAAF000CCAA"
     )
         port map (
-      I0 => \current_packet_reg_n_0_[9]\,
-      I1 => \current_packet_reg_n_0_[17]\,
-      I2 => \current_packet_reg_n_0_[1]\,
-      I3 => byte_counter(1),
-      I4 => byte_counter(0),
-      I5 => \current_packet_reg_n_0_[25]\,
-      O => spi_tx_data_next(1)
+      I0 => \current_packet_reg_n_0_[1]\,
+      I1 => \current_packet_reg_n_0_[9]\,
+      I2 => \current_packet_reg_n_0_[25]\,
+      I3 => byte_counter(0),
+      I4 => byte_counter(1),
+      I5 => \current_packet_reg_n_0_[17]\,
+      O => p_0_in(1)
     );
 \spi_tx_data[2]_i_1\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"FFCCF0AA00CCF0AA"
+      INIT => X"F0FFCCAAF000CCAA"
     )
         port map (
       I0 => \current_packet_reg_n_0_[2]\,
       I1 => \current_packet_reg_n_0_[10]\,
-      I2 => \current_packet_reg_n_0_[18]\,
-      I3 => byte_counter(1),
-      I4 => byte_counter(0),
-      I5 => \current_packet_reg_n_0_[26]\,
-      O => spi_tx_data_next(2)
+      I2 => \current_packet_reg_n_0_[26]\,
+      I3 => byte_counter(0),
+      I4 => byte_counter(1),
+      I5 => \current_packet_reg_n_0_[18]\,
+      O => p_0_in(2)
     );
 \spi_tx_data[3]_i_1\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"CCAAFFF0CCAA00F0"
+      INIT => X"FFCCF0AA00CCF0AA"
     )
         port map (
-      I0 => \current_packet_reg_n_0_[11]\,
-      I1 => \current_packet_reg_n_0_[27]\,
-      I2 => \current_packet_reg_n_0_[3]\,
+      I0 => \current_packet_reg_n_0_[3]\,
+      I1 => \current_packet_reg_n_0_[11]\,
+      I2 => \current_packet_reg_n_0_[19]\,
       I3 => byte_counter(1),
       I4 => byte_counter(0),
-      I5 => \current_packet_reg_n_0_[19]\,
-      O => spi_tx_data_next(3)
+      I5 => \current_packet_reg_n_0_[27]\,
+      O => p_0_in(3)
     );
 \spi_tx_data[4]_i_1\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"F0CCFFAAF0CC00AA"
+      INIT => X"CCFFAAF0CC00AAF0"
     )
         port map (
-      I0 => \current_packet_reg_n_0_[4]\,
-      I1 => \current_packet_reg_n_0_[12]\,
-      I2 => \current_packet_reg_n_0_[28]\,
-      I3 => byte_counter(1),
-      I4 => byte_counter(0),
+      I0 => \current_packet_reg_n_0_[12]\,
+      I1 => \current_packet_reg_n_0_[28]\,
+      I2 => \current_packet_reg_n_0_[4]\,
+      I3 => byte_counter(0),
+      I4 => byte_counter(1),
       I5 => \current_packet_reg_n_0_[20]\,
-      O => spi_tx_data_next(4)
+      O => p_0_in(4)
     );
 \spi_tx_data[5]_i_1\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"F0CCFFAAF0CC00AA"
+      INIT => X"F0FFCCAAF000CCAA"
     )
         port map (
       I0 => \current_packet_reg_n_0_[5]\,
       I1 => \current_packet_reg_n_0_[13]\,
       I2 => \current_packet_reg_n_0_[29]\,
-      I3 => byte_counter(1),
-      I4 => byte_counter(0),
+      I3 => byte_counter(0),
+      I4 => byte_counter(1),
       I5 => \current_packet_reg_n_0_[21]\,
-      O => spi_tx_data_next(5)
+      O => p_0_in(5)
     );
 \spi_tx_data[6]_i_1\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"FFCCF0AA00CCF0AA"
+      INIT => X"F0FFCCAAF000CCAA"
     )
         port map (
       I0 => \current_packet_reg_n_0_[6]\,
       I1 => \current_packet_reg_n_0_[14]\,
-      I2 => \current_packet_reg_n_0_[22]\,
-      I3 => byte_counter(1),
-      I4 => byte_counter(0),
-      I5 => \current_packet_reg_n_0_[30]\,
-      O => spi_tx_data_next(6)
+      I2 => \current_packet_reg_n_0_[30]\,
+      I3 => byte_counter(0),
+      I4 => byte_counter(1),
+      I5 => \current_packet_reg_n_0_[22]\,
+      O => p_0_in(6)
     );
-\spi_tx_data[7]_i_1\: unisim.vcomponents.LUT6
+\spi_tx_data[7]_i_1\: unisim.vcomponents.LUT3
     generic map(
-      INIT => X"FFAACCF000AACCF0"
+      INIT => X"04"
     )
         port map (
-      I0 => \current_packet_reg_n_0_[15]\,
-      I1 => \current_packet_reg_n_0_[23]\,
-      I2 => \current_packet_reg_n_0_[7]\,
+      I0 => \^state\(1),
+      I1 => \^state\(0),
+      I2 => \FSM_sequential_state_reg[1]_0\,
+      O => spi_start_next
+    );
+\spi_tx_data[7]_i_2\: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"FFCCF0AA00CCF0AA"
+    )
+        port map (
+      I0 => \current_packet_reg_n_0_[7]\,
+      I1 => \current_packet_reg_n_0_[15]\,
+      I2 => \current_packet_reg_n_0_[23]\,
       I3 => byte_counter(1),
       I4 => byte_counter(0),
       I5 => \current_packet_reg_n_0_[31]\,
-      O => spi_tx_data_next(7)
+      O => p_0_in(7)
     );
 \spi_tx_data_reg[0]\: unisim.vcomponents.FDRE
      port map (
       C => clk,
-      CE => '1',
-      D => spi_tx_data_next(0),
-      Q => \spi_tx_data_reg[7]_0\(0),
+      CE => spi_start_next,
+      D => p_0_in(0),
+      Q => Q(0),
       R => reset
     );
 \spi_tx_data_reg[1]\: unisim.vcomponents.FDRE
      port map (
       C => clk,
-      CE => '1',
-      D => spi_tx_data_next(1),
-      Q => \spi_tx_data_reg[7]_0\(1),
+      CE => spi_start_next,
+      D => p_0_in(1),
+      Q => Q(1),
       R => reset
     );
 \spi_tx_data_reg[2]\: unisim.vcomponents.FDRE
      port map (
       C => clk,
-      CE => '1',
-      D => spi_tx_data_next(2),
-      Q => \spi_tx_data_reg[7]_0\(2),
+      CE => spi_start_next,
+      D => p_0_in(2),
+      Q => Q(2),
       R => reset
     );
 \spi_tx_data_reg[3]\: unisim.vcomponents.FDRE
      port map (
       C => clk,
-      CE => '1',
-      D => spi_tx_data_next(3),
-      Q => \spi_tx_data_reg[7]_0\(3),
+      CE => spi_start_next,
+      D => p_0_in(3),
+      Q => Q(3),
       R => reset
     );
 \spi_tx_data_reg[4]\: unisim.vcomponents.FDRE
      port map (
       C => clk,
-      CE => '1',
-      D => spi_tx_data_next(4),
-      Q => \spi_tx_data_reg[7]_0\(4),
+      CE => spi_start_next,
+      D => p_0_in(4),
+      Q => Q(4),
       R => reset
     );
 \spi_tx_data_reg[5]\: unisim.vcomponents.FDRE
      port map (
       C => clk,
-      CE => '1',
-      D => spi_tx_data_next(5),
-      Q => \spi_tx_data_reg[7]_0\(5),
+      CE => spi_start_next,
+      D => p_0_in(5),
+      Q => Q(5),
       R => reset
     );
 \spi_tx_data_reg[6]\: unisim.vcomponents.FDRE
      port map (
       C => clk,
-      CE => '1',
-      D => spi_tx_data_next(6),
-      Q => \spi_tx_data_reg[7]_0\(6),
+      CE => spi_start_next,
+      D => p_0_in(6),
+      Q => Q(6),
       R => reset
     );
 \spi_tx_data_reg[7]\: unisim.vcomponents.FDRE
      port map (
       C => clk,
-      CE => '1',
-      D => spi_tx_data_next(7),
-      Q => \spi_tx_data_reg[7]_0\(7),
+      CE => spi_start_next,
+      D => p_0_in(7),
+      Q => Q(7),
       R => reset
     );
 \timer_counter[0]_i_1\: unisim.vcomponents.LUT2
@@ -1868,13 +1852,13 @@ spi_start_reg: unisim.vcomponents.FDRE
     );
 \timer_counter[31]_i_1\: unisim.vcomponents.LUT6
     generic map(
-      INIT => X"0000FFFF40004000"
+      INIT => X"0000FFFF80008000"
     )
         port map (
-      I0 => \FSM_sequential_state_reg[1]_1\,
-      I1 => Q(0),
-      I2 => \^state\(0),
-      I3 => \^byte_counter_reg[0]_0\,
+      I0 => \^state\(0),
+      I1 => byte_counter(0),
+      I2 => byte_counter(1),
+      I3 => \FSM_sequential_state_reg[1]_0\,
       I4 => \timer_counter[31]_i_3_n_0\,
       I5 => \^state\(1),
       O => \timer_counter[31]_i_1_n_0\
@@ -1895,8 +1879,8 @@ spi_start_reg: unisim.vcomponents.FDRE
         port map (
       I0 => \packet_counter[3]_i_5_n_0\,
       I1 => \packet_counter[3]_i_4_n_0\,
-      I2 => \FSM_sequential_state[1]_i_5_n_0\,
-      I3 => \FSM_sequential_state[1]_i_6_n_0\,
+      I2 => \FSM_sequential_state[1]_i_4_n_0\,
+      I3 => \FSM_sequential_state[1]_i_5_n_0\,
       O => \timer_counter[31]_i_3_n_0\
     );
 \timer_counter[3]_i_1\: unisim.vcomponents.LUT2
@@ -2323,7 +2307,7 @@ use UNISIM.VCOMPONENTS.ALL;
 entity system_SPI_Master_Top_0_0_btn_debounce is
   port (
     \counter_reg_reg[0]_0\ : out STD_LOGIC;
-    edge_detect_reg_0 : out STD_LOGIC;
+    \FSM_sequential_state_reg[0]\ : out STD_LOGIC;
     \^clk\ : in STD_LOGIC;
     reset : in STD_LOGIC;
     state : in STD_LOGIC_VECTOR ( 1 downto 0 );
@@ -2372,10 +2356,10 @@ architecture STRUCTURE of system_SPI_Master_Top_0_0_btn_debounce is
   attribute ADDER_THRESHOLD of \counter_next0_carry__1\ : label is 35;
   attribute ADDER_THRESHOLD of \counter_next0_carry__2\ : label is 35;
   attribute SOFT_HLUTNM : string;
-  attribute SOFT_HLUTNM of \counter_reg[0]_i_3\ : label is "soft_lutpair0";
-  attribute SOFT_HLUTNM of \counter_reg[16]_i_2\ : label is "soft_lutpair0";
-  attribute SOFT_HLUTNM of edge_detect_i_1 : label is "soft_lutpair1";
-  attribute SOFT_HLUTNM of \packet_counter[3]_i_13\ : label is "soft_lutpair1";
+  attribute SOFT_HLUTNM of \counter_reg[0]_i_3\ : label is "soft_lutpair28";
+  attribute SOFT_HLUTNM of \counter_reg[16]_i_2\ : label is "soft_lutpair28";
+  attribute SOFT_HLUTNM of edge_detect_i_1 : label is "soft_lutpair29";
+  attribute SOFT_HLUTNM of \packet_counter[3]_i_13\ : label is "soft_lutpair29";
 begin
 counter_next0_carry: unisim.vcomponents.CARRY4
      port map (
@@ -2896,10 +2880,10 @@ edge_detect_reg: unisim.vcomponents.FDCE
         port map (
       I0 => edge_detect_i_2_n_0,
       I1 => \packet_counter[3]_i_13_n_0\,
-      I2 => edge_detect,
+      I2 => state(0),
       I3 => state(1),
-      I4 => state(0),
-      O => edge_detect_reg_0
+      I4 => edge_detect,
+      O => \FSM_sequential_state_reg[0]\
     );
 \q_reg[7]_i_2\: unisim.vcomponents.LUT5
     generic map(
@@ -2986,8 +2970,8 @@ entity system_SPI_Master_Top_0_0_SPI_Master_Top is
   port (
     \counter_reg_reg[0]\ : out STD_LOGIC;
     SCLK : out STD_LOGIC;
-    MOSI : out STD_LOGIC;
     CS : out STD_LOGIC_VECTOR ( 0 to 0 );
+    MOSI : out STD_LOGIC;
     \^clk\ : in STD_LOGIC;
     reset : in STD_LOGIC;
     start_raw : in STD_LOGIC;
@@ -2999,55 +2983,43 @@ entity system_SPI_Master_Top_0_0_SPI_Master_Top is
 end system_SPI_Master_Top_0_0_SPI_Master_Top;
 
 architecture STRUCTURE of system_SPI_Master_Top_0_0_SPI_Master_Top is
-  signal U_Debounce_n_1 : STD_LOGIC;
-  signal U_Packet_Controller_n_3 : STD_LOGIC;
-  signal U_Packet_Controller_n_4 : STD_LOGIC;
   signal U_SPI_Master_n_0 : STD_LOGIC;
-  signal U_SPI_Master_n_4 : STD_LOGIC;
-  signal U_SPI_Master_n_5 : STD_LOGIC;
+  signal U_btn_debounce_n_1 : STD_LOGIC;
   signal spi_start : STD_LOGIC;
   signal spi_tx_data : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal state : STD_LOGIC_VECTOR ( 1 downto 0 );
 begin
-U_Debounce: entity work.system_SPI_Master_Top_0_0_btn_debounce
-     port map (
-      CLK => CLK,
-      \^clk\ => \^clk\,
-      \counter_reg_reg[0]_0\ => \counter_reg_reg[0]\,
-      edge_detect_reg_0 => U_Debounce_n_1,
-      reset => reset,
-      start_raw => start_raw,
-      state(1 downto 0) => state(1 downto 0)
-    );
 U_Packet_Controller: entity work.system_SPI_Master_Top_0_0_SPI_Packet_Controller
      port map (
-      \FSM_sequential_state_reg[0]_0\ => U_SPI_Master_n_5,
-      \FSM_sequential_state_reg[1]_0\ => U_Packet_Controller_n_4,
-      \FSM_sequential_state_reg[1]_1\ => U_SPI_Master_n_4,
-      Q(0) => U_SPI_Master_n_0,
-      \byte_counter_reg[0]_0\ => U_Packet_Controller_n_3,
+      \FSM_sequential_state_reg[1]_0\ => U_SPI_Master_n_0,
+      Q(7 downto 0) => spi_tx_data(7 downto 0),
       clk => \^clk\,
-      \current_packet_reg[0]_0\ => U_Debounce_n_1,
+      \current_packet_reg[0]_0\ => U_btn_debounce_n_1,
       packet_data(31 downto 0) => packet_data(31 downto 0),
       reset => reset,
       spi_start => spi_start,
-      \spi_tx_data_reg[7]_0\(7 downto 0) => spi_tx_data(7 downto 0),
       state(1 downto 0) => state(1 downto 0)
     );
 U_SPI_Master: entity work.system_SPI_Master_Top_0_0_SPI_Master
      port map (
       CS(0) => CS(0),
-      \FSM_onehot_state_reg[3]_0\ => U_SPI_Master_n_5,
-      \FSM_sequential_state[0]_i_3\ => U_Packet_Controller_n_3,
-      \FSM_sequential_state[0]_i_3_0\ => U_Packet_Controller_n_4,
+      \FSM_onehot_state_reg[3]_0\ => U_SPI_Master_n_0,
       MOSI => MOSI,
-      Q(0) => U_SPI_Master_n_0,
+      Q(7 downto 0) => spi_tx_data(7 downto 0),
       SCLK => SCLK,
       clk => \^clk\,
       reset => reset,
-      \sclk_counter_reg_reg[7]_0\ => U_SPI_Master_n_4,
-      spi_start => spi_start,
-      \temp_tx_data_reg_reg[7]_0\(7 downto 0) => spi_tx_data(7 downto 0)
+      spi_start => spi_start
+    );
+U_btn_debounce: entity work.system_SPI_Master_Top_0_0_btn_debounce
+     port map (
+      CLK => CLK,
+      \FSM_sequential_state_reg[0]\ => U_btn_debounce_n_1,
+      \^clk\ => \^clk\,
+      \counter_reg_reg[0]_0\ => \counter_reg_reg[0]\,
+      reset => reset,
+      start_raw => start_raw,
+      state(1 downto 0) => state(1 downto 0)
     );
 end STRUCTURE;
 library IEEE;
@@ -3080,7 +3052,7 @@ end system_SPI_Master_Top_0_0;
 architecture STRUCTURE of system_SPI_Master_Top_0_0 is
   signal \<const0>\ : STD_LOGIC;
   signal U0_n_0 : STD_LOGIC;
-  signal \U_Debounce/r_1khz\ : STD_LOGIC;
+  signal \U_btn_debounce/r_1khz\ : STD_LOGIC;
   attribute x_interface_info : string;
   attribute x_interface_info of clk : signal is "xilinx.com:signal:clock:1.0 clk CLK";
   attribute x_interface_parameter : string;
@@ -3095,7 +3067,7 @@ GND: unisim.vcomponents.GND
     );
 U0: entity work.system_SPI_Master_Top_0_0_SPI_Master_Top
      port map (
-      CLK => \U_Debounce/r_1khz\,
+      CLK => \U_btn_debounce/r_1khz\,
       CS(0) => CS(0),
       MOSI => MOSI,
       SCLK => SCLK,
@@ -3111,6 +3083,6 @@ U0: entity work.system_SPI_Master_Top_0_0_SPI_Master_Top
     )
         port map (
       I0 => U0_n_0,
-      O => \U_Debounce/r_1khz\
+      O => \U_btn_debounce/r_1khz\
     );
 end STRUCTURE;

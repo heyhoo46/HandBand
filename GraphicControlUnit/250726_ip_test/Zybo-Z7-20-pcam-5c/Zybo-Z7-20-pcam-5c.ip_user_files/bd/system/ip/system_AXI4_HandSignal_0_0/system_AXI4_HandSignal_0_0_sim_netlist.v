@@ -1,7 +1,7 @@
 // Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
-// Date        : Fri Aug  1 16:40:53 2025
+// Date        : Tue Aug  5 19:29:36 2025
 // Host        : DESKTOP-7CFQ9ND running 64-bit major release  (build 9200)
 // Command     : write_verilog -force -mode funcsim
 //               c:/working/FPAG_Harman/250726_ip_test/Zybo-Z7-20-pcam-5c/Zybo-Z7-20-pcam-5c.srcs/sources_1/bd/system/ip/system_AXI4_HandSignal_0_0/system_AXI4_HandSignal_0_0_sim_netlist.v
@@ -50,32 +50,72 @@ module system_AXI4_HandSignal_0_0
   wire \U_hand_signal/u_color_detect/raw_red_rel00_in ;
   wire aclk;
   wire aresetn;
-  wire \hist_blue[0]_i_10_n_0 ;
   wire \hist_blue[0]_i_11_n_0 ;
   wire \hist_blue[0]_i_12_n_0 ;
   wire \hist_blue[0]_i_13_n_0 ;
   wire \hist_blue[0]_i_14_n_0 ;
   wire \hist_blue[0]_i_15_n_0 ;
   wire \hist_blue[0]_i_16_n_0 ;
+  wire \hist_blue[0]_i_17_n_0 ;
+  wire \hist_blue[0]_i_18_n_0 ;
+  wire \hist_blue[0]_i_19_n_0 ;
+  wire \hist_blue[0]_i_20_n_0 ;
+  wire \hist_blue[0]_i_21_n_0 ;
+  wire \hist_blue[0]_i_22_n_0 ;
+  wire \hist_blue[0]_i_23_n_0 ;
+  wire \hist_blue[0]_i_24_n_0 ;
+  wire \hist_blue[0]_i_25_n_0 ;
+  wire \hist_blue[0]_i_26_n_0 ;
+  wire \hist_blue[0]_i_27_n_0 ;
   wire \hist_blue[0]_i_6_n_0 ;
+  wire \hist_blue[0]_i_7_n_0 ;
   wire \hist_blue[0]_i_9_n_0 ;
+  wire \hist_blue_reg[0]_i_10_n_0 ;
+  wire \hist_blue_reg[0]_i_10_n_1 ;
+  wire \hist_blue_reg[0]_i_10_n_2 ;
+  wire \hist_blue_reg[0]_i_10_n_3 ;
+  wire \hist_blue_reg[0]_i_3_n_3 ;
   wire \hist_blue_reg[0]_i_5_n_0 ;
   wire \hist_blue_reg[0]_i_5_n_1 ;
   wire \hist_blue_reg[0]_i_5_n_2 ;
   wire \hist_blue_reg[0]_i_5_n_3 ;
-  wire \hist_red[0]_i_10_n_0 ;
+  wire \hist_blue_reg[0]_i_8_n_0 ;
+  wire \hist_blue_reg[0]_i_8_n_1 ;
+  wire \hist_blue_reg[0]_i_8_n_2 ;
+  wire \hist_blue_reg[0]_i_8_n_3 ;
   wire \hist_red[0]_i_11_n_0 ;
   wire \hist_red[0]_i_12_n_0 ;
   wire \hist_red[0]_i_13_n_0 ;
   wire \hist_red[0]_i_14_n_0 ;
   wire \hist_red[0]_i_15_n_0 ;
   wire \hist_red[0]_i_16_n_0 ;
+  wire \hist_red[0]_i_17_n_0 ;
+  wire \hist_red[0]_i_18_n_0 ;
+  wire \hist_red[0]_i_19_n_0 ;
+  wire \hist_red[0]_i_20_n_0 ;
+  wire \hist_red[0]_i_21_n_0 ;
+  wire \hist_red[0]_i_22_n_0 ;
+  wire \hist_red[0]_i_23_n_0 ;
+  wire \hist_red[0]_i_24_n_0 ;
+  wire \hist_red[0]_i_25_n_0 ;
+  wire \hist_red[0]_i_26_n_0 ;
+  wire \hist_red[0]_i_27_n_0 ;
   wire \hist_red[0]_i_6_n_0 ;
+  wire \hist_red[0]_i_7_n_0 ;
   wire \hist_red[0]_i_9_n_0 ;
+  wire \hist_red_reg[0]_i_10_n_0 ;
+  wire \hist_red_reg[0]_i_10_n_1 ;
+  wire \hist_red_reg[0]_i_10_n_2 ;
+  wire \hist_red_reg[0]_i_10_n_3 ;
+  wire \hist_red_reg[0]_i_2_n_3 ;
   wire \hist_red_reg[0]_i_5_n_0 ;
   wire \hist_red_reg[0]_i_5_n_1 ;
   wire \hist_red_reg[0]_i_5_n_2 ;
   wire \hist_red_reg[0]_i_5_n_3 ;
+  wire \hist_red_reg[0]_i_8_n_0 ;
+  wire \hist_red_reg[0]_i_8_n_1 ;
+  wire \hist_red_reg[0]_i_8_n_2 ;
+  wire \hist_red_reg[0]_i_8_n_3 ;
   wire [23:0]m_axis_tdata;
   wire m_axis_tlast;
   wire m_axis_tready;
@@ -88,12 +128,20 @@ module system_AXI4_HandSignal_0_0
   wire s_axis_tready;
   wire s_axis_tuser;
   wire s_axis_tvalid;
-  wire [3:1]\NLW_hist_blue_reg[0]_i_2_CO_UNCONNECTED ;
-  wire [3:0]\NLW_hist_blue_reg[0]_i_2_O_UNCONNECTED ;
+  wire [3:0]\NLW_hist_blue_reg[0]_i_10_O_UNCONNECTED ;
+  wire [3:1]\NLW_hist_blue_reg[0]_i_3_CO_UNCONNECTED ;
+  wire [3:0]\NLW_hist_blue_reg[0]_i_3_O_UNCONNECTED ;
+  wire [3:1]\NLW_hist_blue_reg[0]_i_4_CO_UNCONNECTED ;
+  wire [3:0]\NLW_hist_blue_reg[0]_i_4_O_UNCONNECTED ;
   wire [3:0]\NLW_hist_blue_reg[0]_i_5_O_UNCONNECTED ;
+  wire [3:0]\NLW_hist_blue_reg[0]_i_8_O_UNCONNECTED ;
+  wire [3:0]\NLW_hist_red_reg[0]_i_10_O_UNCONNECTED ;
   wire [3:1]\NLW_hist_red_reg[0]_i_2_CO_UNCONNECTED ;
   wire [3:0]\NLW_hist_red_reg[0]_i_2_O_UNCONNECTED ;
+  wire [3:1]\NLW_hist_red_reg[0]_i_4_CO_UNCONNECTED ;
+  wire [3:0]\NLW_hist_red_reg[0]_i_4_O_UNCONNECTED ;
   wire [3:0]\NLW_hist_red_reg[0]_i_5_O_UNCONNECTED ;
+  wire [3:0]\NLW_hist_red_reg[0]_i_8_O_UNCONNECTED ;
 
   assign o_color_spi_data[31] = \<const0> ;
   assign o_color_spi_data[30] = \<const0> ;
@@ -118,10 +166,12 @@ module system_AXI4_HandSignal_0_0
   GND GND
        (.G(\<const0> ));
   system_AXI4_HandSignal_0_0_AXI4_HandSignal U0
-       (.CO(\U_hand_signal/u_color_detect/raw_red_rel00_in ),
+       (.CO(\hist_blue_reg[0]_i_3_n_3 ),
         .aclk(aclk),
         .aresetn(aresetn),
         .\hist_blue_reg[0] (\U_hand_signal/u_color_detect/raw_blue_rel0 ),
+        .\hist_red_reg[0] (\hist_red_reg[0]_i_2_n_3 ),
+        .\hist_red_reg[0]_0 (\U_hand_signal/u_color_detect/raw_red_rel00_in ),
         .m_axis_tdata(m_axis_tdata),
         .m_axis_tlast(m_axis_tlast),
         .m_axis_tready(m_axis_tready),
@@ -134,184 +184,353 @@ module system_AXI4_HandSignal_0_0
         .s_axis_tready(s_axis_tready),
         .s_axis_tuser(s_axis_tuser),
         .s_axis_tvalid(s_axis_tvalid));
-  LUT4 #(
-    .INIT(16'hF220)) 
-    \hist_blue[0]_i_10 
-       (.I0(s_axis_tdata[12]),
-        .I1(s_axis_tdata[4]),
-        .I2(s_axis_tdata[13]),
-        .I3(s_axis_tdata[5]),
-        .O(\hist_blue[0]_i_10_n_0 ));
-  LUT4 #(
-    .INIT(16'h2F02)) 
+  LUT1 #(
+    .INIT(2'h1)) 
     \hist_blue[0]_i_11 
-       (.I0(s_axis_tdata[10]),
-        .I1(s_axis_tdata[2]),
-        .I2(s_axis_tdata[3]),
-        .I3(s_axis_tdata[11]),
+       (.I0(s_axis_tdata[14]),
         .O(\hist_blue[0]_i_11_n_0 ));
-  LUT4 #(
-    .INIT(16'h2F02)) 
+  LUT3 #(
+    .INIT(8'h96)) 
     \hist_blue[0]_i_12 
-       (.I0(s_axis_tdata[8]),
-        .I1(s_axis_tdata[0]),
-        .I2(s_axis_tdata[1]),
-        .I3(s_axis_tdata[9]),
+       (.I0(s_axis_tdata[14]),
+        .I1(s_axis_tdata[23]),
+        .I2(s_axis_tdata[15]),
         .O(\hist_blue[0]_i_12_n_0 ));
-  LUT5 #(
-    .INIT(32'h18844221)) 
+  LUT2 #(
+    .INIT(4'h6)) 
     \hist_blue[0]_i_13 
        (.I0(s_axis_tdata[14]),
-        .I1(s_axis_tdata[15]),
-        .I2(s_axis_tdata[5]),
-        .I3(s_axis_tdata[6]),
-        .I4(s_axis_tdata[7]),
+        .I1(s_axis_tdata[22]),
         .O(\hist_blue[0]_i_13_n_0 ));
-  LUT4 #(
-    .INIT(16'h0990)) 
+  LUT2 #(
+    .INIT(4'h9)) 
     \hist_blue[0]_i_14 
-       (.I0(s_axis_tdata[12]),
-        .I1(s_axis_tdata[4]),
-        .I2(s_axis_tdata[13]),
-        .I3(s_axis_tdata[5]),
+       (.I0(s_axis_tdata[21]),
+        .I1(s_axis_tdata[13]),
         .O(\hist_blue[0]_i_14_n_0 ));
-  LUT4 #(
-    .INIT(16'h9009)) 
+  LUT2 #(
+    .INIT(4'h9)) 
     \hist_blue[0]_i_15 
-       (.I0(s_axis_tdata[10]),
-        .I1(s_axis_tdata[2]),
-        .I2(s_axis_tdata[11]),
-        .I3(s_axis_tdata[3]),
+       (.I0(s_axis_tdata[20]),
+        .I1(s_axis_tdata[12]),
         .O(\hist_blue[0]_i_15_n_0 ));
   LUT4 #(
-    .INIT(16'h9009)) 
+    .INIT(16'hE282)) 
     \hist_blue[0]_i_16 
-       (.I0(s_axis_tdata[8]),
-        .I1(s_axis_tdata[0]),
-        .I2(s_axis_tdata[9]),
-        .I3(s_axis_tdata[1]),
-        .O(\hist_blue[0]_i_16_n_0 ));
-  LUT3 #(
-    .INIT(8'h7F)) 
-    \hist_blue[0]_i_6 
-       (.I0(s_axis_tdata[7]),
-        .I1(s_axis_tdata[5]),
+       (.I0(s_axis_tdata[15]),
+        .I1(s_axis_tdata[7]),
         .I2(s_axis_tdata[6]),
-        .O(\hist_blue[0]_i_6_n_0 ));
-  LUT5 #(
-    .INIT(32'hC2BF8002)) 
-    \hist_blue[0]_i_9 
-       (.I0(s_axis_tdata[14]),
-        .I1(s_axis_tdata[5]),
+        .I3(s_axis_tdata[14]),
+        .O(\hist_blue[0]_i_16_n_0 ));
+  LUT4 #(
+    .INIT(16'h40F4)) 
+    \hist_blue[0]_i_17 
+       (.I0(s_axis_tdata[4]),
+        .I1(s_axis_tdata[12]),
+        .I2(s_axis_tdata[13]),
+        .I3(s_axis_tdata[5]),
+        .O(\hist_blue[0]_i_17_n_0 ));
+  LUT4 #(
+    .INIT(16'h20BA)) 
+    \hist_blue[0]_i_18 
+       (.I0(s_axis_tdata[11]),
+        .I1(s_axis_tdata[2]),
+        .I2(s_axis_tdata[10]),
+        .I3(s_axis_tdata[3]),
+        .O(\hist_blue[0]_i_18_n_0 ));
+  LUT4 #(
+    .INIT(16'h20BA)) 
+    \hist_blue[0]_i_19 
+       (.I0(s_axis_tdata[9]),
+        .I1(s_axis_tdata[0]),
+        .I2(s_axis_tdata[8]),
+        .I3(s_axis_tdata[1]),
+        .O(\hist_blue[0]_i_19_n_0 ));
+  LUT4 #(
+    .INIT(16'h1824)) 
+    \hist_blue[0]_i_20 
+       (.I0(s_axis_tdata[15]),
+        .I1(s_axis_tdata[14]),
         .I2(s_axis_tdata[6]),
         .I3(s_axis_tdata[7]),
-        .I4(s_axis_tdata[15]),
+        .O(\hist_blue[0]_i_20_n_0 ));
+  LUT4 #(
+    .INIT(16'h8241)) 
+    \hist_blue[0]_i_21 
+       (.I0(s_axis_tdata[4]),
+        .I1(s_axis_tdata[5]),
+        .I2(s_axis_tdata[13]),
+        .I3(s_axis_tdata[12]),
+        .O(\hist_blue[0]_i_21_n_0 ));
+  LUT4 #(
+    .INIT(16'h8241)) 
+    \hist_blue[0]_i_22 
+       (.I0(s_axis_tdata[11]),
+        .I1(s_axis_tdata[10]),
+        .I2(s_axis_tdata[2]),
+        .I3(s_axis_tdata[3]),
+        .O(\hist_blue[0]_i_22_n_0 ));
+  LUT4 #(
+    .INIT(16'h8241)) 
+    \hist_blue[0]_i_23 
+       (.I0(s_axis_tdata[9]),
+        .I1(s_axis_tdata[0]),
+        .I2(s_axis_tdata[8]),
+        .I3(s_axis_tdata[1]),
+        .O(\hist_blue[0]_i_23_n_0 ));
+  LUT2 #(
+    .INIT(4'h9)) 
+    \hist_blue[0]_i_24 
+       (.I0(s_axis_tdata[19]),
+        .I1(s_axis_tdata[11]),
+        .O(\hist_blue[0]_i_24_n_0 ));
+  LUT2 #(
+    .INIT(4'h9)) 
+    \hist_blue[0]_i_25 
+       (.I0(s_axis_tdata[18]),
+        .I1(s_axis_tdata[10]),
+        .O(\hist_blue[0]_i_25_n_0 ));
+  LUT2 #(
+    .INIT(4'h9)) 
+    \hist_blue[0]_i_26 
+       (.I0(s_axis_tdata[17]),
+        .I1(s_axis_tdata[9]),
+        .O(\hist_blue[0]_i_26_n_0 ));
+  LUT2 #(
+    .INIT(4'h9)) 
+    \hist_blue[0]_i_27 
+       (.I0(s_axis_tdata[16]),
+        .I1(s_axis_tdata[8]),
+        .O(\hist_blue[0]_i_27_n_0 ));
+  LUT2 #(
+    .INIT(4'h2)) 
+    \hist_blue[0]_i_6 
+       (.I0(s_axis_tdata[23]),
+        .I1(s_axis_tdata[15]),
+        .O(\hist_blue[0]_i_6_n_0 ));
+  LUT2 #(
+    .INIT(4'hB)) 
+    \hist_blue[0]_i_7 
+       (.I0(s_axis_tdata[15]),
+        .I1(s_axis_tdata[23]),
+        .O(\hist_blue[0]_i_7_n_0 ));
+  LUT2 #(
+    .INIT(4'h7)) 
+    \hist_blue[0]_i_9 
+       (.I0(s_axis_tdata[7]),
+        .I1(s_axis_tdata[6]),
         .O(\hist_blue[0]_i_9_n_0 ));
-  (* COMPARATOR_THRESHOLD = "11" *) 
-  CARRY4 \hist_blue_reg[0]_i_2 
+  CARRY4 \hist_blue_reg[0]_i_10 
+       (.CI(1'b0),
+        .CO({\hist_blue_reg[0]_i_10_n_0 ,\hist_blue_reg[0]_i_10_n_1 ,\hist_blue_reg[0]_i_10_n_2 ,\hist_blue_reg[0]_i_10_n_3 }),
+        .CYINIT(1'b1),
+        .DI(s_axis_tdata[19:16]),
+        .O(\NLW_hist_blue_reg[0]_i_10_O_UNCONNECTED [3:0]),
+        .S({\hist_blue[0]_i_24_n_0 ,\hist_blue[0]_i_25_n_0 ,\hist_blue[0]_i_26_n_0 ,\hist_blue[0]_i_27_n_0 }));
+  CARRY4 \hist_blue_reg[0]_i_3 
        (.CI(\hist_blue_reg[0]_i_5_n_0 ),
-        .CO({\NLW_hist_blue_reg[0]_i_2_CO_UNCONNECTED [3:1],\U_hand_signal/u_color_detect/raw_blue_rel0 }),
+        .CO({\NLW_hist_blue_reg[0]_i_3_CO_UNCONNECTED [3:1],\hist_blue_reg[0]_i_3_n_3 }),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,\hist_blue[0]_i_6_n_0 }),
+        .O(\NLW_hist_blue_reg[0]_i_3_O_UNCONNECTED [3:0]),
+        .S({1'b0,1'b0,1'b0,\hist_blue[0]_i_7_n_0 }));
+  (* COMPARATOR_THRESHOLD = "11" *) 
+  CARRY4 \hist_blue_reg[0]_i_4 
+       (.CI(\hist_blue_reg[0]_i_8_n_0 ),
+        .CO({\NLW_hist_blue_reg[0]_i_4_CO_UNCONNECTED [3:1],\U_hand_signal/u_color_detect/raw_blue_rel0 }),
         .CYINIT(1'b0),
         .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O(\NLW_hist_blue_reg[0]_i_2_O_UNCONNECTED [3:0]),
-        .S({1'b0,1'b0,1'b0,\hist_blue[0]_i_6_n_0 }));
-  (* COMPARATOR_THRESHOLD = "11" *) 
+        .O(\NLW_hist_blue_reg[0]_i_4_O_UNCONNECTED [3:0]),
+        .S({1'b0,1'b0,1'b0,\hist_blue[0]_i_9_n_0 }));
   CARRY4 \hist_blue_reg[0]_i_5 
-       (.CI(1'b0),
+       (.CI(\hist_blue_reg[0]_i_10_n_0 ),
         .CO({\hist_blue_reg[0]_i_5_n_0 ,\hist_blue_reg[0]_i_5_n_1 ,\hist_blue_reg[0]_i_5_n_2 ,\hist_blue_reg[0]_i_5_n_3 }),
         .CYINIT(1'b0),
-        .DI({\hist_blue[0]_i_9_n_0 ,\hist_blue[0]_i_10_n_0 ,\hist_blue[0]_i_11_n_0 ,\hist_blue[0]_i_12_n_0 }),
+        .DI({\hist_blue[0]_i_11_n_0 ,s_axis_tdata[14],s_axis_tdata[21:20]}),
         .O(\NLW_hist_blue_reg[0]_i_5_O_UNCONNECTED [3:0]),
-        .S({\hist_blue[0]_i_13_n_0 ,\hist_blue[0]_i_14_n_0 ,\hist_blue[0]_i_15_n_0 ,\hist_blue[0]_i_16_n_0 }));
-  LUT4 #(
-    .INIT(16'hF220)) 
-    \hist_red[0]_i_10 
-       (.I0(s_axis_tdata[20]),
-        .I1(s_axis_tdata[4]),
-        .I2(s_axis_tdata[21]),
-        .I3(s_axis_tdata[5]),
-        .O(\hist_red[0]_i_10_n_0 ));
-  LUT4 #(
-    .INIT(16'h2F02)) 
+        .S({\hist_blue[0]_i_12_n_0 ,\hist_blue[0]_i_13_n_0 ,\hist_blue[0]_i_14_n_0 ,\hist_blue[0]_i_15_n_0 }));
+  (* COMPARATOR_THRESHOLD = "11" *) 
+  CARRY4 \hist_blue_reg[0]_i_8 
+       (.CI(1'b0),
+        .CO({\hist_blue_reg[0]_i_8_n_0 ,\hist_blue_reg[0]_i_8_n_1 ,\hist_blue_reg[0]_i_8_n_2 ,\hist_blue_reg[0]_i_8_n_3 }),
+        .CYINIT(1'b0),
+        .DI({\hist_blue[0]_i_16_n_0 ,\hist_blue[0]_i_17_n_0 ,\hist_blue[0]_i_18_n_0 ,\hist_blue[0]_i_19_n_0 }),
+        .O(\NLW_hist_blue_reg[0]_i_8_O_UNCONNECTED [3:0]),
+        .S({\hist_blue[0]_i_20_n_0 ,\hist_blue[0]_i_21_n_0 ,\hist_blue[0]_i_22_n_0 ,\hist_blue[0]_i_23_n_0 }));
+  LUT2 #(
+    .INIT(4'h9)) 
     \hist_red[0]_i_11 
-       (.I0(s_axis_tdata[18]),
-        .I1(s_axis_tdata[2]),
-        .I2(s_axis_tdata[3]),
-        .I3(s_axis_tdata[19]),
+       (.I0(s_axis_tdata[15]),
+        .I1(s_axis_tdata[23]),
         .O(\hist_red[0]_i_11_n_0 ));
-  LUT4 #(
-    .INIT(16'h2F02)) 
+  LUT3 #(
+    .INIT(8'h96)) 
     \hist_red[0]_i_12 
-       (.I0(s_axis_tdata[16]),
-        .I1(s_axis_tdata[0]),
-        .I2(s_axis_tdata[1]),
-        .I3(s_axis_tdata[17]),
-        .O(\hist_red[0]_i_12_n_0 ));
-  LUT5 #(
-    .INIT(32'h18844221)) 
-    \hist_red[0]_i_13 
        (.I0(s_axis_tdata[22]),
         .I1(s_axis_tdata[23]),
-        .I2(s_axis_tdata[5]),
-        .I3(s_axis_tdata[6]),
-        .I4(s_axis_tdata[7]),
+        .I2(s_axis_tdata[15]),
+        .O(\hist_red[0]_i_12_n_0 ));
+  LUT2 #(
+    .INIT(4'h6)) 
+    \hist_red[0]_i_13 
+       (.I0(s_axis_tdata[22]),
+        .I1(s_axis_tdata[14]),
         .O(\hist_red[0]_i_13_n_0 ));
-  LUT4 #(
-    .INIT(16'h0990)) 
+  LUT2 #(
+    .INIT(4'h9)) 
     \hist_red[0]_i_14 
-       (.I0(s_axis_tdata[20]),
-        .I1(s_axis_tdata[4]),
-        .I2(s_axis_tdata[21]),
-        .I3(s_axis_tdata[5]),
+       (.I0(s_axis_tdata[13]),
+        .I1(s_axis_tdata[21]),
         .O(\hist_red[0]_i_14_n_0 ));
-  LUT4 #(
-    .INIT(16'h9009)) 
+  LUT2 #(
+    .INIT(4'h9)) 
     \hist_red[0]_i_15 
-       (.I0(s_axis_tdata[18]),
-        .I1(s_axis_tdata[2]),
-        .I2(s_axis_tdata[19]),
-        .I3(s_axis_tdata[3]),
+       (.I0(s_axis_tdata[12]),
+        .I1(s_axis_tdata[20]),
         .O(\hist_red[0]_i_15_n_0 ));
   LUT4 #(
-    .INIT(16'h9009)) 
+    .INIT(16'hE282)) 
     \hist_red[0]_i_16 
-       (.I0(s_axis_tdata[16]),
-        .I1(s_axis_tdata[0]),
-        .I2(s_axis_tdata[17]),
-        .I3(s_axis_tdata[1]),
-        .O(\hist_red[0]_i_16_n_0 ));
-  LUT3 #(
-    .INIT(8'h7F)) 
-    \hist_red[0]_i_6 
-       (.I0(s_axis_tdata[7]),
-        .I1(s_axis_tdata[5]),
+       (.I0(s_axis_tdata[23]),
+        .I1(s_axis_tdata[7]),
         .I2(s_axis_tdata[6]),
-        .O(\hist_red[0]_i_6_n_0 ));
-  LUT5 #(
-    .INIT(32'hC2BF8002)) 
-    \hist_red[0]_i_9 
-       (.I0(s_axis_tdata[22]),
-        .I1(s_axis_tdata[5]),
+        .I3(s_axis_tdata[22]),
+        .O(\hist_red[0]_i_16_n_0 ));
+  LUT4 #(
+    .INIT(16'h40F4)) 
+    \hist_red[0]_i_17 
+       (.I0(s_axis_tdata[4]),
+        .I1(s_axis_tdata[20]),
+        .I2(s_axis_tdata[21]),
+        .I3(s_axis_tdata[5]),
+        .O(\hist_red[0]_i_17_n_0 ));
+  LUT4 #(
+    .INIT(16'h7510)) 
+    \hist_red[0]_i_18 
+       (.I0(s_axis_tdata[3]),
+        .I1(s_axis_tdata[2]),
+        .I2(s_axis_tdata[18]),
+        .I3(s_axis_tdata[19]),
+        .O(\hist_red[0]_i_18_n_0 ));
+  LUT4 #(
+    .INIT(16'h7510)) 
+    \hist_red[0]_i_19 
+       (.I0(s_axis_tdata[1]),
+        .I1(s_axis_tdata[0]),
+        .I2(s_axis_tdata[16]),
+        .I3(s_axis_tdata[17]),
+        .O(\hist_red[0]_i_19_n_0 ));
+  LUT4 #(
+    .INIT(16'h1824)) 
+    \hist_red[0]_i_20 
+       (.I0(s_axis_tdata[23]),
+        .I1(s_axis_tdata[22]),
         .I2(s_axis_tdata[6]),
         .I3(s_axis_tdata[7]),
-        .I4(s_axis_tdata[23]),
+        .O(\hist_red[0]_i_20_n_0 ));
+  LUT4 #(
+    .INIT(16'h8241)) 
+    \hist_red[0]_i_21 
+       (.I0(s_axis_tdata[4]),
+        .I1(s_axis_tdata[5]),
+        .I2(s_axis_tdata[21]),
+        .I3(s_axis_tdata[20]),
+        .O(\hist_red[0]_i_21_n_0 ));
+  LUT4 #(
+    .INIT(16'h8421)) 
+    \hist_red[0]_i_22 
+       (.I0(s_axis_tdata[3]),
+        .I1(s_axis_tdata[2]),
+        .I2(s_axis_tdata[19]),
+        .I3(s_axis_tdata[18]),
+        .O(\hist_red[0]_i_22_n_0 ));
+  LUT4 #(
+    .INIT(16'h8241)) 
+    \hist_red[0]_i_23 
+       (.I0(s_axis_tdata[1]),
+        .I1(s_axis_tdata[0]),
+        .I2(s_axis_tdata[16]),
+        .I3(s_axis_tdata[17]),
+        .O(\hist_red[0]_i_23_n_0 ));
+  LUT2 #(
+    .INIT(4'h9)) 
+    \hist_red[0]_i_24 
+       (.I0(s_axis_tdata[11]),
+        .I1(s_axis_tdata[19]),
+        .O(\hist_red[0]_i_24_n_0 ));
+  LUT2 #(
+    .INIT(4'h9)) 
+    \hist_red[0]_i_25 
+       (.I0(s_axis_tdata[10]),
+        .I1(s_axis_tdata[18]),
+        .O(\hist_red[0]_i_25_n_0 ));
+  LUT2 #(
+    .INIT(4'h9)) 
+    \hist_red[0]_i_26 
+       (.I0(s_axis_tdata[9]),
+        .I1(s_axis_tdata[17]),
+        .O(\hist_red[0]_i_26_n_0 ));
+  LUT2 #(
+    .INIT(4'h9)) 
+    \hist_red[0]_i_27 
+       (.I0(s_axis_tdata[8]),
+        .I1(s_axis_tdata[16]),
+        .O(\hist_red[0]_i_27_n_0 ));
+  LUT2 #(
+    .INIT(4'h2)) 
+    \hist_red[0]_i_6 
+       (.I0(s_axis_tdata[15]),
+        .I1(s_axis_tdata[23]),
+        .O(\hist_red[0]_i_6_n_0 ));
+  LUT2 #(
+    .INIT(4'hB)) 
+    \hist_red[0]_i_7 
+       (.I0(s_axis_tdata[23]),
+        .I1(s_axis_tdata[15]),
+        .O(\hist_red[0]_i_7_n_0 ));
+  LUT2 #(
+    .INIT(4'h7)) 
+    \hist_red[0]_i_9 
+       (.I0(s_axis_tdata[7]),
+        .I1(s_axis_tdata[6]),
         .O(\hist_red[0]_i_9_n_0 ));
-  (* COMPARATOR_THRESHOLD = "11" *) 
+  CARRY4 \hist_red_reg[0]_i_10 
+       (.CI(1'b0),
+        .CO({\hist_red_reg[0]_i_10_n_0 ,\hist_red_reg[0]_i_10_n_1 ,\hist_red_reg[0]_i_10_n_2 ,\hist_red_reg[0]_i_10_n_3 }),
+        .CYINIT(1'b1),
+        .DI(s_axis_tdata[11:8]),
+        .O(\NLW_hist_red_reg[0]_i_10_O_UNCONNECTED [3:0]),
+        .S({\hist_red[0]_i_24_n_0 ,\hist_red[0]_i_25_n_0 ,\hist_red[0]_i_26_n_0 ,\hist_red[0]_i_27_n_0 }));
   CARRY4 \hist_red_reg[0]_i_2 
        (.CI(\hist_red_reg[0]_i_5_n_0 ),
-        .CO({\NLW_hist_red_reg[0]_i_2_CO_UNCONNECTED [3:1],\U_hand_signal/u_color_detect/raw_red_rel00_in }),
+        .CO({\NLW_hist_red_reg[0]_i_2_CO_UNCONNECTED [3:1],\hist_red_reg[0]_i_2_n_3 }),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,\hist_red[0]_i_6_n_0 }),
+        .O(\NLW_hist_red_reg[0]_i_2_O_UNCONNECTED [3:0]),
+        .S({1'b0,1'b0,1'b0,\hist_red[0]_i_7_n_0 }));
+  (* COMPARATOR_THRESHOLD = "11" *) 
+  CARRY4 \hist_red_reg[0]_i_4 
+       (.CI(\hist_red_reg[0]_i_8_n_0 ),
+        .CO({\NLW_hist_red_reg[0]_i_4_CO_UNCONNECTED [3:1],\U_hand_signal/u_color_detect/raw_red_rel00_in }),
         .CYINIT(1'b0),
         .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O(\NLW_hist_red_reg[0]_i_2_O_UNCONNECTED [3:0]),
-        .S({1'b0,1'b0,1'b0,\hist_red[0]_i_6_n_0 }));
-  (* COMPARATOR_THRESHOLD = "11" *) 
+        .O(\NLW_hist_red_reg[0]_i_4_O_UNCONNECTED [3:0]),
+        .S({1'b0,1'b0,1'b0,\hist_red[0]_i_9_n_0 }));
   CARRY4 \hist_red_reg[0]_i_5 
-       (.CI(1'b0),
+       (.CI(\hist_red_reg[0]_i_10_n_0 ),
         .CO({\hist_red_reg[0]_i_5_n_0 ,\hist_red_reg[0]_i_5_n_1 ,\hist_red_reg[0]_i_5_n_2 ,\hist_red_reg[0]_i_5_n_3 }),
         .CYINIT(1'b0),
-        .DI({\hist_red[0]_i_9_n_0 ,\hist_red[0]_i_10_n_0 ,\hist_red[0]_i_11_n_0 ,\hist_red[0]_i_12_n_0 }),
+        .DI({\hist_red[0]_i_11_n_0 ,s_axis_tdata[22],s_axis_tdata[13:12]}),
         .O(\NLW_hist_red_reg[0]_i_5_O_UNCONNECTED [3:0]),
-        .S({\hist_red[0]_i_13_n_0 ,\hist_red[0]_i_14_n_0 ,\hist_red[0]_i_15_n_0 ,\hist_red[0]_i_16_n_0 }));
+        .S({\hist_red[0]_i_12_n_0 ,\hist_red[0]_i_13_n_0 ,\hist_red[0]_i_14_n_0 ,\hist_red[0]_i_15_n_0 }));
+  (* COMPARATOR_THRESHOLD = "11" *) 
+  CARRY4 \hist_red_reg[0]_i_8 
+       (.CI(1'b0),
+        .CO({\hist_red_reg[0]_i_8_n_0 ,\hist_red_reg[0]_i_8_n_1 ,\hist_red_reg[0]_i_8_n_2 ,\hist_red_reg[0]_i_8_n_3 }),
+        .CYINIT(1'b0),
+        .DI({\hist_red[0]_i_16_n_0 ,\hist_red[0]_i_17_n_0 ,\hist_red[0]_i_18_n_0 ,\hist_red[0]_i_19_n_0 }),
+        .O(\NLW_hist_red_reg[0]_i_8_O_UNCONNECTED [3:0]),
+        .S({\hist_red[0]_i_20_n_0 ,\hist_red[0]_i_21_n_0 ,\hist_red[0]_i_22_n_0 ,\hist_red[0]_i_23_n_0 }));
 endmodule
 
 (* ORIG_REF_NAME = "AXI4_HandSignal" *) 
@@ -328,8 +547,10 @@ module system_AXI4_HandSignal_0_0_AXI4_HandSignal
     s_axis_tuser,
     s_axis_tdata,
     CO,
-    s_axis_tvalid,
     \hist_blue_reg[0] ,
+    \hist_red_reg[0] ,
+    \hist_red_reg[0]_0 ,
+    s_axis_tvalid,
     aresetn,
     m_axis_tready);
   output m_axis_tlast;
@@ -344,8 +565,10 @@ module system_AXI4_HandSignal_0_0_AXI4_HandSignal
   input s_axis_tuser;
   input [23:0]s_axis_tdata;
   input [0:0]CO;
-  input s_axis_tvalid;
   input [0:0]\hist_blue_reg[0] ;
+  input [0:0]\hist_red_reg[0] ;
+  input [0:0]\hist_red_reg[0]_0 ;
+  input s_axis_tvalid;
   input aresetn;
   input m_axis_tready;
 
@@ -577,6 +800,8 @@ module system_AXI4_HandSignal_0_0_AXI4_HandSignal
   wire aresetn;
   wire [23:0]dout;
   wire [0:0]\hist_blue_reg[0] ;
+  wire [0:0]\hist_red_reg[0] ;
+  wire [0:0]\hist_red_reg[0]_0 ;
   wire is_color1;
   wire is_color2;
   wire [23:0]m_axis_tdata;
@@ -802,6 +1027,8 @@ module system_AXI4_HandSignal_0_0_AXI4_HandSignal
         .E(U_hand_signal_n_2),
         .aresetn(aresetn),
         .\hist_blue_reg[0] (\hist_blue_reg[0] ),
+        .\hist_red_reg[0] (\hist_red_reg[0] ),
+        .\hist_red_reg[0]_0 (\hist_red_reg[0]_0 ),
         .is_color1(is_color1),
         .is_color2(is_color2),
         .o_color_spi_data(o_color_spi_data),
@@ -5986,9 +6213,11 @@ module system_AXI4_HandSignal_0_0_hand_signal
     pclk,
     s_axis_tdata,
     CO,
+    \hist_blue_reg[0] ,
+    \hist_red_reg[0] ,
+    \hist_red_reg[0]_0 ,
     s_axis_tvalid,
     s_axis_tlast,
-    \hist_blue_reg[0] ,
     s_axis_tuser,
     aresetn,
     zone_id,
@@ -6161,9 +6390,11 @@ module system_AXI4_HandSignal_0_0_hand_signal
   input pclk;
   input [15:0]s_axis_tdata;
   input [0:0]CO;
+  input [0:0]\hist_blue_reg[0] ;
+  input [0:0]\hist_red_reg[0] ;
+  input [0:0]\hist_red_reg[0]_0 ;
   input s_axis_tvalid;
   input s_axis_tlast;
-  input [0:0]\hist_blue_reg[0] ;
   input s_axis_tuser;
   input aresetn;
   input [5:0]zone_id;
@@ -6334,7 +6565,13 @@ module system_AXI4_HandSignal_0_0_hand_signal
   wire [0:0]E;
   wire aresetn;
   wire [6:1]blue_flag;
+  wire \blue_flag[0]_i_2_n_0 ;
+  wire \blue_flag[0]_i_3_n_0 ;
+  wire \blue_flag[0]_i_4_n_0 ;
+  wire \blue_flag[0]_i_5_n_0 ;
   wire [0:0]\hist_blue_reg[0] ;
+  wire [0:0]\hist_red_reg[0] ;
+  wire [0:0]\hist_red_reg[0]_0 ;
   wire is_color1;
   wire is_color2;
   wire max_zone_color1;
@@ -8779,10 +9016,6 @@ module system_AXI4_HandSignal_0_0_hand_signal
   wire [10:0]p_0_in;
   wire pclk;
   wire [6:1]red_flag;
-  wire \red_flag[0]_i_2_n_0 ;
-  wire \red_flag[0]_i_3_n_0 ;
-  wire \red_flag[0]_i_4_n_0 ;
-  wire \red_flag[0]_i_5_n_0 ;
   wire [15:0]s_axis_tdata;
   wire s_axis_tlast;
   wire s_axis_tuser;
@@ -13781,45 +14014,80 @@ module system_AXI4_HandSignal_0_0_hand_signal
   wire [3:2]\NLW_zone_count_color2_reg[1][31]_i_2_CO_UNCONNECTED ;
   wire [3:3]\NLW_zone_count_color2_reg[1][31]_i_2_O_UNCONNECTED ;
 
+  LUT6 #(
+    .INIT(64'h0000000000000020)) 
+    \blue_flag[0]_i_2 
+       (.I0(s_axis_tvalid),
+        .I1(s_axis_tuser),
+        .I2(s_axis_tlast),
+        .I3(\blue_flag[0]_i_3_n_0 ),
+        .I4(\blue_flag[0]_i_4_n_0 ),
+        .I5(\blue_flag[0]_i_5_n_0 ),
+        .O(\blue_flag[0]_i_2_n_0 ));
+  LUT3 #(
+    .INIT(8'hFE)) 
+    \blue_flag[0]_i_3 
+       (.I0(v_cnt_reg[5]),
+        .I1(v_cnt_reg[8]),
+        .I2(v_cnt_reg[10]),
+        .O(\blue_flag[0]_i_3_n_0 ));
+  (* SOFT_HLUTNM = "soft_lutpair67" *) 
+  LUT4 #(
+    .INIT(16'h7FFF)) 
+    \blue_flag[0]_i_4 
+       (.I0(v_cnt_reg[2]),
+        .I1(v_cnt_reg[3]),
+        .I2(v_cnt_reg[0]),
+        .I3(v_cnt_reg[1]),
+        .O(\blue_flag[0]_i_4_n_0 ));
+  (* SOFT_HLUTNM = "soft_lutpair68" *) 
+  LUT4 #(
+    .INIT(16'hDFFF)) 
+    \blue_flag[0]_i_5 
+       (.I0(v_cnt_reg[9]),
+        .I1(v_cnt_reg[4]),
+        .I2(v_cnt_reg[7]),
+        .I3(v_cnt_reg[6]),
+        .O(\blue_flag[0]_i_5_n_0 ));
   FDRE \blue_flag_reg[0] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color1_reg_n_0_[0] ),
-        .Q(o_color_spi_data[4]),
+        .Q(o_color_spi_data[8]),
         .R(u_color_detect_n_1));
   FDRE \blue_flag_reg[1] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color1_reg_n_0_[1] ),
         .Q(blue_flag[1]),
         .R(u_color_detect_n_1));
   FDRE \blue_flag_reg[2] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color1_reg_n_0_[2] ),
         .Q(blue_flag[2]),
         .R(u_color_detect_n_1));
   FDRE \blue_flag_reg[3] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color1_reg_n_0_[3] ),
         .Q(blue_flag[3]),
         .R(u_color_detect_n_1));
   FDRE \blue_flag_reg[4] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color1_reg_n_0_[4] ),
         .Q(blue_flag[4]),
         .R(u_color_detect_n_1));
   FDRE \blue_flag_reg[5] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color1_reg_n_0_[5] ),
         .Q(blue_flag[5]),
         .R(u_color_detect_n_1));
   FDRE \blue_flag_reg[6] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color1_reg_n_0_[6] ),
         .Q(blue_flag[6]),
         .R(u_color_detect_n_1));
@@ -33129,212 +33397,177 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .I1(\max_zone_color2[6]_i_242_n_0 ),
         .O(\max_zone_color2_reg[6]_i_99_n_0 ),
         .S(\max_zone_color2_reg[2]_rep_n_0 ));
-  LUT6 #(
-    .INIT(64'h400AFDD4AFFD400A)) 
-    \o_color_spi_data[0]_INST_0 
+  (* SOFT_HLUTNM = "soft_lutpair65" *) 
+  LUT4 #(
+    .INIT(16'hB244)) 
+    \o_color_spi_data[10]_INST_0 
        (.I0(red_flag[4]),
-        .I1(red_flag[1]),
-        .I2(red_flag[2]),
-        .I3(red_flag[6]),
-        .I4(red_flag[5]),
-        .I5(red_flag[3]),
-        .O(o_color_spi_data[0]));
+        .I1(red_flag[6]),
+        .I2(red_flag[3]),
+        .I3(red_flag[5]),
+        .O(o_color_spi_data[6]));
+  LUT3 #(
+    .INIT(8'hE0)) 
+    \o_color_spi_data[11]_INST_0 
+       (.I0(red_flag[4]),
+        .I1(red_flag[5]),
+        .I2(red_flag[6]),
+        .O(o_color_spi_data[7]));
+  LUT6 #(
+    .INIT(64'h8CC6311863318CC6)) 
+    \o_color_spi_data[17]_INST_0 
+       (.I0(blue_flag[4]),
+        .I1(blue_flag[1]),
+        .I2(blue_flag[2]),
+        .I3(blue_flag[6]),
+        .I4(blue_flag[5]),
+        .I5(blue_flag[3]),
+        .O(o_color_spi_data[9]));
   LUT6 #(
     .INIT(64'hA52994A552944A52)) 
-    \o_color_spi_data[10]_INST_0 
+    \o_color_spi_data[18]_INST_0 
        (.I0(blue_flag[4]),
         .I1(blue_flag[1]),
         .I2(blue_flag[2]),
         .I3(blue_flag[3]),
         .I4(blue_flag[5]),
         .I5(blue_flag[6]),
-        .O(o_color_spi_data[6]));
+        .O(o_color_spi_data[10]));
   LUT6 #(
     .INIT(64'h1042841008214208)) 
-    \o_color_spi_data[11]_INST_0 
+    \o_color_spi_data[19]_INST_0 
        (.I0(blue_flag[4]),
         .I1(blue_flag[1]),
         .I2(blue_flag[2]),
         .I3(blue_flag[5]),
         .I4(blue_flag[3]),
         .I5(blue_flag[6]),
-        .O(o_color_spi_data[7]));
-  LUT6 #(
-    .INIT(64'h400AFDD4AFFD400A)) 
-    \o_color_spi_data[16]_INST_0 
-       (.I0(blue_flag[4]),
-        .I1(blue_flag[1]),
-        .I2(blue_flag[2]),
-        .I3(blue_flag[6]),
-        .I4(blue_flag[5]),
-        .I5(blue_flag[3]),
-        .O(o_color_spi_data[8]));
-  (* SOFT_HLUTNM = "soft_lutpair66" *) 
-  LUT5 #(
-    .INIT(32'h58E55A58)) 
-    \o_color_spi_data[17]_INST_0 
-       (.I0(blue_flag[4]),
-        .I1(blue_flag[2]),
-        .I2(blue_flag[6]),
-        .I3(blue_flag[3]),
-        .I4(blue_flag[5]),
-        .O(o_color_spi_data[9]));
-  (* SOFT_HLUTNM = "soft_lutpair66" *) 
-  LUT4 #(
-    .INIT(16'hB244)) 
-    \o_color_spi_data[18]_INST_0 
-       (.I0(blue_flag[4]),
-        .I1(blue_flag[6]),
-        .I2(blue_flag[3]),
-        .I3(blue_flag[5]),
-        .O(o_color_spi_data[10]));
-  LUT3 #(
-    .INIT(8'hE0)) 
-    \o_color_spi_data[19]_INST_0 
-       (.I0(blue_flag[4]),
-        .I1(blue_flag[5]),
-        .I2(blue_flag[6]),
         .O(o_color_spi_data[11]));
-  (* SOFT_HLUTNM = "soft_lutpair65" *) 
-  LUT5 #(
-    .INIT(32'h58E55A58)) 
-    \o_color_spi_data[1]_INST_0 
-       (.I0(red_flag[4]),
-        .I1(red_flag[2]),
-        .I2(red_flag[6]),
-        .I3(red_flag[3]),
-        .I4(red_flag[5]),
-        .O(o_color_spi_data[1]));
   LUT6 #(
     .INIT(64'h8CC6311863318CC6)) 
-    \o_color_spi_data[25]_INST_0 
+    \o_color_spi_data[1]_INST_0 
        (.I0(red_flag[4]),
         .I1(red_flag[1]),
         .I2(red_flag[2]),
         .I3(red_flag[6]),
         .I4(red_flag[5]),
         .I5(red_flag[3]),
-        .O(o_color_spi_data[13]));
+        .O(o_color_spi_data[1]));
   LUT6 #(
-    .INIT(64'hA52994A552944A52)) 
-    \o_color_spi_data[26]_INST_0 
-       (.I0(red_flag[4]),
-        .I1(red_flag[1]),
-        .I2(red_flag[2]),
-        .I3(red_flag[3]),
-        .I4(red_flag[5]),
-        .I5(red_flag[6]),
-        .O(o_color_spi_data[14]));
-  LUT6 #(
-    .INIT(64'h1042841008214208)) 
-    \o_color_spi_data[27]_INST_0 
-       (.I0(red_flag[4]),
-        .I1(red_flag[1]),
-        .I2(red_flag[2]),
-        .I3(red_flag[5]),
-        .I4(red_flag[3]),
-        .I5(red_flag[6]),
-        .O(o_color_spi_data[15]));
-  (* SOFT_HLUTNM = "soft_lutpair65" *) 
-  LUT4 #(
-    .INIT(16'hB244)) 
-    \o_color_spi_data[2]_INST_0 
-       (.I0(red_flag[4]),
-        .I1(red_flag[6]),
-        .I2(red_flag[3]),
-        .I3(red_flag[5]),
-        .O(o_color_spi_data[2]));
-  LUT3 #(
-    .INIT(8'hE0)) 
-    \o_color_spi_data[3]_INST_0 
-       (.I0(red_flag[4]),
-        .I1(red_flag[5]),
-        .I2(red_flag[6]),
-        .O(o_color_spi_data[3]));
-  LUT6 #(
-    .INIT(64'h8CC6311863318CC6)) 
-    \o_color_spi_data[9]_INST_0 
+    .INIT(64'h400AFDD4AFFD400A)) 
+    \o_color_spi_data[24]_INST_0 
        (.I0(blue_flag[4]),
         .I1(blue_flag[1]),
         .I2(blue_flag[2]),
         .I3(blue_flag[6]),
         .I4(blue_flag[5]),
         .I5(blue_flag[3]),
-        .O(o_color_spi_data[5]));
-  LUT6 #(
-    .INIT(64'h0000000000000020)) 
-    \red_flag[0]_i_2 
-       (.I0(s_axis_tvalid),
-        .I1(s_axis_tuser),
-        .I2(s_axis_tlast),
-        .I3(\red_flag[0]_i_3_n_0 ),
-        .I4(\red_flag[0]_i_4_n_0 ),
-        .I5(\red_flag[0]_i_5_n_0 ),
-        .O(\red_flag[0]_i_2_n_0 ));
+        .O(o_color_spi_data[12]));
+  (* SOFT_HLUTNM = "soft_lutpair66" *) 
+  LUT5 #(
+    .INIT(32'h58E55A58)) 
+    \o_color_spi_data[25]_INST_0 
+       (.I0(blue_flag[4]),
+        .I1(blue_flag[2]),
+        .I2(blue_flag[6]),
+        .I3(blue_flag[3]),
+        .I4(blue_flag[5]),
+        .O(o_color_spi_data[13]));
+  (* SOFT_HLUTNM = "soft_lutpair66" *) 
+  LUT4 #(
+    .INIT(16'hB244)) 
+    \o_color_spi_data[26]_INST_0 
+       (.I0(blue_flag[4]),
+        .I1(blue_flag[6]),
+        .I2(blue_flag[3]),
+        .I3(blue_flag[5]),
+        .O(o_color_spi_data[14]));
   LUT3 #(
-    .INIT(8'hFE)) 
-    \red_flag[0]_i_3 
-       (.I0(v_cnt_reg[5]),
-        .I1(v_cnt_reg[8]),
-        .I2(v_cnt_reg[10]),
-        .O(\red_flag[0]_i_3_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair67" *) 
-  LUT4 #(
-    .INIT(16'h7FFF)) 
-    \red_flag[0]_i_4 
-       (.I0(v_cnt_reg[2]),
-        .I1(v_cnt_reg[3]),
-        .I2(v_cnt_reg[0]),
-        .I3(v_cnt_reg[1]),
-        .O(\red_flag[0]_i_4_n_0 ));
-  (* SOFT_HLUTNM = "soft_lutpair68" *) 
-  LUT4 #(
-    .INIT(16'hDFFF)) 
-    \red_flag[0]_i_5 
-       (.I0(v_cnt_reg[9]),
-        .I1(v_cnt_reg[4]),
-        .I2(v_cnt_reg[7]),
-        .I3(v_cnt_reg[6]),
-        .O(\red_flag[0]_i_5_n_0 ));
+    .INIT(8'hE0)) 
+    \o_color_spi_data[27]_INST_0 
+       (.I0(blue_flag[4]),
+        .I1(blue_flag[5]),
+        .I2(blue_flag[6]),
+        .O(o_color_spi_data[15]));
+  LUT6 #(
+    .INIT(64'hA52994A552944A52)) 
+    \o_color_spi_data[2]_INST_0 
+       (.I0(red_flag[4]),
+        .I1(red_flag[1]),
+        .I2(red_flag[2]),
+        .I3(red_flag[3]),
+        .I4(red_flag[5]),
+        .I5(red_flag[6]),
+        .O(o_color_spi_data[2]));
+  LUT6 #(
+    .INIT(64'h1042841008214208)) 
+    \o_color_spi_data[3]_INST_0 
+       (.I0(red_flag[4]),
+        .I1(red_flag[1]),
+        .I2(red_flag[2]),
+        .I3(red_flag[5]),
+        .I4(red_flag[3]),
+        .I5(red_flag[6]),
+        .O(o_color_spi_data[3]));
+  LUT6 #(
+    .INIT(64'h400AFDD4AFFD400A)) 
+    \o_color_spi_data[8]_INST_0 
+       (.I0(red_flag[4]),
+        .I1(red_flag[1]),
+        .I2(red_flag[2]),
+        .I3(red_flag[6]),
+        .I4(red_flag[5]),
+        .I5(red_flag[3]),
+        .O(o_color_spi_data[4]));
+  (* SOFT_HLUTNM = "soft_lutpair65" *) 
+  LUT5 #(
+    .INIT(32'h58E55A58)) 
+    \o_color_spi_data[9]_INST_0 
+       (.I0(red_flag[4]),
+        .I1(red_flag[2]),
+        .I2(red_flag[6]),
+        .I3(red_flag[3]),
+        .I4(red_flag[5]),
+        .O(o_color_spi_data[5]));
   FDRE \red_flag_reg[0] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color2_reg_n_0_[0] ),
-        .Q(o_color_spi_data[12]),
+        .Q(o_color_spi_data[0]),
         .R(u_color_detect_n_1));
   FDRE \red_flag_reg[1] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color2_reg_n_0_[1] ),
         .Q(red_flag[1]),
         .R(u_color_detect_n_1));
   FDRE \red_flag_reg[2] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color2_reg_n_0_[2] ),
         .Q(red_flag[2]),
         .R(u_color_detect_n_1));
   FDRE \red_flag_reg[3] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color2_reg_n_0_[3] ),
         .Q(red_flag[3]),
         .R(u_color_detect_n_1));
   FDRE \red_flag_reg[4] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color2_reg_n_0_[4] ),
         .Q(red_flag[4]),
         .R(u_color_detect_n_1));
   FDRE \red_flag_reg[5] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color2_reg_n_0_[5] ),
         .Q(red_flag[5]),
         .R(u_color_detect_n_1));
   FDRE \red_flag_reg[6] 
        (.C(pclk),
-        .CE(\red_flag[0]_i_2_n_0 ),
+        .CE(\blue_flag[0]_i_2_n_0 ),
         .D(\max_zone_color2_reg_n_0_[6] ),
         .Q(red_flag[6]),
         .R(u_color_detect_n_1));
@@ -33343,6 +33576,8 @@ module system_AXI4_HandSignal_0_0_hand_signal
         .SR(u_color_detect_n_1),
         .aresetn(aresetn),
         .\hist_blue_reg[0]_0 (\hist_blue_reg[0] ),
+        .\hist_red_reg[0]_0 (\hist_red_reg[0] ),
+        .\hist_red_reg[0]_1 (\hist_red_reg[0]_0 ),
         .is_color1(is_color1),
         .is_color2(is_color2),
         .max_zone_color1(max_zone_color1),
@@ -83040,6 +83275,8 @@ module system_AXI4_HandSignal_0_0_rgb_color_detect
     s_axis_tdata,
     CO,
     \hist_blue_reg[0]_0 ,
+    \hist_red_reg[0]_0 ,
+    \hist_red_reg[0]_1 ,
     s_axis_tvalid,
     \max_zone_color1_reg[0]_rep__1 ,
     \max_zone_color2_reg[0]_rep__1 ,
@@ -83053,6 +83290,8 @@ module system_AXI4_HandSignal_0_0_rgb_color_detect
   input [15:0]s_axis_tdata;
   input [0:0]CO;
   input [0:0]\hist_blue_reg[0]_0 ;
+  input [0:0]\hist_red_reg[0]_0 ;
+  input [0:0]\hist_red_reg[0]_1 ;
   input s_axis_tvalid;
   input [0:0]\max_zone_color1_reg[0]_rep__1 ;
   input [0:0]\max_zone_color2_reg[0]_rep__1 ;
@@ -83062,54 +83301,15 @@ module system_AXI4_HandSignal_0_0_rgb_color_detect
   wire [0:0]SR;
   wire aresetn;
   wire [6:0]hist_blue;
-  wire \hist_blue[0]_i_18_n_0 ;
-  wire \hist_blue[0]_i_19_n_0 ;
-  wire \hist_blue[0]_i_1_n_0 ;
-  wire \hist_blue[0]_i_20_n_0 ;
-  wire \hist_blue[0]_i_21_n_0 ;
-  wire \hist_blue[0]_i_22_n_0 ;
-  wire \hist_blue[0]_i_23_n_0 ;
-  wire \hist_blue[0]_i_24_n_0 ;
-  wire \hist_blue[0]_i_25_n_0 ;
-  wire \hist_blue[0]_i_26_n_0 ;
-  wire \hist_blue[0]_i_27_n_0 ;
-  wire \hist_blue[0]_i_3_n_0 ;
-  wire \hist_blue[0]_i_8_n_0 ;
+  wire \hist_blue[0]_i_2_n_0 ;
   wire [7:7]hist_blue__0;
   wire [0:0]\hist_blue_reg[0]_0 ;
-  wire \hist_blue_reg[0]_i_17_n_0 ;
-  wire \hist_blue_reg[0]_i_17_n_1 ;
-  wire \hist_blue_reg[0]_i_17_n_2 ;
-  wire \hist_blue_reg[0]_i_17_n_3 ;
-  wire \hist_blue_reg[0]_i_4_n_3 ;
-  wire \hist_blue_reg[0]_i_7_n_0 ;
-  wire \hist_blue_reg[0]_i_7_n_1 ;
-  wire \hist_blue_reg[0]_i_7_n_2 ;
-  wire \hist_blue_reg[0]_i_7_n_3 ;
   wire [6:0]hist_red;
-  wire \hist_red[0]_i_18_n_0 ;
-  wire \hist_red[0]_i_19_n_0 ;
   wire \hist_red[0]_i_1_n_0 ;
-  wire \hist_red[0]_i_20_n_0 ;
-  wire \hist_red[0]_i_21_n_0 ;
-  wire \hist_red[0]_i_22_n_0 ;
-  wire \hist_red[0]_i_23_n_0 ;
-  wire \hist_red[0]_i_24_n_0 ;
-  wire \hist_red[0]_i_25_n_0 ;
-  wire \hist_red[0]_i_26_n_0 ;
-  wire \hist_red[0]_i_27_n_0 ;
-  wire \hist_red[0]_i_4_n_0 ;
-  wire \hist_red[0]_i_8_n_0 ;
+  wire \hist_red[0]_i_3_n_0 ;
   wire [7:7]hist_red__0;
-  wire \hist_red_reg[0]_i_17_n_0 ;
-  wire \hist_red_reg[0]_i_17_n_1 ;
-  wire \hist_red_reg[0]_i_17_n_2 ;
-  wire \hist_red_reg[0]_i_17_n_3 ;
-  wire \hist_red_reg[0]_i_3_n_3 ;
-  wire \hist_red_reg[0]_i_7_n_0 ;
-  wire \hist_red_reg[0]_i_7_n_1 ;
-  wire \hist_red_reg[0]_i_7_n_2 ;
-  wire \hist_red_reg[0]_i_7_n_3 ;
+  wire [0:0]\hist_red_reg[0]_0 ;
+  wire [0:0]\hist_red_reg[0]_1 ;
   wire is_blue_i_1_n_0;
   wire is_blue_i_2_n_0;
   wire is_color1;
@@ -83120,132 +83320,41 @@ module system_AXI4_HandSignal_0_0_rgb_color_detect
   wire [0:0]\max_zone_color1_reg[0]_rep__1 ;
   wire max_zone_color2;
   wire [0:0]\max_zone_color2_reg[0]_rep__1 ;
+  wire [0:0]p_2_out;
   wire pclk;
   wire [15:0]s_axis_tdata;
   wire s_axis_tvalid;
-  wire [3:0]\NLW_hist_blue_reg[0]_i_17_O_UNCONNECTED ;
-  wire [3:1]\NLW_hist_blue_reg[0]_i_4_CO_UNCONNECTED ;
-  wire [3:0]\NLW_hist_blue_reg[0]_i_4_O_UNCONNECTED ;
-  wire [3:0]\NLW_hist_blue_reg[0]_i_7_O_UNCONNECTED ;
-  wire [3:0]\NLW_hist_red_reg[0]_i_17_O_UNCONNECTED ;
-  wire [3:1]\NLW_hist_red_reg[0]_i_3_CO_UNCONNECTED ;
-  wire [3:0]\NLW_hist_red_reg[0]_i_3_O_UNCONNECTED ;
-  wire [3:0]\NLW_hist_red_reg[0]_i_7_O_UNCONNECTED ;
 
-  LUT5 #(
-    .INIT(32'h0000A888)) 
-    \hist_blue[0]_i_1 
-       (.I0(\hist_blue_reg[0]_0 ),
-        .I1(s_axis_tdata[7]),
-        .I2(\hist_blue[0]_i_3_n_0 ),
-        .I3(s_axis_tdata[6]),
-        .I4(\hist_blue_reg[0]_i_4_n_3 ),
-        .O(\hist_blue[0]_i_1_n_0 ));
-  LUT2 #(
-    .INIT(4'h2)) 
-    \hist_blue[0]_i_18 
-       (.I0(s_axis_tdata[14]),
-        .I1(s_axis_tdata[6]),
-        .O(\hist_blue[0]_i_18_n_0 ));
   LUT1 #(
     .INIT(2'h1)) 
-    \hist_blue[0]_i_19 
-       (.I0(s_axis_tdata[5]),
-        .O(\hist_blue[0]_i_19_n_0 ));
-  LUT4 #(
-    .INIT(16'hB44B)) 
-    \hist_blue[0]_i_20 
-       (.I0(s_axis_tdata[6]),
-        .I1(s_axis_tdata[14]),
-        .I2(s_axis_tdata[7]),
-        .I3(s_axis_tdata[15]),
-        .O(\hist_blue[0]_i_20_n_0 ));
-  LUT3 #(
-    .INIT(8'h96)) 
-    \hist_blue[0]_i_21 
-       (.I0(s_axis_tdata[5]),
-        .I1(s_axis_tdata[6]),
-        .I2(s_axis_tdata[14]),
-        .O(\hist_blue[0]_i_21_n_0 ));
-  LUT2 #(
-    .INIT(4'h6)) 
-    \hist_blue[0]_i_22 
-       (.I0(s_axis_tdata[5]),
-        .I1(s_axis_tdata[13]),
-        .O(\hist_blue[0]_i_22_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_blue[0]_i_23 
-       (.I0(s_axis_tdata[12]),
-        .I1(s_axis_tdata[4]),
-        .O(\hist_blue[0]_i_23_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_blue[0]_i_24 
-       (.I0(s_axis_tdata[11]),
-        .I1(s_axis_tdata[3]),
-        .O(\hist_blue[0]_i_24_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_blue[0]_i_25 
-       (.I0(s_axis_tdata[10]),
-        .I1(s_axis_tdata[2]),
-        .O(\hist_blue[0]_i_25_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_blue[0]_i_26 
-       (.I0(s_axis_tdata[9]),
+    \blue_flag[0]_i_1 
+       (.I0(aresetn),
+        .O(SR));
+  LUT5 #(
+    .INIT(32'h00A80000)) 
+    \hist_blue[0]_i_1 
+       (.I0(s_axis_tdata[7]),
         .I1(s_axis_tdata[1]),
-        .O(\hist_blue[0]_i_26_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_blue[0]_i_27 
-       (.I0(s_axis_tdata[8]),
-        .I1(s_axis_tdata[0]),
-        .O(\hist_blue[0]_i_27_n_0 ));
+        .I2(\hist_blue[0]_i_2_n_0 ),
+        .I3(CO),
+        .I4(\hist_blue_reg[0]_0 ),
+        .O(p_2_out));
   LUT6 #(
     .INIT(64'hFFFFFFFFFFFFFFFE)) 
-    \hist_blue[0]_i_3 
+    \hist_blue[0]_i_2 
        (.I0(s_axis_tdata[2]),
-        .I1(s_axis_tdata[1]),
+        .I1(s_axis_tdata[0]),
         .I2(s_axis_tdata[5]),
-        .I3(s_axis_tdata[0]),
-        .I4(s_axis_tdata[3]),
-        .I5(s_axis_tdata[4]),
-        .O(\hist_blue[0]_i_3_n_0 ));
-  LUT2 #(
-    .INIT(4'hB)) 
-    \hist_blue[0]_i_8 
-       (.I0(s_axis_tdata[7]),
-        .I1(s_axis_tdata[15]),
-        .O(\hist_blue[0]_i_8_n_0 ));
+        .I3(s_axis_tdata[4]),
+        .I4(s_axis_tdata[6]),
+        .I5(s_axis_tdata[3]),
+        .O(\hist_blue[0]_i_2_n_0 ));
   FDCE \hist_blue_reg[0] 
        (.C(pclk),
         .CE(1'b1),
         .CLR(SR),
-        .D(\hist_blue[0]_i_1_n_0 ),
+        .D(p_2_out),
         .Q(hist_blue[0]));
-  CARRY4 \hist_blue_reg[0]_i_17 
-       (.CI(1'b0),
-        .CO({\hist_blue_reg[0]_i_17_n_0 ,\hist_blue_reg[0]_i_17_n_1 ,\hist_blue_reg[0]_i_17_n_2 ,\hist_blue_reg[0]_i_17_n_3 }),
-        .CYINIT(1'b1),
-        .DI(s_axis_tdata[11:8]),
-        .O(\NLW_hist_blue_reg[0]_i_17_O_UNCONNECTED [3:0]),
-        .S({\hist_blue[0]_i_24_n_0 ,\hist_blue[0]_i_25_n_0 ,\hist_blue[0]_i_26_n_0 ,\hist_blue[0]_i_27_n_0 }));
-  CARRY4 \hist_blue_reg[0]_i_4 
-       (.CI(\hist_blue_reg[0]_i_7_n_0 ),
-        .CO({\NLW_hist_blue_reg[0]_i_4_CO_UNCONNECTED [3:1],\hist_blue_reg[0]_i_4_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b1}),
-        .O(\NLW_hist_blue_reg[0]_i_4_O_UNCONNECTED [3:0]),
-        .S({1'b0,1'b0,1'b0,\hist_blue[0]_i_8_n_0 }));
-  CARRY4 \hist_blue_reg[0]_i_7 
-       (.CI(\hist_blue_reg[0]_i_17_n_0 ),
-        .CO({\hist_blue_reg[0]_i_7_n_0 ,\hist_blue_reg[0]_i_7_n_1 ,\hist_blue_reg[0]_i_7_n_2 ,\hist_blue_reg[0]_i_7_n_3 }),
-        .CYINIT(1'b0),
-        .DI({\hist_blue[0]_i_18_n_0 ,\hist_blue[0]_i_19_n_0 ,s_axis_tdata[5],s_axis_tdata[12]}),
-        .O(\NLW_hist_blue_reg[0]_i_7_O_UNCONNECTED [3:0]),
-        .S({\hist_blue[0]_i_20_n_0 ,\hist_blue[0]_i_21_n_0 ,\hist_blue[0]_i_22_n_0 ,\hist_blue[0]_i_23_n_0 }));
   FDCE \hist_blue_reg[1] 
        (.C(pclk),
         .CE(1'b1),
@@ -83289,119 +83398,30 @@ module system_AXI4_HandSignal_0_0_rgb_color_detect
         .D(hist_blue[6]),
         .Q(hist_blue__0));
   LUT5 #(
-    .INIT(32'h22202020)) 
+    .INIT(32'h54000000)) 
     \hist_red[0]_i_1 
-       (.I0(CO),
-        .I1(\hist_red_reg[0]_i_3_n_3 ),
-        .I2(s_axis_tdata[15]),
-        .I3(\hist_red[0]_i_4_n_0 ),
-        .I4(s_axis_tdata[14]),
-        .O(\hist_red[0]_i_1_n_0 ));
-  LUT2 #(
-    .INIT(4'h2)) 
-    \hist_red[0]_i_18 
-       (.I0(s_axis_tdata[6]),
-        .I1(s_axis_tdata[14]),
-        .O(\hist_red[0]_i_18_n_0 ));
-  LUT1 #(
-    .INIT(2'h1)) 
-    \hist_red[0]_i_19 
-       (.I0(s_axis_tdata[13]),
-        .O(\hist_red[0]_i_19_n_0 ));
-  LUT4 #(
-    .INIT(16'hB44B)) 
-    \hist_red[0]_i_20 
-       (.I0(s_axis_tdata[14]),
-        .I1(s_axis_tdata[6]),
-        .I2(s_axis_tdata[15]),
-        .I3(s_axis_tdata[7]),
-        .O(\hist_red[0]_i_20_n_0 ));
-  LUT3 #(
-    .INIT(8'h96)) 
-    \hist_red[0]_i_21 
-       (.I0(s_axis_tdata[13]),
-        .I1(s_axis_tdata[14]),
-        .I2(s_axis_tdata[6]),
-        .O(\hist_red[0]_i_21_n_0 ));
-  LUT2 #(
-    .INIT(4'h6)) 
-    \hist_red[0]_i_22 
-       (.I0(s_axis_tdata[13]),
-        .I1(s_axis_tdata[5]),
-        .O(\hist_red[0]_i_22_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_red[0]_i_23 
-       (.I0(s_axis_tdata[4]),
-        .I1(s_axis_tdata[12]),
-        .O(\hist_red[0]_i_23_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_red[0]_i_24 
-       (.I0(s_axis_tdata[3]),
-        .I1(s_axis_tdata[11]),
-        .O(\hist_red[0]_i_24_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_red[0]_i_25 
-       (.I0(s_axis_tdata[2]),
-        .I1(s_axis_tdata[10]),
-        .O(\hist_red[0]_i_25_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_red[0]_i_26 
-       (.I0(s_axis_tdata[1]),
+       (.I0(\hist_red_reg[0]_0 ),
         .I1(s_axis_tdata[9]),
-        .O(\hist_red[0]_i_26_n_0 ));
-  LUT2 #(
-    .INIT(4'h9)) 
-    \hist_red[0]_i_27 
-       (.I0(s_axis_tdata[0]),
-        .I1(s_axis_tdata[8]),
-        .O(\hist_red[0]_i_27_n_0 ));
+        .I2(\hist_red[0]_i_3_n_0 ),
+        .I3(s_axis_tdata[15]),
+        .I4(\hist_red_reg[0]_1 ),
+        .O(\hist_red[0]_i_1_n_0 ));
   LUT6 #(
     .INIT(64'hFFFFFFFFFFFFFFFE)) 
-    \hist_red[0]_i_4 
+    \hist_red[0]_i_3 
        (.I0(s_axis_tdata[10]),
-        .I1(s_axis_tdata[9]),
-        .I2(s_axis_tdata[13]),
-        .I3(s_axis_tdata[8]),
-        .I4(s_axis_tdata[11]),
-        .I5(s_axis_tdata[12]),
-        .O(\hist_red[0]_i_4_n_0 ));
-  LUT2 #(
-    .INIT(4'hB)) 
-    \hist_red[0]_i_8 
-       (.I0(s_axis_tdata[15]),
-        .I1(s_axis_tdata[7]),
-        .O(\hist_red[0]_i_8_n_0 ));
+        .I1(s_axis_tdata[13]),
+        .I2(s_axis_tdata[8]),
+        .I3(s_axis_tdata[14]),
+        .I4(s_axis_tdata[12]),
+        .I5(s_axis_tdata[11]),
+        .O(\hist_red[0]_i_3_n_0 ));
   FDCE \hist_red_reg[0] 
        (.C(pclk),
         .CE(1'b1),
         .CLR(SR),
         .D(\hist_red[0]_i_1_n_0 ),
         .Q(hist_red[0]));
-  CARRY4 \hist_red_reg[0]_i_17 
-       (.CI(1'b0),
-        .CO({\hist_red_reg[0]_i_17_n_0 ,\hist_red_reg[0]_i_17_n_1 ,\hist_red_reg[0]_i_17_n_2 ,\hist_red_reg[0]_i_17_n_3 }),
-        .CYINIT(1'b1),
-        .DI(s_axis_tdata[3:0]),
-        .O(\NLW_hist_red_reg[0]_i_17_O_UNCONNECTED [3:0]),
-        .S({\hist_red[0]_i_24_n_0 ,\hist_red[0]_i_25_n_0 ,\hist_red[0]_i_26_n_0 ,\hist_red[0]_i_27_n_0 }));
-  CARRY4 \hist_red_reg[0]_i_3 
-       (.CI(\hist_red_reg[0]_i_7_n_0 ),
-        .CO({\NLW_hist_red_reg[0]_i_3_CO_UNCONNECTED [3:1],\hist_red_reg[0]_i_3_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b1}),
-        .O(\NLW_hist_red_reg[0]_i_3_O_UNCONNECTED [3:0]),
-        .S({1'b0,1'b0,1'b0,\hist_red[0]_i_8_n_0 }));
-  CARRY4 \hist_red_reg[0]_i_7 
-       (.CI(\hist_red_reg[0]_i_17_n_0 ),
-        .CO({\hist_red_reg[0]_i_7_n_0 ,\hist_red_reg[0]_i_7_n_1 ,\hist_red_reg[0]_i_7_n_2 ,\hist_red_reg[0]_i_7_n_3 }),
-        .CYINIT(1'b0),
-        .DI({\hist_red[0]_i_18_n_0 ,\hist_red[0]_i_19_n_0 ,s_axis_tdata[13],s_axis_tdata[4]}),
-        .O(\NLW_hist_red_reg[0]_i_7_O_UNCONNECTED [3:0]),
-        .S({\hist_red[0]_i_20_n_0 ,\hist_red[0]_i_21_n_0 ,\hist_red[0]_i_22_n_0 ,\hist_red[0]_i_23_n_0 }));
   FDCE \hist_red_reg[1] 
        (.C(pclk),
         .CE(1'b1),
@@ -83506,11 +83526,6 @@ module system_AXI4_HandSignal_0_0_rgb_color_detect
         .I1(\max_zone_color2_reg[0]_rep__1 ),
         .I2(is_color2),
         .O(max_zone_color2));
-  LUT1 #(
-    .INIT(2'h1)) 
-    \red_flag[0]_i_1 
-       (.I0(aresetn),
-        .O(SR));
 endmodule
 `ifndef GLBL
 `define GLBL
