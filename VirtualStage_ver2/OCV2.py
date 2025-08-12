@@ -3,8 +3,28 @@ from PIL import Image, ImageSequence, ImageOps
 import numpy as np
 from collections import deque
 
-GREEN_LOWER    = np.array([35, 90, 60])
-GREEN_UPPER    = np.array([80, 255, 255])
+UART_ID      = input("COM PORT NUM: ")
+CAM_ID       = input("CAM NUM: ")
+
+# ✅ MediaPipe 제거 (HSV 기반 크로마키만 사용)
+# import mediapipe as mp  # <-- 삭제
+# mp_seg  = mp.solutions.selfie_segmentation
+# segment = mp_seg.SelfieSegmentation(model_selection=0)
+
+WIDTH,HEIGHT = 640, 480
+# ROI fractions (이제 미사용, 필요시 유지)
+TOP_PERCENT   = 0.15
+RIGHT_PERCENT = 0.05
+
+H_TOP         = int(HEIGHT * TOP_PERCENT)
+W_RIGHT       = int(WIDTH  * RIGHT_PERCENT)
+X_RIGHT_START = WIDTH - W_RIGHT
+
+GREEN_LOWER    = np.array([45, 70, 90])
+GREEN_UPPER    = np.array([90, 255, 255])
+
+GREEN_LOWER2 = np.array([40, 50, 40])
+GREEN_UPPER2 = np.array([95, 255, 255])
 
 OPEN_K         = 3
 CLOSE_K        = 3
@@ -16,28 +36,23 @@ DIST_RATIO_MIN = 0.02
 DIST_RATIO_MAX = 0.10
 
 # 전역 변수 및 락
-overlay_on = False #기본값은 효과를 실행하지 X
-effect_request = False # 새로운 이펙트 실행
-overlay_lock = threading.Lock() # Thread를 독립적으로 실행시키기 위함
-spot_state = 0        # spotlight 상태 (0:left, 1:right, 2:all)
+overlay_on = False
+effect_request = False
+spot_state = 0
 
-UART_ID      = input("COM PORT NUM: ")
-CAM_ID       = input("CAM NUM: ")
+THRESHOLD    = 0.5
 
 uart_port = "COM" + UART_ID
 uart_baudrate = 115200
 
 cam_num = int(CAM_ID)
-maximum_frame_rate = 30
-WIDTH,HEIGHT = 1280, 720
+maximum_frame_rate = 60
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 BG_PATH      = os.path.join(FILE_PATH, "img", "stage_background.png")
 OVERLAY_PATH = os.path.join(FILE_PATH, "img", "stage_overlap.png")
 gif_base_path = os.path.join(FILE_PATH, "img")
 sound_base_addr = os.path.join(FILE_PATH, "sounds")
-THRESHOLD    = 0.5
-
 
 # 배경 로드 & 리사이즈
 bg = cv2.imread(BG_PATH, cv2.IMREAD_UNCHANGED)
@@ -51,16 +66,28 @@ bg = cv2.resize(bg, (WIDTH, HEIGHT))
 ov = cv2.imread(OVERLAY_PATH, cv2.IMREAD_UNCHANGED)
 if ov is None:
     raise FileNotFoundError(f"Cannot find '{OVERLAY_PATH}'")
+
 if ov.shape[2] == 4:
-    ov_bgr   = ov[..., :3]
-    ov_alpha = ov[..., 3] / 255.0
+    # 1) BGR과 Alpha 추출
+    ov_bgr   = ov[..., :3].astype(np.float32)
+    ov_alpha = ov[..., 3].astype(np.float32) / 255.0
+
+    # 2) Alpha>0인 픽셀만 un-premultiply
+    nz = ov_alpha > 0
+    ov_bgr[nz] = ov_bgr[nz] / ov_alpha[nz][..., None]
+
+    # 3) 값 클립
+    ov_bgr = np.clip(ov_bgr, 0, 255)
 else:
-    ov_bgr   = ov
-    ov_alpha = np.ones((HEIGHT, WIDTH), dtype=np.float32)
-ov_bgr   = cv2.resize(ov_bgr,   (WIDTH, HEIGHT))
+    ov_bgr   = ov.astype(np.float32)
+    ov_alpha = np.ones((ov.shape[0], ov.shape[1]), np.float32)
+
+# 4) 리사이즈 및 정규화
+ov_bgr   = cv2.resize(ov_bgr,   (WIDTH, HEIGHT)) / 255.0
 ov_alpha = cv2.resize(ov_alpha, (WIDTH, HEIGHT))
 
 eft_num = 0
+# ▶ 효과별 사운드 채널 추적용 맵 (동일 이펙트 재실행 시 사운드 중지 후 재생)
 channel_map = {}
 
 # 캠 프레임
@@ -80,7 +107,7 @@ class sound(threading.Thread):
         mp3_path = os.path.join(sound_base_addr, self.path)
         if not os.path.exists(mp3_path):
             print("❌ 사운드 파일 없음")
-            return  # overlay_on을 제어하지 않음
+            return
 
         try:
             pygame.mixer.music.load(mp3_path)
@@ -89,15 +116,9 @@ class sound(threading.Thread):
                 time.sleep(0.1)
         except Exception as e:
             print(f"⚠️ 사운드 오류: {e}")
-        # finally:
-        #     # 이펙트를 사운드 시간과 무관하게 일정 시간 후 종료
-        #     time.sleep(1.0)  # 최소 시간, 사운드 끝나자마자 바로 끄지 않도록
-        #     with overlay_lock:
-        #         overlay_on = False
 
-# 폭죽 : 0 , fog: 2, Spot:3, Confetti:4, RGB_light:5, Blur:6, Zoom:7, snow:8
+# 공용 def
 def eft_sel(cmd):
-    # 필요에 따라 하나 이상의 idx를 튜플로 반환할 수 있습니다.
     dt = {
         'a': 8,
         'b': 6,
@@ -106,94 +127,104 @@ def eft_sel(cmd):
         'e': 4,
         'f': 5,
         'g': 2,
-        'h': 7,
-        # 예시: 'x' 명령 들어오면 3개의 이펙트를 동시에
-        'x': (1, 2, 3),
-        # 'z' 명령 들어오면 전부 중단 (stop 신호)
-        'E': 'STOP',
-    }
+        'h': 7
+        }
     return dt.get(cmd)
+
 # 공용 def
 def uart_listener(manager):
-    ser = None  # 시리얼 객체
+    ser = None
+    
     while True:
-        # ── (1) 시리얼 연결 관리 ──
-        if ser is None or not getattr(ser, 'is_open', False):
-            print("UART 연결 시도 중...")
+        if ser is None or not ser.is_open:
+            print("UART 연결을 시도 중...")
             try:
                 ser = serial.Serial(uart_port, uart_baudrate, timeout=1)
                 print(f"✅ UART Connected: {uart_port}")
             except serial.SerialException as e:
-                print(f"⚠️ UART 연결 실패: {e}. 5초 후 재시도...")
+                print(f"⚠️ UART 연결 실패: {e}")
+                print("5초 후 재연결을 시도합니다...")
                 time.sleep(5)
                 continue
-
-        # ── (2) 데이터 수신 & 파싱 ──
         try:
-            line = ser.readline().strip()        # 최대 1초 대기
-            if not line:
+            input_string = ser.readline().strip()
+            if not input_string:
                 continue
 
-            raw = line.decode('utf-8', errors='ignore')
-            # 예: "(x1 y1),(x2 y2) CMD MAG"
-            raw, data = raw.split(',')
-            point = [list(map(float, s[1:-1].split())) for s in (list(raw.split('='))[:-1])]
-            # 포맷에 맞춰 파싱 (원본과 동일)
-            angle, mag, cmd = data.split()
-            cmd = cmd.upper()
-
-            print(*point, sep=' ')
-            print(f"수신 → cmd={cmd}, angle={angle}, mag={mag}")
-
-            # 오류 코드 무시
-            if cmd == 'E':
-                print("ERROR 코드, 무시")
+            data = str(input_string)[2:-1]
+            if not data:
                 continue
 
-            sel = eft_sel(cmd)
-            if sel is None:
-                # 매핑에 없으면 무시
+            temp = list(data.split(','))
+            angle, mag, cmd = list(temp[1].split())
+            point = [list(map(float, string[1:-1].split())) for string in (list(temp[0].split('='))[:-1])]
+            
+            print(f"{cmd}, {angle}, {mag}")
+            print(*point, sep=', ')
+
+            if cmd in ['E']:
+                print(f"ERROR Code: {cmd}")
                 continue
 
-            # ── (3) STOP 신호 처리 ──
-            if sel == 'STOP':
-                print("📴 STOP 신호 수신 → 모든 이펙트 중단")
+            new_idx = eft_sel(cmd)
+            if new_idx is None:
+                continue
+            print(f"act {cmd}, {angle}")
+            if new_idx == 0: 
                 manager.stop_all_effects()
-                continue
-
-            # ── (4) Enqueue: 단일 또는 복수 지원 ──
-            if isinstance(sel, (tuple, list)):
-                for idx in sel:
-                    print(f"📥 Enqueue idx={idx}")
-                    manager.enqueue(idx)
             else:
-                print(f"📥 Enqueue idx={sel}")
-                manager.enqueue(sel)
+                manager.enqueue(new_idx)
 
         except serial.SerialException as e:
-            # 통신 중 끊김
-            print(f"❌ UART 통신 중 오류: {e}. 재연결 시도...")
-            try:
+            print(f"❌ UART 통신 중 오류 발생: {e}")
+            print("연결이 끊어졌습니다. 재연결을 시도합니다...")
+            if ser.is_open:
                 ser.close()
-            except:
-                pass
             ser = None
             time.sleep(2)
-
         except Exception as e:
-            # 기타 예외
-            print(f"🚨 예외 발생 in UART listener: {e}")
+            print(f"🚨 예상치 못한 오류 발생: {e}")
             time.sleep(1)
 
-def color_key_mask(frame: np.ndarray) -> np.ndarray:
+def color_key_mask(
+    frame: np.ndarray,
+    bright_range: tuple[np.ndarray, np.ndarray] = (GREEN_LOWER, GREEN_UPPER),
+    dark_range: tuple[np.ndarray, np.ndarray] = (GREEN_LOWER2, GREEN_UPPER2),
+    region: dict = None,
+    show_debug: bool = False
+) -> np.ndarray:
+    """
+    HSV 크로마키 마스크 생성 (float32 0~1)
+    """
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    m = cv2.inRange(hsv, GREEN_LOWER, GREEN_UPPER)
-    m = (m > 0).astype(np.uint8)
-    k = np.ones((3,3), np.uint8)
+
+    # 전체 영역용 마스크
+    m1 = cv2.inRange(hsv, *bright_range)
+
+    # 어두운 영역용 마스크
+    m2 = cv2.inRange(hsv, *dark_range)
+
+    h, w = hsv.shape[:2]
+    mask_final = m1.copy()
+
+    if region:
+        y_thresh = int(h * region.get("top", 1.0))
+        x_thresh = int(w * region.get("left", 1.0))
+        mask_final[y_thresh:, :x_thresh] = m2[y_thresh:, :x_thresh]
+
+    m = (mask_final > 0).astype(np.uint8)
+    k = np.ones((3, 3), np.uint8)
     m = cv2.morphologyEx(m, cv2.MORPH_OPEN,  k)
     m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, k)
     m = cv2.GaussianBlur(m.astype(np.float32), (BLUR_K, BLUR_K), 0)
-    return np.clip(m, 0.0, 1.0)
+    m = np.clip(m, 0.0, 1.0)
+
+    if show_debug:
+        vis = (m * 255).astype(np.uint8)
+        vis_color = cv2.applyColorMap(vis, cv2.COLORMAP_JET)
+        cv2.imshow("Chroma Key Mask Debug", vis_color)
+
+    return m
 
 def gif_set(fname, total_ms=None, speed=1.0):
     """GIF 로드 후 RGBA 프레임, count, interval_ms 반환"""
@@ -201,7 +232,6 @@ def gif_set(fname, total_ms=None, speed=1.0):
     gif = Image.open(path)
     frames = [f.convert("RGBA") for f in ImageSequence.Iterator(gif)]
     count = len(frames)
-    # duration 설정
     durations = [f.info.get("duration",100) for f in ImageSequence.Iterator(gif)]
     avg = int(np.mean(durations)) if durations else 100
     interval = int(avg/speed)
@@ -214,7 +244,6 @@ class FrameGrabber(threading.Thread):
     def __init__(self, src, queue, lock):
         super().__init__(daemon=True)
         cap = cv2.VideoCapture(src, cv2.CAP_MSMF)
-        #cap = cv2.VideoCapture(src, cv2.CAP_DSHOW)
         fourcc = cv2.VideoWriter_fourcc(*'MJPG')
         cap.set(cv2.CAP_PROP_FOURCC,      fourcc)
         cap.set(cv2.CAP_PROP_AUTOFOCUS,   0)
@@ -222,10 +251,9 @@ class FrameGrabber(threading.Thread):
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT,1080)
         cap.set(cv2.CAP_PROP_FPS,         maximum_frame_rate)
-        self.cap = cv2.VideoCapture(src)
-        self.lock = lock
+        self.cap   = cap
+        self.lock  = lock
         self.queue = queue
-
     def run(self):
         while True:
             ret, frame = self.cap.read()
@@ -234,6 +262,13 @@ class FrameGrabber(threading.Thread):
             with self.lock:
                 self.queue.clear()
                 self.queue.append(frame)
+
+def refine_mask(raw_mask, thresh=0.5):
+    m = (raw_mask > thresh).astype(np.uint8)
+    k = np.ones((CLOSE_K, CLOSE_K), np.uint8)
+    m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, k)
+    m = cv2.GaussianBlur(m.astype(np.float32), (BLUR_K, BLUR_K), 0)
+    return np.clip(m, 0.0, 1.0)
 
 class ChromaKeyThread(threading.Thread):
     def __init__(self, raw_queue, keyed_queue, lock):
@@ -250,18 +285,21 @@ class ChromaKeyThread(threading.Thread):
                     continue
                 frame = self.raw_q[0].copy()
 
-            # ① 그린스크린(연두~초록) 마스크 생성 [0 또는 1]
-            mask = color_key_mask(frame)  # float32 [0.0–1.0]
+            # ✅ HSV 크로마키만 적용 (MediaPipe 제거)
+            ck = color_key_mask(frame)
+            # 크로마키는 "초록=1" → 배경으로 보낼 영역이므로, 전경 마스크는 1-ck
+            combined = 1.0 - ck
+            combined = np.clip(combined, 0, 1)
 
-            # ② 이진화 → 0/1 마스크로 변환
-            bin_mask = (mask > 0.5).astype(np.uint8)
+            #  BG/FG 합성 ([0..1] 스케일)
+            fg  = combined[...,None] * (frame.astype(np.float32)/255.0)
+            bgc = (1-combined[...,None]) * (bg.astype(np.float32)/255.0)
+            comp= fg + bgc
 
-            # ③ 3채널 확장
-            mask3 = np.dstack([bin_mask]*3)
-
-            # ④ 배경 합성
-            out = frame.copy()
-            out[mask3 == 1] = bg[mask3 == 1]
+            #  PNG 오버레이 알파 블렌딩
+            alpha3 = ov_alpha[...,None]
+            out_f  = comp*(1-alpha3) + ov_bgr*alpha3
+            out    = np.clip(out_f*255, 0, 255).astype(np.uint8)
 
             with self.lock:
                 self.keyed_q.clear()
@@ -278,14 +316,13 @@ class OverlayThread(threading.Thread):
         while True:
             with self.lock:
                 if not self.keyed_q:
-                    # 마찬가지로, 잠깐 쉬고 GIL 해제
                     time.sleep(0.005)
                     continue
             frame = self.keyed_q[0].copy()
 
-            # ── 여기서 PNG 오버레이 합성만 수행 ──
+            # (주의) 여기서도 오버레이를 한 번 더 얹습니다. 필요한 경우 유지.
             of = frame.astype(np.float32) / 255.0
-            overlay_rgb = ov_bgr.astype(np.float32) / 255.0
+            overlay_rgb = ov_bgr.astype(np.float32)
             alpha3 = ov_alpha[..., None]
             out = (of * (1 - alpha3) + overlay_rgb * alpha3) * 255
             out = out.astype(np.uint8)
@@ -303,49 +340,86 @@ class EffectThread:
         self.sound_file = sound_file
         self.start_time = None
         self.frame_idx = 0
+
     def start(self):
         self.start_time = time.time()
         if hasattr(self.effect, "start") and callable(self.effect.start):
-           self.effect.start()
+            self.effect.start()
         else:
-           self.effect.reset()
-        # 사운드 독립 재생
-        ch = pygame.mixer.find_channel()
-        if ch:
-            snd = pygame.mixer.Sound(os.path.join(sound_base_addr, self.sound_file))
+            self.effect.reset()
+
+        # 🔊 동일 이펙트 재실행 시 겹침 방지: 이전 채널 정지 후 처음부터 재생
+        try:
+            snd_path = os.path.join(sound_base_addr, self.sound_file)
+            if not os.path.exists(snd_path):
+                return
+
+            # 1) 이전에 이 이펙트가 쓰던 채널이 있으면 정지
+            prev_ch = channel_map.get(self.idx)
+            if prev_ch and prev_ch.get_busy():
+                prev_ch.stop()
+
+            # 2) 재생할 채널 확보 (없으면 새로 배정)
+            ch = pygame.mixer.find_channel()
+            if ch is None:
+                # 모든 채널 사용 중이면 이펙트 인덱스로 고정 채널 사용
+                ch = pygame.mixer.Channel(self.idx % max(1, pygame.mixer.get_num_channels()))
+
+            # 3) 사운드 로드 & 재생
+            snd = pygame.mixer.Sound(snd_path)
             ch.play(snd)
+
+            # 4) 이 이펙트가 사용하는 채널을 기록해두기
+            channel_map[self.idx] = ch
+
+        except Exception as e:
+            print(f"⚠️ 사운드 재생 오류: {e}")
+
     def is_alive(self):
         return (time.time() - self.start_time) < self.duration
+
     def apply(self, frame):
         self.effect.on(frame, self.frame_idx)
         self.frame_idx += 1
         
 class EffectManager:
-    MAX_CONCURRENT = 2
+    MAX_CONCURRENT = 4
+
     def __init__(self, factories, sounds, durations):
         self.factories = factories
         self.sounds    = sounds
         self.durations = durations
         self.active = []
         self.lock = threading.Lock()
+
     def enqueue(self, idx):
         with self.lock:
-            # 이미 같은 idx 실행 중? → 재시작
-            for i,t in enumerate(self.active):
+            # 이미 같은 idx 실행 중? → 재시작 (사운드도 재시작)
+            for i, t in enumerate(self.active):
                 if t.idx == idx:
+                    # 🔊 같은 이펙트 재트리거 시: 기존 채널 정지
+                    ch_prev = channel_map.get(idx)
+                    if ch_prev and ch_prev.get_busy():
+                        ch_prev.stop()
+
+                    # 이펙트 객체 새로 만들고 스레드 교체
                     obj = self.factories[idx]()
-                    if idx==3: obj.set_state(0)
+                    if idx == 3:  # spotlight 예외 처리
+                        obj.set_state(spot_state)
                     thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
-                    thr.start()
+                    thr.start()   # EffectThread.start()에서 새 사운드 처음부터 재생
                     self.active[i] = thr
                     return
-            # 신규 슬록 있으면
+
+            # 신규 슬롯이 있으면 추가
             if len(self.active) < self.MAX_CONCURRENT:
                 obj = self.factories[idx]()
-                if idx==3: obj.set_state(0)
+                if idx == 3:
+                    obj.set_state(spot_state)
                 thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
                 thr.start()
                 self.active.append(thr)
+
     def composite(self, frame):
         with self.lock:
             for t in self.active[:]:
@@ -354,42 +428,32 @@ class EffectManager:
                 else:
                     self.active.remove(t)
         return frame
+
     def stop_all_effects(self):
-        """활성화된 모든 이펙트를 즉시 중단하고 사운드를 멈춥니다."""
+        """활성 이펙트/사운드 즉시 중단"""
         with self.lock:
-            # 각 EffectThread 의 내부 이펙트가 가진 .running 플래그가 있다면 꺼주기
             for t in self.active:
                 eff = t.effect
                 if hasattr(eff, 'running'):
                     eff.running = False
-                # 필요하다면 추가적인 cleanup() 메서드 호출 가능
-            # 액티브 리스트 초기화
             self.active.clear()
-
-        # 재생 중인 모든 사운드를 정지
         pygame.mixer.stop()
-
+    
 class FlameEffect:
     def __init__(self, pil_frames, height_range=(0.7, 1.0), rise_duration=1.0, offset_range=(0.0, 1.5), frame_delay_per_flame=10, y_offset= 1):
-        # 1) 원본 RGBA→(BGR, alpha) 튜플 리스트로 변환
         self.raw = []
         for pil in pil_frames:
-            rgba = np.array(pil)  # H×W×4
-            bgr  = rgba[..., :3][..., ::-1]            # BGR
-            alpha = (rgba[..., 3] / 255.0)[..., None]  # (H×W×1)
+            rgba = np.array(pil)
+            bgr  = rgba[..., :3][..., ::-1]
+            alpha = (rgba[..., 3] / 255.0)[..., None]
             self.raw.append((bgr, alpha))
         self.frame_count = len(self.raw)
-
-        # 2) 리사이즈 캐시
-        self._cache = {}  # key=(frame_idx, w, h) → (bgr_resized, alpha_resized)
-
-        # (이하 기존 속성 초기화)
+        self._cache = {}
         self.height_range = height_range
         self.rise_duration = rise_duration
         self.offset_range = offset_range
         self.y_offset = y_offset
         self.frame_delay_per_flame = frame_delay_per_flame
-
         self.positions = np.linspace(0.23, 0.80, 3).tolist()
         self._init_flame_properties()
         self.start_time_global = time.time()
@@ -421,56 +485,42 @@ class FlameEffect:
             if elapsed < 0:
                 continue
 
-            # 1) 크기 계산
             ratio = self.individual_heights[i]
             t_h = int(fh * ratio)
             aspect = self.raw[0][0].shape[1] / self.raw[0][0].shape[0]
             t_w = int(t_h * aspect)
 
-            # 2) 위치 계산
             x = int(fw * pos) - t_w // 2
             rise = min(elapsed / self.rise_duration, 1.0)
             y = int(fh - t_h * rise + self.y_offset + self.y_offset)
 
-            # ─────────────────────────────────────────────
-            #  화면 클리핑 영역 계산
             x1, y1 = max(0, x),       max(0, y)
             x2, y2 = min(fw, x + t_w), min(fh, y + t_h)
             sub_w, sub_h = x2 - x1,   y2 - y1
             if sub_w <= 0 or sub_h <= 0:
-                continue  # 완전히 화면 밖
+                continue
 
-            # 3) 인덱스
             idx = (frame_index + self.frame_offsets[i]) % self.frame_count
-
-            # 4) 리사이즈된 전체 화염 프레임 가져오기
             bgr_r, alpha_r = self.get_resized(idx, t_w, t_h)
 
-            # 5) 잘리는 부분만 자르기
             ox, oy = x1 - x, y1 - y
             bgr_crop   = bgr_r [oy:oy+sub_h, ox:ox+sub_w]
             alpha_crop = alpha_r[oy:oy+sub_h, ox:ox+sub_w]
 
-            # 6) 알파 블렌딩
-            roi = frame[y1:y2, x1:x2]                # (h, w, 3)
-            inv_a = (1.0 - alpha_crop)[..., None]   # (h, w, 1)
-            alpha_3c = alpha_crop[..., None]        # (h, w, 1)
-            # 이제 1×1 채널 차원 브로드캐스트로 곱셈 가능
+            roi = frame[y1:y2, x1:x2]
+            inv_a = (1.0 - alpha_crop)[..., None]
+            alpha_3c = alpha_crop[..., None]
             frame[y1:y2, x1:x2] = (roi * inv_a + bgr_crop * alpha_3c).astype(np.uint8)
-
-
 
 class PurpleFlameEffect(FlameEffect):
     def __init__(self, frames):
         super().__init__(frames, height_range=(0.3, 0.55))
-        # 🔄 화면 좌우 여유 확보: 9개 evenly spaced
         self.positions = np.linspace(0.07, 0.93, 9).tolist()
-        self._init_flame_properties()  # 🔁 다시 초기화
+        self._init_flame_properties()
 
     def reset(self):
         self._init_flame_properties()
         self.start_time_global = time.time()
-
 
 class fog_eft:
     def __init__(self, frames, mirror_frames, cam_width, cam_height):
@@ -481,7 +531,6 @@ class fog_eft:
         self.height = cam_height
         self.max_height = int(self.height * 0.25)
 
-        # ✅ 누락된 설정값 복구
         self.GIF_DURATION = 10.0
         self.FADEOUT_DURATION = 3.0
         self.GIF_SPEED_RATIO = 1.0
@@ -490,7 +539,6 @@ class fog_eft:
         self.GIF_WIDTH_SCALE = 2.0
         self.MIRROR_START_TIME = 1
 
-        # 나머지는 그대로 유지
         self.start_time = time.time()
         self.mirror_started = False
         self.mirror_start_time = None
@@ -555,7 +603,6 @@ class fog_eft:
         now = time.time()
         elapsed = now - self.start_time
 
-        # 오른쪽
         frame, opacity = self.get_looping_frame(
             elapsed, self.frames, self.GIF_DURATION, self.FADEOUT_DURATION
         )
@@ -576,7 +623,6 @@ class fog_eft:
                 cam_frame, frame, opacity, x_pos, y_pos, target_width, new_height
             )
 
-        # 왼쪽 (거울)
         if not self.mirror_started and elapsed >= self.MIRROR_START_TIME:
             self.mirror_started = True
             self.mirror_start_time = now
@@ -611,20 +657,17 @@ class fog_eft:
 
 class spotlight_eft:
     mask_cache = {}
-    # 사용자 조정용 파라미터
-    SPREAD_ANGLE = 9               # 원뿔이 퍼지는 각도
-    BRIGHTNESS_GAIN = 4            # spotlight의 밝기 정도
-    VERTICAL_FADE_EXP_SCALE = 0.3  # 거리기반 감쇠 강도
-    BACKGROUND_DIM_FACTOR = 0.25   # 바깥영역의 어두움정도
-    GRADIENT_STRENGTH = 0.8        # 위→아래 그라데이션 강도
+    SPREAD_ANGLE = 7.5
+    BRIGHTNESS_GAIN = 4
+    VERTICAL_FADE_EXP_SCALE = 0.3
+    BACKGROUND_DIM_FACTOR = 0.25
+    GRADIENT_STRENGTH = 0.8
 
-    # ── 왼쪽·중앙·오른쪽 3개를 모두 한 번에 켜는 단일 상태 정의 ──
     SPOT_ALL = [
-        (0.05, -0.3, 0.35, 1.2),  # 왼쪽
+        (0.1, -0.3, 0.30, 1.2),  # 왼쪽
         (0.50, -0.3, 0.50, 1.2),  # 중앙
-        (0.95, -0.3, 0.65, 1.2),  # 오른쪽
+        (0.9, -0.3, 0.75, 1.2),  # 오른쪽
     ]
-    # 오직 이 하나의 상태만 존재
     SPOT_STATES = [
         SPOT_ALL
     ]
@@ -634,21 +677,15 @@ class spotlight_eft:
         self.h, self.w        = sample_frame.shape[:2]
         self.auto_off_duration = auto_off_duration
         self.auto_off_start    = None
-
-        # SPOT_STATES 에는 이제 하나밖에 없으므로 항상 인덱스 0
         self.current_state    = 0
         self.last_switch_time = time.time()
-
-        # 초기 마스크 생성
         self.enhanced_mask    = self.make_mask_from_state(0)
 
     def reset(self):
         self.last_switch_time = time.time()
         self.auto_off_start   = time.time()
 
-    # set_state 제거하거나, 내부에서 무시해도 무방
     def set_state(self, state_index: int):
-        # 항상 0만 허용
         self.current_state = 0
         self.enhanced_mask = self.make_mask_from_state(0)
 
@@ -698,30 +735,22 @@ class spotlight_eft:
         return final_mask
 
     def on(self, frame, frame_count):
-        # 바깥 영역을 어둡게 한 뒤, enhanced_mask로 덮기
         dark = (frame * self.BACKGROUND_DIM_FACTOR).astype(np.uint8)
         frame[:] = (dark * (1 - self.enhanced_mask) + frame * self.enhanced_mask).astype(np.uint8)
 
-# 꽃가루 효과
 class confetti_eft:
-    # 기준 해상도 (이 해상도를 기준으로 스케일을 계산)
     BASE_WIDTH  = 640
-    BASE_HEIGHT = 360
-
-    # ▶ 크기 조절용 외부 파라미터 (기본값 1.0)
+    BASE_HEIGHT = 480
     CONFETTI_SIZE_SCALE = 0.7
 
     def __init__(self, width, height):
         self.WIDTH  = width
         self.HEIGHT = height
-
-        # 해상도 기준 스케일
         self.scale = self.WIDTH / self.BASE_WIDTH
-
         self.confettis = []
-        self.MAX_CONFETTI       = 900
+        self.MAX_CONFETTI       = 1000
         self.CONFETTI_PER_FRAME = 40
-        self.CONFETTI_LIFETIME  = 4.0
+        self.CONFETTI_LIFETIME  = 5.0
 
     def reset(self):
         self.confettis.clear()
@@ -732,33 +761,27 @@ class confetti_eft:
             self.lifetime = parent.CONFETTI_LIFETIME
 
             w, h = parent.WIDTH, parent.HEIGHT
-            s    = parent.scale * parent.CONFETTI_SIZE_SCALE  # ← 사용자 크기 스케일 적용
+            s    = parent.scale * parent.CONFETTI_SIZE_SCALE
 
-            # 위치: y-offset 에만 scale 적용
             self.x = 0 if np.random.rand() < 0.5 else w
             self.y = h - int(5 * s)
 
-            # 속도는 원래대로
             to_center = w//2 - self.x
             self.vx = to_center * np.random.uniform(0.024, 0.036) + np.random.uniform(-12, 12)
             self.vy = np.random.uniform(-70, -20)
 
-            # 회전
             self.angle            = np.random.uniform(0, 360)
             self.angular_velocity = np.random.uniform(-500, 500)
 
-            # ▶ 크기: 사용자 정의 스케일이 곱해짐
             self.width  = max(1, int(np.random.randint(2, 4) * s))
             self.height = max(1, int(np.random.randint(12, 20) * s))
 
-            # 색상 & 알파
             self.color       = random.choice([(0,215,255),(30,230,255),(50,245,255),(80,255,255)])
             self.base_alpha  = np.random.uniform(0.7, 1.0)
             self.alpha       = self.base_alpha
             self.alpha_freq  = np.random.uniform(8, 16)
             self.alpha_phase = np.random.uniform(0, 2*np.pi)
 
-            # 바람
             self.wind_amp  = np.random.uniform(5, 20)
             self.wind_freq = np.random.uniform(2, 5)
             self.phase     = np.random.uniform(0, 2*np.pi)
@@ -784,12 +807,10 @@ class confetti_eft:
             cv2.drawContours(frame, [np.int32(box)], 0, col, -1)
 
     def on(self, frame, frame_count):
-        # 매 프레임마다 최대 MAX_CONFETTI 수만큼 spawn
         if len(self.confettis) < self.MAX_CONFETTI:
             for _ in range(self.CONFETTI_PER_FRAME):
                 self.confettis.append(self.Confetti(self))
 
-        # 업데이트 & 렌더
         alive = []
         for c in self.confettis:
             c.update()
@@ -828,8 +849,6 @@ class rgb_flash_eft:
         if now - self.last_switch > self.INTERVAL:
             self.current_color = tuple(np.random.randint(0, 256, size=3).tolist())
             self.last_switch = now
-
-            # 🔊 색상 바뀔 때마다 사운드 실행
             sound("lamp.wav").start()
 
         overlay = np.full_like(frame, self.current_color, dtype=np.uint8)
@@ -886,8 +905,8 @@ class zoom_eft:
         self.HOLD_DURATION = 1.0
         self.SHAKE_INTENSITY = 2.0
         self.REGION_RATIOS = [
-            (0.2, 0.3, 0.3, 0.2),  # (x%, y%, width%, height%)
-            (0.6, 0.3, 0.3, 0.2)
+            (0.1, 0.40, 0.20, 0.15),  # (x%, y%, width%, height%)
+            (0.7, 0.40, 0.20, 0.15)
         ]
         self.REGIONS = [
             (
@@ -985,28 +1004,23 @@ class zoom_eft:
         display = np.clip(display, 0, 255).astype(np.uint8)
         frame[:] = display
 
-NUM_SNOW           = 400         # SnowEffect 기본 눈송이 개수
-DURATION           = 10.0        # SnowEffect 기본 지속 시간(초)
-
-# 눈송이 외형/물리 파라미터
-MIN_SIZE           = 1.5         # 눈송이 최소 반지름
-MAX_SIZE           = 7.5         # 눈송이 최대 반지름
-BASE_GRAVITY       = 0.15         # 중력 가속도 기반값
-SNOW_ALPHA         = 0.8         # 눈송이 투명도 계수
-
-# 불규칙성 폴리곤 생성 파라미터
-POLY_POINTS_MIN    = 5           # 꼭짓점 최소 개수
-POLY_POINTS_MAX    = 10          # 꼭짓점 최대 개수
-RADIAL_VAR_MIN     = 0.3         # 반경 변동도 최소 비율
-RADIAL_VAR_MAX     = 1.0         # 반경 변동도 최대 비율
-BLUR_KERNEL_SIZE   = 5           # 마스크 블러 커널 크기 (홀수)
+NUM_SNOW           = 400
+DURATION           = 10.0
+MIN_SIZE           = 1.5
+MAX_SIZE           = 7.5
+BASE_GRAVITY       = 0.15
+SNOW_ALPHA         = 0.8
+POLY_POINTS_MIN    = 5
+POLY_POINTS_MAX    = 10
+RADIAL_VAR_MIN     = 0.3
+RADIAL_VAR_MAX     = 1.0
+BLUR_KERNEL_SIZE   = 5
 
 class Snowflake:
     def __init__(self):
         self.reset()
 
     def reset(self):
-        # 화면 크기는 전역 상수 WIDTH, HEIGHT 사용
         self.x    = random.uniform(0, WIDTH)
         self.y    = random.uniform(-HEIGHT, 0)
         self.size = random.uniform(MIN_SIZE, MAX_SIZE)
@@ -1056,8 +1070,6 @@ class Snowflake:
             roi[...,c] = roi[...,c]*inv_alpha[...,0] + self.color[c]*alpha[...,0]
         frame[y1:y2, x1:x2] = roi.astype(np.uint8)
 
-
-# SnowEffect 클래스
 class SnowEffect:
     def __init__(self, width, height, num_snow= 400, duration=10.0):
         self.WIDTH      = width
@@ -1066,7 +1078,6 @@ class SnowEffect:
         self.DURATION   = duration
         self.FADE_DURATION = 2.0
 
-        # 이 버퍼에 눈송이 이미지를 그리고…
         self.buffer = np.zeros((height, width, 3), dtype=np.uint8)
         self.lock   = threading.Lock()
 
@@ -1081,48 +1092,39 @@ class SnowEffect:
         self.SNOWFLAKES    = [Snowflake() for _ in range(self.NUM_SNOW)]
 
     def start(self):
-        # EffectThread.start 에서 이걸 호출해 주세요!
         self.running = True
         self.reset()
         self.thread = threading.Thread(target=self._worker, daemon=True)
         self.thread.start()
 
     def _worker(self):
-        """별도 스레드에서 update+draw → self.buffer 에 보관"""
         fps = 30.0
         interval = 1.0 / fps
         while self.running:
             elapsed       = time.time() - self.start_time
             spawn_allowed = (elapsed <= self.DURATION)
 
-            # 페이드 알파 계산
             if elapsed <= self.DURATION:
                 fade_alpha = 1.0
             elif elapsed <= self.DURATION + self.FADE_DURATION:
                 fade_alpha = 1.0 - (elapsed - self.DURATION) / self.FADE_DURATION
             else:
-                # 완전히 종료
                 self.running = False
                 break
 
-            # 새 버퍼에 렌더
             buf = np.zeros_like(self.buffer)
             for flake in self.SNOWFLAKES:
                 flake.update(spawn_allowed)
                 flake.draw(buf, overall_alpha=fade_alpha)
 
-            # 락 걸고 교체
             with self.lock:
                 self.buffer[:] = buf
 
             time.sleep(interval)
 
     def on(self, frame, frame_idx):
-        """메인 루프에서는 버퍼만 가볍게 합성"""
         with self.lock:
             snow = self.buffer
-        # 검은 바탕(0,0,0)인 부분은 frame 에 변화 없고,
-        # 눈송이 픽셀값은 더해주는 방식
         cv2.add(frame, snow, dst=frame)
 
 def video_start():
@@ -1168,10 +1170,10 @@ def video_start():
     fog_frames = [f.crop(bbox) for f in fog_raw]
     fog_mirror = [ImageOps.mirror(f) for f in fog_frames]
 
-    factories = [
-        lambda: FlameEffect(flame_frames,   (0.7,1.0),1.0,(0.0,1.5),10),
+    factories = [ #0번은 Allstop
+        lambda: fog_eft(fog_frames,fog_mirror,w,h), 
         lambda: PurpleFlameEffect(purple_frames),
-        lambda: fog_eft(fog_frames,fog_mirror,w,h),
+        lambda: FlameEffect(flame_frames,   (0.7,1.0),1.0,(0.0,1.5),10),
         lambda: spotlight_eft(sample),
         lambda: confetti_eft(w,h),
         lambda: rgb_flash_eft(w,h),
@@ -1226,5 +1228,6 @@ def video_start():
             cv2.setWindowProperty("Fire", cv2.WND_PROP_FULLSCREEN, prop)
 
     cv2.destroyAllWindows()
+
 if __name__ == "__main__":
     video_start()

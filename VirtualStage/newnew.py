@@ -2,9 +2,24 @@ import threading, pygame, time, os, cv2, serial, random, math
 from PIL import Image, ImageSequence, ImageOps
 import numpy as np
 from collections import deque
+import mediapipe as mp
 
-GREEN_LOWER    = np.array([35, 90, 60])
-GREEN_UPPER    = np.array([80, 255, 255])
+WIDTH,HEIGHT = 640, 360
+# ROI fractions: 상단 15%, 우측 5%
+TOP_PERCENT   = 0.15
+RIGHT_PERCENT = 0.05
+
+mp_seg  = mp.solutions.selfie_segmentation
+segment = mp_seg.SelfieSegmentation(model_selection=0)
+
+H_TOP         = int(HEIGHT * TOP_PERCENT)   # 상단 ROI 높이
+W_RIGHT       = int(WIDTH  * RIGHT_PERCENT) # 우측 ROI 너비
+X_RIGHT_START = WIDTH - W_RIGHT             # 우측 ROI 시작 x좌표
+
+GREEN_LOWER    = np.array([45, 70, 90])
+GREEN_UPPER    = np.array([90, 255, 255])
+GREEN_LOWER2 = np.array([40, 40, 40])
+GREEN_UPPER2 = np.array([95, 255, 255])
 
 OPEN_K         = 3
 CLOSE_K        = 3
@@ -38,7 +53,6 @@ gif_base_path = os.path.join(FILE_PATH, "img")
 sound_base_addr = os.path.join(FILE_PATH, "sounds")
 THRESHOLD    = 0.5
 
-
 # 배경 로드 & 리사이즈
 bg = cv2.imread(BG_PATH, cv2.IMREAD_UNCHANGED)
 if bg is None:
@@ -51,13 +65,25 @@ bg = cv2.resize(bg, (WIDTH, HEIGHT))
 ov = cv2.imread(OVERLAY_PATH, cv2.IMREAD_UNCHANGED)
 if ov is None:
     raise FileNotFoundError(f"Cannot find '{OVERLAY_PATH}'")
+
 if ov.shape[2] == 4:
-    ov_bgr   = ov[..., :3]
-    ov_alpha = ov[..., 3] / 255.0
+    # 1) BGR과 Alpha 추출
+    ov_bgr   = ov[..., :3].astype(np.float32)
+    ov_alpha = ov[..., 3].astype(np.float32) / 255.0
+
+    # 2) Alpha>0인 픽셀만 un-premultiply
+    nz = ov_alpha > 0
+    # ov_bgr[nz]는 shape==(num_true,3), ov_alpha[nz]는 (num_true,)
+    ov_bgr[nz] = ov_bgr[nz] / ov_alpha[nz][..., None]
+
+    # 3) 값 클립
+    ov_bgr = np.clip(ov_bgr, 0, 255)
 else:
-    ov_bgr   = ov
-    ov_alpha = np.ones((HEIGHT, WIDTH), dtype=np.float32)
-ov_bgr   = cv2.resize(ov_bgr,   (WIDTH, HEIGHT))
+    ov_bgr   = ov.astype(np.float32)
+    ov_alpha = np.ones((ov.shape[0], ov.shape[1]), np.float32)
+
+# 4) 리사이즈 및 정규화
+ov_bgr   = cv2.resize(ov_bgr,   (WIDTH, HEIGHT)) / 255.0
 ov_alpha = cv2.resize(ov_alpha, (WIDTH, HEIGHT))
 
 eft_num = 0
@@ -89,13 +115,8 @@ class sound(threading.Thread):
                 time.sleep(0.1)
         except Exception as e:
             print(f"⚠️ 사운드 오류: {e}")
-        # finally:
-        #     # 이펙트를 사운드 시간과 무관하게 일정 시간 후 종료
-        #     time.sleep(1.0)  # 최소 시간, 사운드 끝나자마자 바로 끄지 않도록
-        #     with overlay_lock:
-        #         overlay_on = False
 
-# 폭죽 : 0 , fog: 2, Spot:3, Confetti:4, RGB_light:5, Blur:6, Zoom:7, snow:8
+# 공용 def
 def eft_sel(cmd):
     # 필요에 따라 하나 이상의 idx를 튜플로 반환할 수 있습니다.
     dt = {
@@ -142,7 +163,6 @@ def uart_listener(manager):
             angle, mag, cmd = data.split()
             cmd = cmd.upper()
 
-            print(*point, sep=' ')
             print(f"수신 → cmd={cmd}, angle={angle}, mag={mag}")
 
             # 오류 코드 무시
@@ -185,15 +205,55 @@ def uart_listener(manager):
             print(f"🚨 예외 발생 in UART listener: {e}")
             time.sleep(1)
 
-def color_key_mask(frame: np.ndarray) -> np.ndarray:
+def color_key_mask(
+    frame: np.ndarray,
+    bright_range: tuple[np.ndarray, np.ndarray] = (GREEN_LOWER, GREEN_UPPER),
+    dark_range: tuple[np.ndarray, np.ndarray] = (GREEN_LOWER2, GREEN_UPPER2),
+    region: dict = None,
+    show_debug: bool = False
+) -> np.ndarray:
+    """
+    frame: 입력 이미지 (BGR)
+    bright_range: 기본 HSV 범위 (전체 영역용)
+    dark_range: 어두운 곳에서 적용할 HSV 범위
+    region: 어두운 HSV 범위를 적용할 영역 정의. None이면 적용 안 함.
+        예시: {"top": 0.7, "left": 0.9} → 아래 30%, 왼쪽 90%
+    show_debug: True면 디버그 마스크 컬러맵 표시
+
+    return: 부드러운 float32 마스크 (0~1)
+    """
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    m = cv2.inRange(hsv, GREEN_LOWER, GREEN_UPPER)
-    m = (m > 0).astype(np.uint8)
-    k = np.ones((3,3), np.uint8)
+
+    # 전체 영역용 마스크
+    m1 = cv2.inRange(hsv, *bright_range)
+
+    # 어두운 영역용 마스크
+    m2 = cv2.inRange(hsv, *dark_range)
+
+    h, w = hsv.shape[:2]
+    mask_final = m1.copy()
+
+    # 범위가 주어진 경우만 m2로 덮기
+    if region:
+        y_thresh = int(h * region.get("top", 1.0))
+        x_thresh = int(w * region.get("left", 1.0))
+        mask_final[y_thresh:, :x_thresh] = m2[y_thresh:, :x_thresh]
+
+    # 후처리
+    m = (mask_final > 0).astype(np.uint8)
+    k = np.ones((3, 3), np.uint8)
     m = cv2.morphologyEx(m, cv2.MORPH_OPEN,  k)
     m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, k)
     m = cv2.GaussianBlur(m.astype(np.float32), (BLUR_K, BLUR_K), 0)
-    return np.clip(m, 0.0, 1.0)
+    m = np.clip(m, 0.0, 1.0)
+
+    # 디버그 시각화
+    if show_debug:
+        vis = (m * 255).astype(np.uint8)
+        vis_color = cv2.applyColorMap(vis, cv2.COLORMAP_JET)
+        cv2.imshow("Chroma Key Mask Debug", vis_color)
+
+    return m
 
 def gif_set(fname, total_ms=None, speed=1.0):
     """GIF 로드 후 RGBA 프레임, count, interval_ms 반환"""
@@ -235,6 +295,16 @@ class FrameGrabber(threading.Thread):
                 self.queue.clear()
                 self.queue.append(frame)
 
+def refine_mask(raw_mask, thresh=0.5):
+    # 1) 임계치 이진화
+    m = (raw_mask > thresh).astype(np.uint8)
+    # 2) 작은 구멍 닫기
+    k = np.ones((CLOSE_K, CLOSE_K), np.uint8)
+    m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, k)
+    # 3) 가장자리 부드럽게
+    m = cv2.GaussianBlur(m.astype(np.float32), (BLUR_K, BLUR_K), 0)
+    return np.clip(m, 0.0, 1.0)
+
 class ChromaKeyThread(threading.Thread):
     def __init__(self, raw_queue, keyed_queue, lock):
         super().__init__(daemon=True)
@@ -250,18 +320,37 @@ class ChromaKeyThread(threading.Thread):
                     continue
                 frame = self.raw_q[0].copy()
 
-            # ① 그린스크린(연두~초록) 마스크 생성 [0 또는 1]
-            mask = color_key_mask(frame)  # float32 [0.0–1.0]
+            # 1) MediaPipe 세그멘테이션 (downscale → full)
+            small     = cv2.resize(frame, (WIDTH//2, HEIGHT//2))
+            rgb_small = cv2.cvtColor(small, cv2.COLOR_BGR2RGB)
+            raw_small = segment.process(rgb_small).segmentation_mask
+            raw_full  = cv2.resize(raw_small, (WIDTH, HEIGHT))
+            seg_full  = refine_mask(raw_full)
 
-            # ② 이진화 → 0/1 마스크로 변환
-            bin_mask = (mask > 0.5).astype(np.uint8)
+            # 2) HSV 크로마키 마스크
+            ck = color_key_mask(frame)
 
-            # ③ 3채널 확장
-            mask3 = np.dstack([bin_mask]*3)
+            # 3) ROI 기반 결합
+            combined = np.zeros_like(seg_full, dtype=np.float32)
+            #  → 상단 15%, 우측 5% 구역은 MediaPipe 결과
+            combined[:H_TOP, :]         = seg_full[:H_TOP, :]
+            combined[:, X_RIGHT_START:] = seg_full[:, X_RIGHT_START:]
+            #  → 그 외 구역은 HSV 크로마키 역치
+            roi_mask = np.zeros_like(seg_full, dtype=bool)
+            roi_mask[:H_TOP, :]         = True
+            roi_mask[:, X_RIGHT_START:] = True
+            combined[~roi_mask] = 1.0 - ck[~roi_mask]
+            combined = np.clip(combined, 0, 1)
 
-            # ④ 배경 합성
-            out = frame.copy()
-            out[mask3 == 1] = bg[mask3 == 1]
+            # 4) BG/FG 합성 ([0..1] 스케일)
+            fg  = combined[...,None] * (frame.astype(np.float32)/255.0)
+            bgc = (1-combined[...,None]) * (bg.astype(np.float32)/255.0)
+            comp= fg + bgc
+
+            # 5) PNG 오버레이 알파 블렌딩
+            alpha3 = ov_alpha[...,None]
+            out_f  = comp*(1-alpha3) + ov_bgr*alpha3
+            out    = np.clip(out_f*255, 0, 255).astype(np.uint8)
 
             with self.lock:
                 self.keyed_q.clear()
@@ -285,7 +374,7 @@ class OverlayThread(threading.Thread):
 
             # ── 여기서 PNG 오버레이 합성만 수행 ──
             of = frame.astype(np.float32) / 255.0
-            overlay_rgb = ov_bgr.astype(np.float32) / 255.0
+            overlay_rgb = ov_bgr.astype(np.float32)
             alpha3 = ov_alpha[..., None]
             out = (of * (1 - alpha3) + overlay_rgb * alpha3) * 255
             out = out.astype(np.uint8)
@@ -334,7 +423,7 @@ class EffectManager:
             for i,t in enumerate(self.active):
                 if t.idx == idx:
                     obj = self.factories[idx]()
-                    if idx==3: obj.set_state(0)
+                    if idx==3: obj.set_state(spot_state)
                     thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
                     thr.start()
                     self.active[i] = thr
@@ -342,7 +431,7 @@ class EffectManager:
             # 신규 슬록 있으면
             if len(self.active) < self.MAX_CONCURRENT:
                 obj = self.factories[idx]()
-                if idx==3: obj.set_state(0)
+                if idx==3: obj.set_state(spot_state)
                 thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
                 thr.start()
                 self.active.append(thr)
@@ -368,7 +457,7 @@ class EffectManager:
 
         # 재생 중인 모든 사운드를 정지
         pygame.mixer.stop()
-
+    
 class FlameEffect:
     def __init__(self, pil_frames, height_range=(0.7, 1.0), rise_duration=1.0, offset_range=(0.0, 1.5), frame_delay_per_flame=10, y_offset= 1):
         # 1) 원본 RGBA→(BGR, alpha) 튜플 리스트로 변환

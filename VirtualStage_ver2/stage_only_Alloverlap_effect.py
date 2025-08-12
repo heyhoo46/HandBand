@@ -3,73 +3,30 @@ from PIL import Image, ImageSequence, ImageOps
 import numpy as np
 from collections import deque
 
-GREEN_LOWER    = np.array([35, 90, 60])
-GREEN_UPPER    = np.array([80, 255, 255])
-
-OPEN_K         = 3
-CLOSE_K        = 3
-BLUR_K         = 3
-
-BASE_THRESHOLD = 0.60
-DIST_BOOST_MAX = 0.30
-DIST_RATIO_MIN = 0.02
-DIST_RATIO_MAX = 0.10
-
-# 전역 변수 및 락
-overlay_on = False #기본값은 효과를 실행하지 X
-effect_request = False # 새로운 이펙트 실행
-overlay_lock = threading.Lock() # Thread를 독립적으로 실행시키기 위함
-spot_state = 0        # spotlight 상태 (0:left, 1:right, 2:all)
-
+# -------------------------------------------------------
+# [1] 해상도·파일 경로·시리얼 포트 설정
+# -------------------------------------------------------
 UART_ID      = input("COM PORT NUM: ")
 CAM_ID       = input("CAM NUM: ")
 
-uart_port = "COM" + UART_ID
-uart_baudrate = 115200
+cam_num           = int(CAM_ID)
+maximum_frame_rate= 60
+WIDTH, HEIGHT     = 1280, 720
 
-cam_num = int(CAM_ID)
-maximum_frame_rate = 30
-WIDTH,HEIGHT = 1280, 720
+uart_port         = "COM" + UART_ID
+uart_baudrate     = 115200
 
+# 이펙트용 리소스 경로
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 BG_PATH      = os.path.join(FILE_PATH, "img", "stage_background.png")
-OVERLAY_PATH = os.path.join(FILE_PATH, "img", "stage_overlap.png")
+OVERLAY_PATH = os.path.join(FILE_PATH, "img", "stage_all_overlap.png")
 gif_base_path = os.path.join(FILE_PATH, "img")
 sound_base_addr = os.path.join(FILE_PATH, "sounds")
-THRESHOLD    = 0.5
-
-
-# 배경 로드 & 리사이즈
-bg = cv2.imread(BG_PATH, cv2.IMREAD_UNCHANGED)
-if bg is None:
-    raise FileNotFoundError(f"배경 파일 '{BG_PATH}'을 찾을 수 없습니다.")
-if bg.shape[2] == 4:
-    bg = bg[..., :3]
-bg = cv2.resize(bg, (WIDTH, HEIGHT))
-
-# ── 오버레이(알파 포함) 로드 & 분리 & 리사이즈 ──
-ov = cv2.imread(OVERLAY_PATH, cv2.IMREAD_UNCHANGED)
-if ov is None:
-    raise FileNotFoundError(f"Cannot find '{OVERLAY_PATH}'")
-if ov.shape[2] == 4:
-    ov_bgr   = ov[..., :3]
-    ov_alpha = ov[..., 3] / 255.0
-else:
-    ov_bgr   = ov
-    ov_alpha = np.ones((HEIGHT, WIDTH), dtype=np.float32)
-ov_bgr   = cv2.resize(ov_bgr,   (WIDTH, HEIGHT))
-ov_alpha = cv2.resize(ov_alpha, (WIDTH, HEIGHT))
-
-eft_num = 0
-channel_map = {}
-
-# 캠 프레임
-cam_frame = None #(0, 1)
 
 # pygame 초기화 (사운드용)
 pygame.init()
 pygame.mixer.init()
-
+pygame.mixer.set_num_channels(16)
 
 class sound(threading.Thread):
     def __init__(self, path):
@@ -79,25 +36,19 @@ class sound(threading.Thread):
     def run(self):
         mp3_path = os.path.join(sound_base_addr, self.path)
         if not os.path.exists(mp3_path):
-            print("❌ 사운드 파일 없음")
-            return  # overlay_on을 제어하지 않음
-
+            print("❌ 사운드 파일 없음:", self.path)
+            return
         try:
             pygame.mixer.music.load(mp3_path)
             pygame.mixer.music.play()
             while pygame.mixer.music.get_busy():
                 time.sleep(0.1)
         except Exception as e:
-            print(f"⚠️ 사운드 오류: {e}")
-        # finally:
-        #     # 이펙트를 사운드 시간과 무관하게 일정 시간 후 종료
-        #     time.sleep(1.0)  # 최소 시간, 사운드 끝나자마자 바로 끄지 않도록
-        #     with overlay_lock:
-        #         overlay_on = False
+            print("⚠️ 사운드 오류:", e)
+
 
 # 폭죽 : 0 , fog: 2, Spot:3, Confetti:4, RGB_light:5, Blur:6, Zoom:7, snow:8
 def eft_sel(cmd):
-    # 필요에 따라 하나 이상의 idx를 튜플로 반환할 수 있습니다.
     dt = {
         'a': 8,
         'b': 6,
@@ -107,101 +58,79 @@ def eft_sel(cmd):
         'f': 5,
         'g': 2,
         'h': 7,
-        # 예시: 'x' 명령 들어오면 3개의 이펙트를 동시에
-        'x': (1, 2, 3),
-        # 'z' 명령 들어오면 전부 중단 (stop 신호)
-        'E': 'STOP',
-    }
+        'E': 8
+        }
     return dt.get(cmd)
+
 # 공용 def
 def uart_listener(manager):
-    ser = None  # 시리얼 객체
-    while True:
-        # ── (1) 시리얼 연결 관리 ──
-        if ser is None or not getattr(ser, 'is_open', False):
-            print("UART 연결 시도 중...")
+    ser = None # 초기 시리얼 객체는 None으로 설정
+    
+    while True: # 무한 재연결 시도 루프
+        # 1. 시리얼 포트 연결 시도
+        if ser is None or not ser.is_open:
+            print("UART 연결을 시도 중...")
             try:
                 ser = serial.Serial(uart_port, uart_baudrate, timeout=1)
                 print(f"✅ UART Connected: {uart_port}")
             except serial.SerialException as e:
-                print(f"⚠️ UART 연결 실패: {e}. 5초 후 재시도...")
+                print(f"⚠️ UART 연결 실패: {e}")
+                print("5초 후 재연결을 시도합니다...")
                 time.sleep(5)
-                continue
-
-        # ── (2) 데이터 수신 & 파싱 ──
+                continue # 연결 실패 시 다음 루프에서 다시 시도
+        
+        # 2. 연결이 성공적으로 이루어졌다면 데이터 수신 시작
         try:
-            line = ser.readline().strip()        # 최대 1초 대기
-            if not line:
+            # timeout=1초로 설정했기 때문에 readline()은 1초 후에도 데이터가 없으면 빈 바이트를 반환
+            input_string = ser.readline().strip()
+            
+            # 읽어온 데이터가 없을 경우
+            if not input_string:
                 continue
 
-            raw = line.decode('utf-8', errors='ignore')
-            # 예: "(x1 y1),(x2 y2) CMD MAG"
-            raw, data = raw.split(',')
-            point = [list(map(float, s[1:-1].split())) for s in (list(raw.split('='))[:-1])]
-            # 포맷에 맞춰 파싱 (원본과 동일)
-            angle, mag, cmd = data.split()
-            cmd = cmd.upper()
-
-            print(*point, sep=' ')
-            print(f"수신 → cmd={cmd}, angle={angle}, mag={mag}")
-
-            # 오류 코드 무시
-            if cmd == 'E':
-                print("ERROR 코드, 무시")
+            data = str(input_string)[2:-1]  # read UART
+            if not data:
                 continue
 
-            sel = eft_sel(cmd)
-            if sel is None:
-                # 매핑에 없으면 무시
+            # 기존 데이터 처리 로직
+            temp = list(data.split(','))
+            angle, mag, cmd = list(temp[1].split())
+            point = [list(map(float, string[1:-1].split())) for string in (list(temp[0].split('='))[:-1])]
+            
+            print(f"{cmd}, {angle}, {mag}")
+            print(*point, sep=', ')
+
+
+            new_idx = eft_sel(cmd)
+
+            if new_idx is None:
                 continue
 
-            # ── (3) STOP 신호 처리 ──
-            if sel == 'STOP':
-                print("📴 STOP 신호 수신 → 모든 이펙트 중단")
+            print(f"act {cmd}, {angle}")
+            if cmd in ['E']:
                 manager.stop_all_effects()
-                continue
-
-            # ── (4) Enqueue: 단일 또는 복수 지원 ──
-            if isinstance(sel, (tuple, list)):
-                for idx in sel:
-                    print(f"📥 Enqueue idx={idx}")
-                    manager.enqueue(idx)
             else:
-                print(f"📥 Enqueue idx={sel}")
-                manager.enqueue(sel)
+                manager.enqueue(new_idx)
 
         except serial.SerialException as e:
-            # 통신 중 끊김
-            print(f"❌ UART 통신 중 오류: {e}. 재연결 시도...")
-            try:
-                ser.close()
-            except:
-                pass
-            ser = None
-            time.sleep(2)
-
+            # 통신 중 예외 발생 시 (포트 끊김, 권한 오류 등)
+            print(f"❌ UART 통신 중 오류 발생: {e}")
+            print("연결이 끊어졌습니다. 재연결을 시도합니다...")
+            if ser.is_open:
+                ser.close() # 기존 포트를 닫고
+            ser = None # 시리얼 객체를 초기화하여 다음 루프에서 재연결 시도
+            time.sleep(2) # 짧은 대기 후 재시도
+        
         except Exception as e:
-            # 기타 예외
-            print(f"🚨 예외 발생 in UART listener: {e}")
+            # 다른 종류의 예상치 못한 예외 처리
+            print(f"🚨 예상치 못한 오류 발생: {e}")
             time.sleep(1)
-
-def color_key_mask(frame: np.ndarray) -> np.ndarray:
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    m = cv2.inRange(hsv, GREEN_LOWER, GREEN_UPPER)
-    m = (m > 0).astype(np.uint8)
-    k = np.ones((3,3), np.uint8)
-    m = cv2.morphologyEx(m, cv2.MORPH_OPEN,  k)
-    m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, k)
-    m = cv2.GaussianBlur(m.astype(np.float32), (BLUR_K, BLUR_K), 0)
-    return np.clip(m, 0.0, 1.0)
-
+            
 def gif_set(fname, total_ms=None, speed=1.0):
-    """GIF 로드 후 RGBA 프레임, count, interval_ms 반환"""
     path = os.path.join(gif_base_path, fname)
     gif = Image.open(path)
     frames = [f.convert("RGBA") for f in ImageSequence.Iterator(gif)]
     count = len(frames)
-    # duration 설정
     durations = [f.info.get("duration",100) for f in ImageSequence.Iterator(gif)]
     avg = int(np.mean(durations)) if durations else 100
     interval = int(avg/speed)
@@ -234,66 +163,7 @@ class FrameGrabber(threading.Thread):
             with self.lock:
                 self.queue.clear()
                 self.queue.append(frame)
-
-class ChromaKeyThread(threading.Thread):
-    def __init__(self, raw_queue, keyed_queue, lock):
-        super().__init__(daemon=True)
-        self.raw_q   = raw_queue
-        self.keyed_q = keyed_queue
-        self.lock    = lock
-
-    def run(self):
-        while True:
-            with self.lock:
-                if not self.raw_q:
-                    time.sleep(0.005)
-                    continue
-                frame = self.raw_q[0].copy()
-
-            # ① 그린스크린(연두~초록) 마스크 생성 [0 또는 1]
-            mask = color_key_mask(frame)  # float32 [0.0–1.0]
-
-            # ② 이진화 → 0/1 마스크로 변환
-            bin_mask = (mask > 0.5).astype(np.uint8)
-
-            # ③ 3채널 확장
-            mask3 = np.dstack([bin_mask]*3)
-
-            # ④ 배경 합성
-            out = frame.copy()
-            out[mask3 == 1] = bg[mask3 == 1]
-
-            with self.lock:
-                self.keyed_q.clear()
-                self.keyed_q.append(out)
-
-class OverlayThread(threading.Thread):
-    def __init__(self, keyed_queue, overlay_queue, lock):
-        super().__init__(daemon=True)
-        self.keyed_q   = keyed_queue
-        self.overlay_q = overlay_queue
-        self.lock      = lock
-
-    def run(self):
-        while True:
-            with self.lock:
-                if not self.keyed_q:
-                    # 마찬가지로, 잠깐 쉬고 GIL 해제
-                    time.sleep(0.005)
-                    continue
-            frame = self.keyed_q[0].copy()
-
-            # ── 여기서 PNG 오버레이 합성만 수행 ──
-            of = frame.astype(np.float32) / 255.0
-            overlay_rgb = ov_bgr.astype(np.float32) / 255.0
-            alpha3 = ov_alpha[..., None]
-            out = (of * (1 - alpha3) + overlay_rgb * alpha3) * 255
-            out = out.astype(np.uint8)
-
-            with self.lock:
-                self.overlay_q.clear()
-                self.overlay_q.append(out)
-
+                
 # ── 이펙트 관리용 클래스 ──
 class EffectThread:
     def __init__(self, idx, effect, duration, sound_file):
@@ -306,14 +176,14 @@ class EffectThread:
     def start(self):
         self.start_time = time.time()
         if hasattr(self.effect, "start") and callable(self.effect.start):
-           self.effect.start()
+            self.effect.start()
         else:
-           self.effect.reset()
-        # 사운드 독립 재생
-        ch = pygame.mixer.find_channel()
-        if ch:
-            snd = pygame.mixer.Sound(os.path.join(sound_base_addr, self.sound_file))
-            ch.play(snd)
+            self.effect.reset()
+        path = os.path.join(sound_base_addr, self.sound_file)
+        ch = pygame.mixer.Channel(self.idx)
+        ch.stop()
+        snd = pygame.mixer.Sound(path)
+        ch.play(snd)
     def is_alive(self):
         return (time.time() - self.start_time) < self.duration
     def apply(self, frame):
@@ -321,7 +191,7 @@ class EffectThread:
         self.frame_idx += 1
         
 class EffectManager:
-    MAX_CONCURRENT = 2
+    MAX_CONCURRENT = 4
     def __init__(self, factories, sounds, durations):
         self.factories = factories
         self.sounds    = sounds
@@ -330,19 +200,18 @@ class EffectManager:
         self.lock = threading.Lock()
     def enqueue(self, idx):
         with self.lock:
-            # 이미 같은 idx 실행 중? → 재시작
-            for i,t in enumerate(self.active):
+            for i, t in enumerate(self.active):
                 if t.idx == idx:
+                    pygame.mixer.Channel(idx).stop()
                     obj = self.factories[idx]()
-                    if idx==3: obj.set_state(0)
+                    if idx == 3: obj.set_state(0)
                     thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
                     thr.start()
                     self.active[i] = thr
                     return
-            # 신규 슬록 있으면
             if len(self.active) < self.MAX_CONCURRENT:
                 obj = self.factories[idx]()
-                if idx==3: obj.set_state(0)
+                if idx == 3: obj.set_state(0)
                 thr = EffectThread(idx, obj, self.durations[idx], self.sounds[idx])
                 thr.start()
                 self.active.append(thr)
@@ -368,7 +237,6 @@ class EffectManager:
 
         # 재생 중인 모든 사운드를 정지
         pygame.mixer.stop()
-
 class FlameEffect:
     def __init__(self, pil_frames, height_range=(0.7, 1.0), rise_duration=1.0, offset_range=(0.0, 1.5), frame_delay_per_flame=10, y_offset= 1):
         # 1) 원본 RGBA→(BGR, alpha) 튜플 리스트로 변환
@@ -620,9 +488,9 @@ class spotlight_eft:
 
     # ── 왼쪽·중앙·오른쪽 3개를 모두 한 번에 켜는 단일 상태 정의 ──
     SPOT_ALL = [
-        (0.05, -0.3, 0.35, 1.2),  # 왼쪽
+        (0.05, -0.3, 0.30, 1.2),  # 왼쪽
         (0.50, -0.3, 0.50, 1.2),  # 중앙
-        (0.95, -0.3, 0.65, 1.2),  # 오른쪽
+        (0.95, -0.3, 0.7, 1.2),  # 오른쪽
     ]
     # 오직 이 하나의 상태만 존재
     SPOT_STATES = [
@@ -709,7 +577,7 @@ class confetti_eft:
     BASE_HEIGHT = 360
 
     # ▶ 크기 조절용 외부 파라미터 (기본값 1.0)
-    CONFETTI_SIZE_SCALE = 0.7
+    CONFETTI_SIZE_SCALE = 0.6
 
     def __init__(self, width, height):
         self.WIDTH  = width
@@ -719,7 +587,7 @@ class confetti_eft:
         self.scale = self.WIDTH / self.BASE_WIDTH
 
         self.confettis = []
-        self.MAX_CONFETTI       = 900
+        self.MAX_CONFETTI       = 1000
         self.CONFETTI_PER_FRAME = 40
         self.CONFETTI_LIFETIME  = 4.0
 
@@ -886,7 +754,7 @@ class zoom_eft:
         self.HOLD_DURATION = 1.0
         self.SHAKE_INTENSITY = 2.0
         self.REGION_RATIOS = [
-            (0.2, 0.3, 0.3, 0.2),  # (x%, y%, width%, height%)
+            (0.05, 0.3, 0.3, 0.2),  # (x%, y%, width%, height%)
             (0.6, 0.3, 0.3, 0.2)
         ]
         self.REGIONS = [
@@ -1126,37 +994,28 @@ class SnowEffect:
         cv2.add(frame, snow, dst=frame)
 
 def video_start():
+    # PNG 풀프레임 오버레이용 변수
+    OVERLAY_PNG = cv2.imread(OVERLAY_PATH, cv2.IMREAD_UNCHANGED)
+    if OVERLAY_PNG is None or OVERLAY_PNG.shape[2] != 4:
+        raise FileNotFoundError(f"{OVERLAY_PATH}를 RGBA로 불러올 수 없습니다.")
+    OVERLAY_PNG = cv2.resize(OVERLAY_PNG, (WIDTH, HEIGHT), interpolation=cv2.INTER_AREA)
+    bgr_png    = OVERLAY_PNG[..., :3].astype(np.float32)
+    alpha_mask = OVERLAY_PNG[..., 3:] / 255.0  # (H,W,1)
     is_fullscreen = False
-
     # 1) 카메라 스레드 준비
     frame_queue = deque(maxlen=1)
-
-    frame_lock   = threading.Lock()
-    process_lock = threading.Lock()
-    overlay_lock = threading.Lock()
-
+    frame_lock = threading.Lock()
     grabber = FrameGrabber(cam_num, frame_queue, frame_lock)
     grabber.start()
-
-    # 2) Chromakey 전용 스레드 준비
-    keyed_queue = deque(maxlen=1)
-    chroma = ChromaKeyThread(frame_queue, keyed_queue, process_lock)
-    chroma.start()
-
-   # 2.5) Overlay 전용 스레드 준비
-    overlay_queue = deque(maxlen=1)
-    overlay_thr  = OverlayThread(keyed_queue, overlay_queue, overlay_lock)
-    overlay_thr.start()
-
-    # 3) 최초 프레임 대기 (샘플용)
+    # 2) 샘플 프레임 얻기 (효과 매니저용 크기 산출)
     while True:
-        with process_lock:
-            if keyed_queue:
-                sample = keyed_queue[0].copy()
+        with frame_lock:
+            if frame_queue:
+                sample = frame_queue[0].copy()
                 break
         time.sleep(0.01)
     h, w = sample.shape[:2]
-
+ 
     # 4) GIF 및 이펙트 팩토리 초기화 (이전과 동일)
     names = ["Flame.gif","Purple_Flame.gif","fog2.gif"]
     durations_ms = [10000,4000,None]
@@ -1204,16 +1063,20 @@ def video_start():
 
     # 6) 메인 루프: keyed_queue 에서 처리 완료 프레임만 가져옴
     while True:
-        # (1) 크로마키+PNG 오버레이가 완료된 프레임 대기
-        with overlay_lock:
-            if not overlay_queue:
+        # (1) 카메라 최신 프레임
+        with frame_lock:
+            if not frame_queue:
                 continue
-            frame = overlay_queue[0].copy()
+            frame = frame_queue[0].copy()
 
-        # (2) 이제 이 프레임 위에 이펙트를 가장 앞에 합성
-        out = manager.composite(frame)
-
-        # (3) 화면 출력
+        # (2) 풀프레임 PNG 오버레이
+        f32 = frame.astype(np.float32)
+        blended = (bgr_png * alpha_mask + f32 * (1 - alpha_mask)).astype(np.uint8)
+         
+        # (3) 이펙트 합성
+        out = manager.composite(blended)
+   
+        # (4) 화면 출력
         cv2.imshow("Fire", out)
 
         # (4) 키 이벤트 처리

@@ -1,9 +1,10 @@
 import threading, pygame, time, os, cv2, serial, random, math
 from PIL import Image, ImageSequence, ImageOps
 import numpy as np
+import mediapipe as mp
 from collections import deque
 
-GREEN_LOWER    = np.array([35, 90, 60])
+GREEN_LOWER    = np.array([40, 100, 35])
 GREEN_UPPER    = np.array([80, 255, 255])
 
 OPEN_K         = 3
@@ -24,20 +25,24 @@ spot_state = 0        # spotlight 상태 (0:left, 1:right, 2:all)
 UART_ID      = input("COM PORT NUM: ")
 CAM_ID       = input("CAM NUM: ")
 
+WIDTH,HEIGHT = 640, 480
+THRESHOLD    = 0.5
+
 uart_port = "COM" + UART_ID
 uart_baudrate = 115200
 
 cam_num = int(CAM_ID)
 maximum_frame_rate = 30
-WIDTH,HEIGHT = 1280, 720
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 BG_PATH      = os.path.join(FILE_PATH, "img", "stage_background.png")
 OVERLAY_PATH = os.path.join(FILE_PATH, "img", "stage_overlap.png")
 gif_base_path = os.path.join(FILE_PATH, "img")
 sound_base_addr = os.path.join(FILE_PATH, "sounds")
-THRESHOLD    = 0.5
 
+# Mediapipe 세그멘테이션
+mp_seg  = mp.solutions.selfie_segmentation
+segment = mp_seg.SelfieSegmentation(model_selection=1)
 
 # 배경 로드 & 리사이즈
 bg = cv2.imread(BG_PATH, cv2.IMREAD_UNCHANGED)
@@ -59,6 +64,7 @@ else:
     ov_alpha = np.ones((HEIGHT, WIDTH), dtype=np.float32)
 ov_bgr   = cv2.resize(ov_bgr,   (WIDTH, HEIGHT))
 ov_alpha = cv2.resize(ov_alpha, (WIDTH, HEIGHT))
+
 
 eft_num = 0
 channel_map = {}
@@ -95,9 +101,9 @@ class sound(threading.Thread):
         #     with overlay_lock:
         #         overlay_on = False
 
+
 # 폭죽 : 0 , fog: 2, Spot:3, Confetti:4, RGB_light:5, Blur:6, Zoom:7, snow:8
 def eft_sel(cmd):
-    # 필요에 따라 하나 이상의 idx를 튜플로 반환할 수 있습니다.
     dt = {
         'a': 8,
         'b': 6,
@@ -106,83 +112,72 @@ def eft_sel(cmd):
         'e': 4,
         'f': 5,
         'g': 2,
-        'h': 7,
-        # 예시: 'x' 명령 들어오면 3개의 이펙트를 동시에
-        'x': (1, 2, 3),
-        # 'z' 명령 들어오면 전부 중단 (stop 신호)
-        'E': 'STOP',
-    }
+        'h': 7
+        }
     return dt.get(cmd)
+
 # 공용 def
 def uart_listener(manager):
-    ser = None  # 시리얼 객체
-    while True:
-        # ── (1) 시리얼 연결 관리 ──
-        if ser is None or not getattr(ser, 'is_open', False):
-            print("UART 연결 시도 중...")
+    ser = None # 초기 시리얼 객체는 None으로 설정
+    
+    while True: # 무한 재연결 시도 루프
+        # 1. 시리얼 포트 연결 시도
+        if ser is None or not ser.is_open:
+            print("UART 연결을 시도 중...")
             try:
                 ser = serial.Serial(uart_port, uart_baudrate, timeout=1)
                 print(f"✅ UART Connected: {uart_port}")
             except serial.SerialException as e:
-                print(f"⚠️ UART 연결 실패: {e}. 5초 후 재시도...")
+                print(f"⚠️ UART 연결 실패: {e}")
+                print("5초 후 재연결을 시도합니다...")
                 time.sleep(5)
-                continue
-
-        # ── (2) 데이터 수신 & 파싱 ──
+                continue # 연결 실패 시 다음 루프에서 다시 시도
+        
+        # 2. 연결이 성공적으로 이루어졌다면 데이터 수신 시작
         try:
-            line = ser.readline().strip()        # 최대 1초 대기
-            if not line:
+            # timeout=1초로 설정했기 때문에 readline()은 1초 후에도 데이터가 없으면 빈 바이트를 반환
+            input_string = ser.readline().strip()
+            
+            # 읽어온 데이터가 없을 경우
+            if not input_string:
                 continue
 
-            raw = line.decode('utf-8', errors='ignore')
-            # 예: "(x1 y1),(x2 y2) CMD MAG"
-            raw, data = raw.split(',')
-            point = [list(map(float, s[1:-1].split())) for s in (list(raw.split('='))[:-1])]
-            # 포맷에 맞춰 파싱 (원본과 동일)
-            angle, mag, cmd = data.split()
-            cmd = cmd.upper()
-
-            print(*point, sep=' ')
-            print(f"수신 → cmd={cmd}, angle={angle}, mag={mag}")
-
-            # 오류 코드 무시
-            if cmd == 'E':
-                print("ERROR 코드, 무시")
+            data = str(input_string)[2:-1]  # read UART
+            if not data:
                 continue
 
-            sel = eft_sel(cmd)
-            if sel is None:
-                # 매핑에 없으면 무시
+            # 기존 데이터 처리 로직
+            temp = list(data.split(','))
+            angle, mag, cmd = list(temp[1].split())
+            point = [list(map(float, string[1:-1].split())) for string in (list(temp[0].split('='))[:-1])]
+            
+            print(f"{cmd}, {angle}, {mag}")
+            print(*point, sep=', ')
+
+            if cmd in ['E']:
+                print(f"ERROR Code: {cmd}")
                 continue
 
-            # ── (3) STOP 신호 처리 ──
-            if sel == 'STOP':
-                print("📴 STOP 신호 수신 → 모든 이펙트 중단")
-                manager.stop_all_effects()
+            new_idx = eft_sel(cmd)
+
+            if new_idx is None:
                 continue
 
-            # ── (4) Enqueue: 단일 또는 복수 지원 ──
-            if isinstance(sel, (tuple, list)):
-                for idx in sel:
-                    print(f"📥 Enqueue idx={idx}")
-                    manager.enqueue(idx)
-            else:
-                print(f"📥 Enqueue idx={sel}")
-                manager.enqueue(sel)
+            print(f"act {cmd}, {angle}")
+            manager.enqueue(new_idx)
 
         except serial.SerialException as e:
-            # 통신 중 끊김
-            print(f"❌ UART 통신 중 오류: {e}. 재연결 시도...")
-            try:
-                ser.close()
-            except:
-                pass
-            ser = None
-            time.sleep(2)
-
+            # 통신 중 예외 발생 시 (포트 끊김, 권한 오류 등)
+            print(f"❌ UART 통신 중 오류 발생: {e}")
+            print("연결이 끊어졌습니다. 재연결을 시도합니다...")
+            if ser.is_open:
+                ser.close() # 기존 포트를 닫고
+            ser = None # 시리얼 객체를 초기화하여 다음 루프에서 재연결 시도
+            time.sleep(2) # 짧은 대기 후 재시도
+        
         except Exception as e:
-            # 기타 예외
-            print(f"🚨 예외 발생 in UART listener: {e}")
+            # 다른 종류의 예상치 못한 예외 처리
+            print(f"🚨 예상치 못한 오류 발생: {e}")
             time.sleep(1)
 
 def color_key_mask(frame: np.ndarray) -> np.ndarray:
@@ -193,6 +188,28 @@ def color_key_mask(frame: np.ndarray) -> np.ndarray:
     m = cv2.morphologyEx(m, cv2.MORPH_OPEN,  k)
     m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, k)
     m = cv2.GaussianBlur(m.astype(np.float32), (BLUR_K, BLUR_K), 0)
+    return np.clip(m, 0.0, 1.0)
+
+def refine_seg_mask(raw_mask: np.ndarray) -> np.ndarray:
+    # 거리 기반 threshold 보정
+    pr = np.mean(raw_mask > BASE_THRESHOLD)
+    boost = np.interp(pr, [DIST_RATIO_MIN, DIST_RATIO_MAX],
+                          [DIST_BOOST_MAX,  0.0],
+                          left=DIST_BOOST_MAX, right=0.0)
+    th = BASE_THRESHOLD - boost
+    # 이진화 + 형태학 반복
+    m = (raw_mask > th).astype(np.uint8)
+    k1 = np.ones((OPEN_K, OPEN_K),  np.uint8)
+    k2 = np.ones((CLOSE_K, CLOSE_K), np.uint8)
+    for _ in range(2):
+        m = cv2.morphologyEx(m, cv2.MORPH_OPEN,  k1)
+    for _ in range(2):
+        m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, k2)
+    # Bilateral 필터로 경계 보존
+    m255 = (m*255).astype(np.uint8)
+    m = (cv2.bilateralFilter(m255, d=9, sigmaColor=75, sigmaSpace=75)/255.0).astype(np.float32)
+    # 최종 경계 블러
+    m = cv2.GaussianBlur(m, (BLUR_K, BLUR_K), 0)
     return np.clip(m, 0.0, 1.0)
 
 def gif_set(fname, total_ms=None, speed=1.0):
@@ -214,7 +231,6 @@ class FrameGrabber(threading.Thread):
     def __init__(self, src, queue, lock):
         super().__init__(daemon=True)
         cap = cv2.VideoCapture(src, cv2.CAP_MSMF)
-        #cap = cv2.VideoCapture(src, cv2.CAP_DSHOW)
         fourcc = cv2.VideoWriter_fourcc(*'MJPG')
         cap.set(cv2.CAP_PROP_FOURCC,      fourcc)
         cap.set(cv2.CAP_PROP_AUTOFOCUS,   0)
@@ -222,7 +238,7 @@ class FrameGrabber(threading.Thread):
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT,1080)
         cap.set(cv2.CAP_PROP_FPS,         maximum_frame_rate)
-        self.cap = cv2.VideoCapture(src)
+        self.cap = cap
         self.lock = lock
         self.queue = queue
 
@@ -245,23 +261,24 @@ class ChromaKeyThread(threading.Thread):
     def run(self):
         while True:
             with self.lock:
-                if not self.raw_q:
-                    time.sleep(0.005)
-                    continue
-                frame = self.raw_q[0].copy()
+               if not self.raw_q:
+                   # 큐가 비어 있으면 5ms 쉬고 다시 시도
+                   time.sleep(0.005)
+                   continue
+            frame = self.raw_q[0].copy()
+            # ① 연두색 컬러키
+            ck = color_key_mask(frame)                                 # [0–1]
 
-            # ① 그린스크린(연두~초록) 마스크 생성 [0 또는 1]
-            mask = color_key_mask(frame)  # float32 [0.0–1.0]
+            # ② Mediapipe 세그 + 리파인
+            rgb      = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            raw_m    = segment.process(rgb).segmentation_mask
+            seg      = refine_seg_mask(raw_m)                          # [0–1]
 
-            # ② 이진화 → 0/1 마스크로 변환
-            bin_mask = (mask > 0.5).astype(np.uint8)
-
-            # ③ 3채널 확장
-            mask3 = np.dstack([bin_mask]*3)
-
-            # ④ 배경 합성
-            out = frame.copy()
-            out[mask3 == 1] = bg[mask3 == 1]
+            # ③ 둘 합성: seg 우선, ck 강제 배경 처리
+            final_m  = ((seg * (1-ck)) > 0.5).astype(np.uint8)
+            m3       = np.dstack([final_m]*3)
+            out      = frame.copy()
+            out[m3==0] = bg[m3==0]
 
             with self.lock:
                 self.keyed_q.clear()
@@ -354,21 +371,7 @@ class EffectManager:
                 else:
                     self.active.remove(t)
         return frame
-    def stop_all_effects(self):
-        """활성화된 모든 이펙트를 즉시 중단하고 사운드를 멈춥니다."""
-        with self.lock:
-            # 각 EffectThread 의 내부 이펙트가 가진 .running 플래그가 있다면 꺼주기
-            for t in self.active:
-                eff = t.effect
-                if hasattr(eff, 'running'):
-                    eff.running = False
-                # 필요하다면 추가적인 cleanup() 메서드 호출 가능
-            # 액티브 리스트 초기화
-            self.active.clear()
-
-        # 재생 중인 모든 사운드를 정지
-        pygame.mixer.stop()
-
+    
 class FlameEffect:
     def __init__(self, pil_frames, height_range=(0.7, 1.0), rise_duration=1.0, offset_range=(0.0, 1.5), frame_delay_per_flame=10, y_offset= 1):
         # 1) 원본 RGBA→(BGR, alpha) 튜플 리스트로 변환
