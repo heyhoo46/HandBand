@@ -25,16 +25,16 @@ fdb_proj =
 fdb_campaign = 
 fdb_tool = 
 [hb]
-postSimFile = /home/hedu53/dev1/0719_handsignal/build/wave.fsdb
+postSimFile = /home/hedu53/HandBand/UVM/0801_spi_added/build/wave.fsdb
 syncTime = 0
-viewport = 0 23 2560 1369 0 0 292 898
-activeNode = "tb_handsignal"
-activeScope = "tb_handsignal"
-activeFile = "./tb/tb_handsignal.sv"
+viewport = 0 23 2560 1369 0 0 290 898
+activeNode = "tb_spi_handsignal"
+activeScope = "tb_spi_handsignal"
+activeFile = "./tb/tb_spi_handsignal.sv"
 interactiveMode = False
 viewType = Source
 simulatorMode = False
-sourceBeginLine = 376
+sourceBeginLine = 314
 baMode = False
 srcLineNum = True
 AutoWrap = True
@@ -51,25 +51,25 @@ DnDtraceCrossHierOnly = True
 leadingZero = False
 signalPane = False
 SourceVerticalScrollLines = 5
-Scope1 = "tb_handsignal"
-multipleSelection = 1 376 2 0 0
+Scope1 = "tb_spi_handsignal"
+multipleSelection = 1 314 2 0 0
 sdfCheckUndef = FALSE
 simFlow = FALSE
 [hb.design]
 importCmd = "-dbdir" "./build/simv.daidir" 
-invokeDir = /home/hedu53/dev1/0719_handsignal
+invokeDir = /home/hedu53/HandBand/UVM/0801_spi_added
 [hb.sourceTab.1]
-scope = tb_handsignal
-File = /home/hedu53/dev1/0719_handsignal/tb/tb_handsignal.sv
-Line = 377
+scope = tb_spi_handsignal
+File = /home/hedu53/HandBand/UVM/0801_spi_added/tb/tb_spi_handsignal.sv
+Line = 315
 [nMemoryManager]
-WaveformFile = /home/hedu53/dev1/0719_handsignal/build/wave.fsdb
+WaveformFile = /home/hedu53/HandBand/UVM/0801_spi_added/build/wave.fsdb
 UserActionNum = 0
 nMemWindowNum = 0
 [wave.0]
-viewPort = 0 25 2560 594 209 65
+viewPort = 0 25 2560 594 362 65
 primaryWindow = TRUE
-SessionFile = /home/hedu53/dev1/0719_handsignal/verdiLog/novas_autosave.ses.wave.0
+SessionFile = /home/hedu53/HandBand/UVM/0801_spi_added/verdiLog/novas_autosave.ses.wave.0
 displayGrid = FALSE
 hierarchicalName = FALSE
 waveformToolTip = FALSE

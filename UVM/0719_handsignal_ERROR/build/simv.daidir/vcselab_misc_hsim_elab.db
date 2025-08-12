@@ -1,6 +1,6 @@
 psSimBaseName                      	./build/simv
 psLogFileName                      	./build/comp.log
-psDaiDir                           	/home/hedu53/HandBand/UVM/0719_handsignal/./build/simv.daidir
+psDaiDir                           	/home/hedu53/HandBand/UVM/0719_handsignal_ERROR/./build/simv.daidir
 destPath                           	./build/csrc/
 fSharedMasterElab                  	0
 fHsimPCSharedLibSpecified          	0

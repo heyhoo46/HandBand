@@ -1,0 +1,181 @@
+simSetSimulator "-vcssv" -exec "./build/simv" -args \
+           "+UVM_TESTNAME=pixel_test +MEM_FILE=./memfile_with_noise_0803/img_noise_001.mem"
+debImport "-dbdir" "./build/simv.daidir"
+debLoadSimResult /home/hedu53/HandBand/UVM/0804_handsignal_1920/build/wave.fsdb
+wvCreateWindow
+verdiSetActWin -win $_nWave2
+verdiWindowResize -win $_Verdi_1 "8" "31" "2560" "1369"
+verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
+wvGetSignalOpen -win $_nWave2
+wvGetSignalSetScope -win $_nWave2 "/tb_handsignal"
+verdiSetActWin -win $_nWave2
+wvGetSignalSetScope -win $_nWave2 "/tb_handsignal/dut"
+wvSetPosition -win $_nWave2 {("G1" 17)}
+wvSetPosition -win $_nWave2 {("G1" 17)}
+wvAddSignal -win $_nWave2 -clear
+wvAddSignal -win $_nWave2 -group {"G1" \
+{/tb_handsignal/dut/B\[7:0\]} \
+{/tb_handsignal/dut/G\[7:0\]} \
+{/tb_handsignal/dut/R\[7:0\]} \
+{/tb_handsignal/dut/blue_flag\[6:0\]} \
+{/tb_handsignal/dut/clk} \
+{/tb_handsignal/dut/i\[31:0\]} \
+{/tb_handsignal/dut/is_color1} \
+{/tb_handsignal/dut/is_color2} \
+{/tb_handsignal/dut/max_zone_color1\[6:0\]} \
+{/tb_handsignal/dut/max_zone_color2\[6:0\]} \
+{/tb_handsignal/dut/pclk} \
+{/tb_handsignal/dut/pixel_COLOR\[23:0\]} \
+{/tb_handsignal/dut/red_flag\[6:0\]} \
+{/tb_handsignal/dut/rst} \
+{/tb_handsignal/dut/x_pixel\[10:0\]} \
+{/tb_handsignal/dut/y_pixel\[10:0\]} \
+{/tb_handsignal/dut/zone_id\[6:0\]} \
+}
+wvAddSignal -win $_nWave2 -group {"G2" \
+}
+wvSelectSignal -win $_nWave2 {( "G1" 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 \
+           )} 
+wvSetPosition -win $_nWave2 {("G1" 17)}
+wvSetPosition -win $_nWave2 {("G1" 17)}
+wvSetPosition -win $_nWave2 {("G1" 17)}
+wvAddSignal -win $_nWave2 -clear
+wvAddSignal -win $_nWave2 -group {"G1" \
+{/tb_handsignal/dut/B\[7:0\]} \
+{/tb_handsignal/dut/G\[7:0\]} \
+{/tb_handsignal/dut/R\[7:0\]} \
+{/tb_handsignal/dut/blue_flag\[6:0\]} \
+{/tb_handsignal/dut/clk} \
+{/tb_handsignal/dut/i\[31:0\]} \
+{/tb_handsignal/dut/is_color1} \
+{/tb_handsignal/dut/is_color2} \
+{/tb_handsignal/dut/max_zone_color1\[6:0\]} \
+{/tb_handsignal/dut/max_zone_color2\[6:0\]} \
+{/tb_handsignal/dut/pclk} \
+{/tb_handsignal/dut/pixel_COLOR\[23:0\]} \
+{/tb_handsignal/dut/red_flag\[6:0\]} \
+{/tb_handsignal/dut/rst} \
+{/tb_handsignal/dut/x_pixel\[10:0\]} \
+{/tb_handsignal/dut/y_pixel\[10:0\]} \
+{/tb_handsignal/dut/zone_id\[6:0\]} \
+}
+wvAddSignal -win $_nWave2 -group {"G2" \
+}
+wvSelectSignal -win $_nWave2 {( "G1" 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 \
+           )} 
+wvSetPosition -win $_nWave2 {("G1" 17)}
+wvGetSignalClose -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvSelectSignal -win $_nWave2 {( "G1" 7 )} 
+wvSelectSignal -win $_nWave2 {( "G1" 8 )} 
+wvSelectSignal -win $_nWave2 {( "G1" 7 )} 
+wvSelectSignal -win $_nWave2 {( "G1" 8 )} 
+wvSelectSignal -win $_nWave2 {( "G1" 7 )} 
+wvSetCursor -win $_nWave2 229481558.511689 -snap {("G1" 8)}
+wvSetCursor -win $_nWave2 221351777.050728 -snap {("G1" 8)}
+wvSetCursor -win $_nWave2 47300546.681959 -snap {("G1" 7)}
+wvSetCursor -win $_nWave2 39355532.981473 -snap {("G1" 8)}
+wvSetCursor -win $_nWave2 42127049.388619 -snap {("G1" 7)}
+wvSetCursor -win $_nWave2 12379439.951919 -snap {("G1" 7)}
+wvSetCursor -win $_nWave2 7760245.940009 -snap {("G1" 8)}
+wvSetCursor -win $_nWave2 4064890.730481 -snap {("G1" 8)}
+wvSelectSignal -win $_nWave2 {( "G1" 5 )} 
+wvSelectSignal -win $_nWave2 {( "G1" 6 )} 
+wvSelectSignal -win $_nWave2 {( "G1" 13 )} 
+wvSelectSignal -win $_nWave2 {( "G1" 3 )} 
+wvSelectSignal -win $_nWave2 {( "G1" 4 )} 
+wvSetCursor -win $_nWave2 62636270.801500 -snap {("G2" 0)}
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomIn -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+wvZoomOut -win $_nWave2
+debExit
