@@ -108,7 +108,7 @@ int main(void)
   Button_Init(&hBtnSi, GPIOB, GPIO_PIN_0);
   Button_Init(&hBtnDDO, GPIOA, GPIO_PIN_4);
 
-  DF_Init(0x0F);
+  DF_Init(0x1E);
 
   //Initial 0001 mp3 sound
 //  DF_PlayFromStart();
